@@ -1,3 +1,6 @@
 #include <iostream>
 
-int main() {}
+int main()
+{
+    std::cout << "dobsov.sergey\n";
+}
