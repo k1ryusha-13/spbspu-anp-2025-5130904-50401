@@ -1,6 +1,5 @@
 #include <iostream>
 int main()
 {
-	std::cout <<"malashenko.dmitrii\n";
-	return 0;
+  std::cout <<"malashenko.dmitrii\n";
 }
