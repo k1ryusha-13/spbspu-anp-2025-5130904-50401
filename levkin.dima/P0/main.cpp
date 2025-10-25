@@ -2,5 +2,5 @@
 
 int main()
 {
-    std::cout << "levkin.dima\n";
+  std::cout << "levkin.dima\n";
 }
