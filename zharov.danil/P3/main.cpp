@@ -12,7 +12,7 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  if (! isArgNum(argv[1])) {
+  if (!isArgNum(argv[1])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   }
@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
   std::cout << "All is good\n";
 }
 
-bool isArgNum(char * arg)
+bool isArgNum(const char * arg)
 {
   if (arg[0] == '\0') {
     return false;
