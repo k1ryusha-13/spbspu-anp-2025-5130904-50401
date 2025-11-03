@@ -1,6 +1,6 @@
 #include <iostream>
 
-bool isArgNum(char * arg);
+bool isArgNum(const char * arg);
 
 int main(int argc, char ** argv)
 {
