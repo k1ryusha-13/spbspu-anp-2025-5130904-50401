@@ -118,7 +118,7 @@ int task14(int* matrix, s_t rows, s_t cols)
   // under main diagonal
   for (s_t s = 1; s <= (cols / 2.0); ++s) {
     for (s_t i = s; i < rows; i++) {
-      tempSum += matrix[i * cols + (i + s)];
+      tempSum += matrix[i * cols + (i - s)];
     }
     if (tempSum > maxSum) {
       maxSum = tempSum;
