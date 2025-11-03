@@ -19,6 +19,7 @@ namespace kuznetsov {
   }
 
   int CntColNsm(const int* mtx, size_t rows, size_t cols);
+  int CntLocMax(const int* mtx, size_t rows, size_t cols);
 
 }
 
@@ -66,9 +67,10 @@ int main(int argc, char** argv)
       return 2;
     }
 
-    int res = kuz::CntColNsm(mtx, rows, cols);
-    std::cout << res << '\n';
-
+    int res1 = kuz::CntColNsm(mtx, rows, cols);
+    int res2 = kuz::CntLocMax(mtx, rows, cols);
+    std::cout << res1 << '\n';
+    std::cout << res2 << '\n';
     return 0;
   }
 
@@ -86,6 +88,28 @@ int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
       }
     }
     res += !repeats;
+  }
+  return res;
+}
+
+int kuznetsov::CntLocMax(const int* mtx, size_t rows, size_t cols)
+{
+  int res = 0;
+  for (size_t j = 1; j < cols-1; ++j) {
+    for (size_t i = 1; i < rows-1; ++i) {
+      int center = mtx[i * cols + j];
+      bool isLocMax = true;
+
+      for (int di = -1; di <= 1; ++di) {
+        for (int dj = -1; dj <= 1; ++dj) {
+          if (!(di == 0 && dj == 0)) {
+            isLocMax = isLocMax && (center > mtx[(i+di) * cols + j+dj]);
+          }
+        }
+      }
+
+      res += isLocMax;
+    }
   }
   return res;
 }
