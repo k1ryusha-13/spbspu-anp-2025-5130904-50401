@@ -5,6 +5,7 @@ namespace zharov
 {
   bool isArgNum(const char * arg);
   bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  bool UppTriMtx(int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -30,15 +31,15 @@ int main(int argc, char ** argv)
   std::ifstream input(argv[2]);
   input >> rows >> cols;
   if (!input) {
-    std::cerr << "Bad read (rows and cols)";
+    std::cerr << "Bad read (rows and cols)\n";
     return 2;
   }
   if (argv[1][0] == '1') {
-    int arr[10000] = {};
-    if (zharov::createMatrix(input, arr, rows, cols)) {
+    int matrix[10000] = {};
+    if (!zharov::createMatrix(input, matrix, rows, cols)) {
       return 2;
     }
-    std::cout << "Read is ok";
+    std::cout << zharov::UppTriMtx(matrix, rows, cols) <<"\n";
   } 
 }
 
@@ -64,12 +65,33 @@ bool zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t c
   }
   if (input.eof()) {
     if (count < (rows * cols)) {
-      std::cerr << "Not enough numbers";
+      std::cerr << "Not enough numbers\n";
       return false;
     }
   } else if (input.fail()) {
-    std::cerr << "Bad read (wrong value)";
+    std::cerr << "Bad read (wrong value)\n";
     return false;
+  }
+  return true;
+}
+
+bool zharov::UppTriMtx(int * mtx, size_t rows, size_t cols)
+{
+  if (rows != cols) {
+    rows = (rows > cols) ? cols : rows;
+    cols = rows;
+  }
+
+  if (rows == 0) {
+    return false;
+  }
+
+  for (size_t i = 0; i < rows; ++i) {
+    for (size_t j = 0; j < i; j++) {
+      if (mtx[cols*i+j] != 0) {
+        return false;
+      }
+    }
   }
   return true;
 }
