@@ -6,7 +6,6 @@
 #include <fstream> //for ofstream/ifstream
 #include <memory>  //for malloc/free
 #include <cmath>   //for std::ceil()
-#include <limits> //for limits max_int() and min_int()
 using s_t = size_t;
 
 int max_int()
@@ -102,11 +101,11 @@ int task9(int* matrix, s_t rows, s_t cols)
 }
 int task14(int* matrix, s_t rows, s_t cols)
 {
+  int num = 0;
   int maxSum = min_int();
   int tempSum = 0;
   // over main diagonal
-  for (s_t s = 1; s <= std::ceil(cols / 2.0);
-       ++s) { // use 2.0 because i want floating point division
+  for (s_t s = 1; s <= (cols / 2.0); ++s) { // because i want floating point division
     for (s_t i = 0; i < rows - s; i++) {
       tempSum += matrix[i * cols + (i + s)];
     }
@@ -116,7 +115,7 @@ int task14(int* matrix, s_t rows, s_t cols)
     tempSum = 0;
   }
   // under main diagonal
-  for (s_t s = 1; s <= std::ceil(cols / 2.0); ++s) {
+  for (s_t s = 1; s <= (cols / 2.0); ++s) {
     for (s_t i = s; i < rows; i++) {
       tempSum += matrix[i * cols + (i + s)];
     }
@@ -131,7 +130,7 @@ int main(int argc, char const** argv)
 {
   s_t rows = 0, cols = 0;
   try {
-    if (argc != 4 || std::stoi(argv[1]) != 2) {
+    if (argc != 4 || std::stoi(argv[1]) != 2 && std::stoi(argv[1]) != 1) {
       std::cerr << "Wrong arguments" << "\n";
       return 1;
     }
@@ -152,6 +151,7 @@ int main(int argc, char const** argv)
 
   input.close();
   if (!mtx) {
+
     return 2;
   }
   mtx = convertToSquare(mtx, rows, cols);
