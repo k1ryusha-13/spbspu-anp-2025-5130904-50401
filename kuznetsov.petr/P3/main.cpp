@@ -3,24 +3,12 @@
 #include <memory>
 
 namespace kuznetsov {
-  bool isNumber(const char* str)
-  {
-    bool isNum = true;
-    size_t i = 0;
-
-    do {
-      if (str[i] < '0' || str[i] > '9') {
-        isNum = false;
-      }
-      ++i;
-    } while (str[i] != '\0');
-
-    return isNum;
-  }
+  bool isNumber(const char* str);
 
   int CntColNsm(const int* mtx, size_t rows, size_t cols);
   int CntLocMax(const int* mtx, size_t rows, size_t cols);
 
+  int initMatr(std::istream& input, int* mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char** argv)
@@ -52,27 +40,52 @@ int main(int argc, char** argv)
 
   if (argv[1][0] == '1') {
     int mtx[10'000]{};
-    size_t c = 0;
-    while (input >> mtx[c]) {
-      ++c;
-    }
 
-    if (input.eof()) {
-      if (c < rows * cols) {
-        std::cerr << "Not enough elements for matrix\n";
-        return 1;
-      }
-    } else if (input.fail()) {
+    int status = kuz::initMatr(input, mtx, rows, cols);
+    input.close();
+    if (status == -1) {
+      std::cerr << "Not enough elements for matrix\n";
+      return 1;
+    } else if (status == -2) {
       std::cerr << "Bad reading file\n";
       return 2;
     }
 
     int res1 = kuz::CntColNsm(mtx, rows, cols);
     int res2 = kuz::CntLocMax(mtx, rows, cols);
+
     std::cout << res1 << '\n';
     std::cout << res2 << '\n';
+
     return 0;
   }
+
+  int* mtrx = reinterpret_cast< int* >(malloc(sizeof(int)*rows*cols));
+  if (mtrx == nullptr) {
+    std::cerr << "Bad alloc\n";
+    return 3;
+  }
+
+  int status = kuz::initMatr(input, mtrx, rows, cols);
+  input.close();
+
+  if (status == -1) {
+    std::cerr << "Not enough elements for matrix\n";
+    return 1;
+  } else if (status == -2) {
+    std::cerr << "Bad reading file\n";
+    return 2;
+  }
+
+  int res1 = kuz::CntColNsm(mtrx, rows, cols);
+  int res2 = kuz::CntLocMax(mtrx, rows, cols);
+
+
+
+  std::cout << res1 << '\n';
+  std::cout << res2 << '\n';
+
+  free(mtrx);
 
 }
 
@@ -112,5 +125,38 @@ int kuznetsov::CntLocMax(const int* mtx, size_t rows, size_t cols)
     }
   }
   return res;
+}
+
+int kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, size_t cols)
+{
+  size_t c = 0;
+  while (input >> mtx[c]) {
+    ++c;
+  }
+
+  if (input.eof()) {
+    if (c < rows * cols) {
+      return -1;
+    }
+  } else if (input.fail()) {
+    return -2;
+  }
+
+  return 0;
+}
+
+bool kuznetsov::isNumber(const char* str)
+{
+  bool isNum = true;
+  size_t i = 0;
+
+  do {
+    if (str[i] < '0' || str[i] > '9') {
+      isNum = false;
+    }
+    ++i;
+  } while (str[i] != '\0');
+
+  return isNum;
 }
 
