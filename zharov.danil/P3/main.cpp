@@ -6,6 +6,7 @@ namespace zharov
   bool isArgNum(const char * arg);
   bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool UppTriMtx(int * mtx, size_t rows, size_t cols);
+  size_t CntColNsm(int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -40,6 +41,7 @@ int main(int argc, char ** argv)
       return 2;
     }
     std::cout << zharov::UppTriMtx(matrix, rows, cols) <<"\n";
+    std::cout << zharov::CntColNsm(matrix, rows, cols) <<"\n";
   } 
 }
 
@@ -87,11 +89,29 @@ bool zharov::UppTriMtx(int * mtx, size_t rows, size_t cols)
   }
 
   for (size_t i = 0; i < rows; ++i) {
-    for (size_t j = 0; j < i; j++) {
-      if (mtx[cols*i+j] != 0) {
+    for (size_t j = 0; j < i; ++j) {
+      if (mtx[cols * i + j] != 0) {
         return false;
       }
     }
   }
   return true;
+}
+
+size_t zharov::CntColNsm(int * mtx, size_t rows, size_t cols)
+{
+  if (rows == 0 || cols == 0) {
+    return 0;
+  }
+
+  size_t res = cols;
+  for (size_t i = 0; i < cols; ++i) {
+    for (size_t j = 1; j < rows; ++j) {
+      if (mtx[j * cols + i] == mtx[(j - 1) * cols + i]) {
+        --res;
+        break;
+      }
+    }
+  }
+  return res;
 }
