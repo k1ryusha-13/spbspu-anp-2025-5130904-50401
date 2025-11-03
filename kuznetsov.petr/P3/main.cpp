@@ -56,7 +56,10 @@ int main(int argc, char** argv)
     int res1 = kuz::CntColNsm(mtx, rows, cols);
     int res2 = kuz::CntLocMax(mtx, rows, cols);
 
-    kuz::outputRes(argv[3], res1, res2);
+    int statusWrite = kuz::outputRes(argv[3], res1, res2);
+    if (statusWrite == 2) {
+      std::cerr << "Can't open output file\n";
+    }
     return 0;
   }
 
@@ -80,10 +83,14 @@ int main(int argc, char** argv)
   int res1 = kuz::CntColNsm(mtrx, rows, cols);
   int res2 = kuz::CntLocMax(mtrx, rows, cols);
 
-  kuz::outputRes(argv[3], res1, res2);
 
+  int statusWrite = kuz::outputRes(argv[3], res1, res2);
+
+  if (statusWrite == 2) {
+    std::cerr << "Can't open output file\n";
+  }
   free(mtrx);
-
+  return 0;
 }
 
 int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
