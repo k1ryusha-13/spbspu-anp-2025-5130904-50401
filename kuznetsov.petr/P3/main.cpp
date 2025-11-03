@@ -39,6 +39,11 @@ int main(int argc, char** argv)
   }
 
   input >> rows >> cols;
+  if (!input) {
+    std::cerr << "Bad reading\n";
+    input.close();
+    return 2;
+  }
 
   if (argv[1][0] == '1') {
     int mtx[10'000]{};
@@ -74,9 +79,11 @@ int main(int argc, char** argv)
 
   if (status == -1) {
     std::cerr << "Not enough elements for matrix\n";
+    free(mtrx);
     return 1;
   } else if (status == -2) {
     std::cerr << "Bad reading file\n";
+    free(mtrx);
     return 2;
   }
 
