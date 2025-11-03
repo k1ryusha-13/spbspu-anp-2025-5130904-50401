@@ -25,7 +25,7 @@ int main(int argc, char** argv)
   } else if (!kuz::isNumber(argv[1])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
-  } else if (argv[1][0] != '1' && argv[1][0] != '2' && argv[1][0] == '\0') {
+  } else if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0') {
     std::cerr << "First parameter is out of range\n";
     return 1;
   }
