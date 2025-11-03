@@ -9,6 +9,8 @@ namespace kuznetsov {
   int CntLocMax(const int* mtx, size_t rows, size_t cols);
 
   int initMatr(std::istream& input, int* mtx, size_t rows, size_t cols);
+
+  int outputRes(char* output, int res1, int res2);
 }
 
 int main(int argc, char** argv)
@@ -54,9 +56,7 @@ int main(int argc, char** argv)
     int res1 = kuz::CntColNsm(mtx, rows, cols);
     int res2 = kuz::CntLocMax(mtx, rows, cols);
 
-    std::cout << res1 << '\n';
-    std::cout << res2 << '\n';
-
+    kuz::outputRes(argv[3], res1, res2);
     return 0;
   }
 
@@ -80,10 +80,7 @@ int main(int argc, char** argv)
   int res1 = kuz::CntColNsm(mtrx, rows, cols);
   int res2 = kuz::CntLocMax(mtrx, rows, cols);
 
-
-
-  std::cout << res1 << '\n';
-  std::cout << res2 << '\n';
+  kuz::outputRes(argv[3], res1, res2);
 
   free(mtrx);
 
@@ -160,3 +157,15 @@ bool kuznetsov::isNumber(const char* str)
   return isNum;
 }
 
+int kuznetsov::outputRes(char* output, int res1, int res2)
+{
+  std::ofstream out(output);
+
+  if (!out.is_open()) {
+    return 2;
+  }
+  out << res1 << '\n';
+  out << res2 << '\n';
+  out.close();
+  return 0;
+}
