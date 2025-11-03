@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 namespace zharov 
 {
@@ -35,14 +36,34 @@ int main(int argc, char ** argv)
     std::cerr << "Bad read (rows and cols)\n";
     return 2;
   }
+
   if (argv[1][0] == '1') {
     int matrix[10000] = {};
     if (!zharov::createMatrix(input, matrix, rows, cols)) {
       return 2;
     }
-    std::cout << zharov::UppTriMtx(matrix, rows, cols) <<"\n";
-    std::cout << zharov::CntColNsm(matrix, rows, cols) <<"\n";
-  } 
+    input.close();
+    std::ofstream output(argv[3]);
+    output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
+    output << zharov::CntColNsm(matrix, rows, cols) << "\n";
+    return 0;
+  }
+
+  int * matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+  if (matrix == nullptr) {
+    std::cerr << "Bad alloc\n";
+    return 2;
+  }
+  if (!zharov::createMatrix(input, matrix, rows, cols)) {
+    free(matrix);
+      return 2;
+    }
+    input.close();
+    std::ofstream output(argv[3]);
+    output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
+    output << zharov::CntColNsm(matrix, rows, cols) << "\n";
+    free(matrix);
+    return 0;
 }
 
 bool zharov::isArgNum(const char * arg)
