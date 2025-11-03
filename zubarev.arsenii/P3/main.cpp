@@ -101,7 +101,7 @@ int task9(int* matrix, s_t rows, s_t cols)
 }
 int task14(int* matrix, s_t rows, s_t cols)
 {
-  int num = 0;
+
   int maxSum = min_int();
   int tempSum = 0;
   // over main diagonal
@@ -130,7 +130,7 @@ int main(int argc, char const** argv)
 {
   s_t rows = 0, cols = 0;
   try {
-    if (argc != 4 || std::stoi(argv[1]) != 2 && std::stoi(argv[1]) != 1) {
+    if (argc != 4 || (std::stoi(argv[1]) != 2 && std::stoi(argv[1]) != 1)) {
       std::cerr << "Wrong arguments" << "\n";
       return 1;
     }
