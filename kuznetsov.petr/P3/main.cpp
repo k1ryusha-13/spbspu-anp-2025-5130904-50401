@@ -3,6 +3,7 @@
 #include <memory>
 
 namespace kuznetsov {
+  const size_t MAX_SIZE = 10'000;
   bool isNumber(const char* str);
 
   int CntColNsm(const int* mtx, size_t rows, size_t cols);
@@ -46,7 +47,7 @@ int main(int argc, char** argv)
   }
 
   if (argv[1][0] == '1') {
-    int mtx[10'000]{};
+    int mtx[kuz::MAX_SIZE] {};
 
     int status = kuz::initMatr(input, mtx, rows, cols);
     input.close();
