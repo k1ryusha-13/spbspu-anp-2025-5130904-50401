@@ -4,7 +4,7 @@
 namespace zharov 
 {
   bool isArgNum(const char * arg);
-  int createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -35,13 +35,7 @@ int main(int argc, char ** argv)
   }
   if (argv[1][0] == '1') {
     int arr[10000] = {};
-    int code = zharov::createMatrix(input, arr, rows, cols);
-    if (code == 1) {
-      std::cerr << "Not enough numbers";
-      return 2;
-    }
-    if (code == 2) {
-      std::cerr << "Bad read (wrong value)";
+    if (zharov::createMatrix(input, arr, rows, cols)) {
       return 2;
     }
     std::cout << "Read is ok";
@@ -62,7 +56,7 @@ bool zharov::isArgNum(const char * arg)
   return true;
 }
 
-int zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+bool zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   size_t count = 0;
   while (input >> mtx[count]) {
@@ -70,10 +64,12 @@ int zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t co
   }
   if (input.eof()) {
     if (count < (rows * cols)) {
-      return 1;
+      std::cerr << "Not enough numbers";
+      return false;
     }
   } else if (input.fail()) {
-    return 2;
+    std::cerr << "Bad read (wrong value)";
+    return false;
   }
-  return 0;
+  return true;
 }
