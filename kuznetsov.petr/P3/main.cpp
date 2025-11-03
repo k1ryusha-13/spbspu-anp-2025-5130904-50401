@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+
 namespace kuznetsov {
   bool isNumber(const char* str)
   {
@@ -17,6 +18,7 @@ namespace kuznetsov {
     return isNum;
   }
 
+  int CntColNsm(const int* mtx, size_t rows, size_t cols);
 
 }
 
@@ -37,4 +39,54 @@ int main(int argc, char** argv)
     return 1;
   }
 
+  size_t rows = 0, cols = 0;
+  std::ifstream input(argv[2]);
+
+  if (!input.is_open()) {
+    std::cerr << "Can't open file\n";
+    return 2;
+  }
+
+  input >> rows >> cols;
+
+  if (argv[1][0] == '1') {
+    int mtx[10'000]{};
+    size_t c = 0;
+    while (input >> mtx[c]) {
+      ++c;
+    }
+
+    if (input.eof()) {
+      if (c < rows * cols) {
+        std::cerr << "Not enough elements for matrix\n";
+        return 1;
+      }
+    } else if (input.fail()) {
+      std::cerr << "Bad reading file\n";
+      return 2;
+    }
+
+    int res = kuz::CntColNsm(mtx, rows, cols);
+    std::cout << res << '\n';
+
+    return 0;
+  }
+
 }
+
+int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
+{
+  int res = 0;
+  for (size_t j = 0; j < cols; ++j) {
+    bool repeats = false;
+    for (size_t i = 0; i < rows-1; ++i) {
+      if (mtx[i * cols + j] == mtx[(i + 1) * cols + j]) {
+        repeats = true;
+        break;
+      }
+    }
+    res += !repeats;
+  }
+  return res;
+}
+
