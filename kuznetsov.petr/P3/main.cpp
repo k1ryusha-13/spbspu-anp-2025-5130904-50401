@@ -102,8 +102,10 @@ int main(int argc, char** argv)
 
 int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
 {
-  if (rows == 0 || cols == 0)
+  if (rows == 0 || cols == 0) {
     return 0;
+  }
+
   int res = 0;
   for (size_t j = 0; j < cols; ++j) {
     bool repeats = false;
@@ -120,8 +122,9 @@ int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
 
 int kuznetsov::CntLocMax(const int* mtx, size_t rows, size_t cols)
 {
-  if (rows == 0 || cols == 0)
+  if (rows == 0 || cols == 0) {
     return 0;
+  }
   int res = 0;
   for (size_t j = 1; j < cols-1; ++j) {
     for (size_t i = 1; i < rows-1; ++i) {
