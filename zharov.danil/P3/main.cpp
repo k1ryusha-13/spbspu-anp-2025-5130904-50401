@@ -2,7 +2,7 @@
 #include <fstream>
 #include <memory>
 
-namespace zharov 
+namespace zharov
 {
   bool isArgNum(const char * arg);
   bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
