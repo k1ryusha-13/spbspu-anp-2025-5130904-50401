@@ -5,7 +5,7 @@
 namespace goltsov
 {
   long long * create(size_t rows, size_t cols);
-  void destroy(long long * mtx, size_t created);
+  void destroy(long long * mtx);
   void get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
   bool LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag);
   size_t CNTLOCMAX(long long * mtx, size_t rows, size_t cols);
