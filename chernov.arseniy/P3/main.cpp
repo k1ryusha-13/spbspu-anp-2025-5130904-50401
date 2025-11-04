@@ -3,23 +3,13 @@
 
 namespace chernov {
   void matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols);
-  // void matrix_input(std::istream & input, int (&mtx)[], size_t rows, size_t cols);
   void destroy(int ** mtx, size_t created);
   int ** create(size_t rows, size_t cols);
   bool isNumber(char * word);
   void fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t cols);
 }
 
-void chernov::matrix_input(std::istream & input, int ** mtx, size_t rows, size_t cols)
-{
-  for (size_t i = 0; i < rows; ++i) {
-    for (size_t j = 0; j < cols; ++j) {
-      input >> mtx[i][j];
-    }
-  }
-}
-
-void chernov::matrix_input(std::istream & input, int (&mtx)[] , size_t rows, size_t cols)
+void chernov::matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; ++i) {
     input >> mtx[i];
@@ -126,7 +116,23 @@ int main(int argc, char ** argv)
       std::cerr << "Incorrect input\n";
       return 2;
     }
+
     chernov::fll_inc_wav(output, matrix, rows, cols);
     return 0;
+  }
+
+  int * matrix = new int [rows * cols];
+  chernov::matrix_input(input, matrix, rows, cols);
+  if (! input) {
+    std::cerr << "Incorrect input\n";
+    delete [] matrix;
+    return 2;
+  }
+
+  try {
+    chernov::fll_inc_wav(output, matrix, rows, cols);
+  } catch (const std::exception & e) {
+    delete [] matrix;
+    throw;
   }
 }
