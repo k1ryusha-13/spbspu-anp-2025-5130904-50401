@@ -85,7 +85,7 @@ namespace zubarev
 
     return matrix;
   }
-  int task9(const int* matrix, s_t rows, s_t cols)
+  int solveTask9(const int* matrix, s_t rows, s_t cols)
   {
     s_t count = 0;
     bool equalFlag = false;
@@ -107,7 +107,7 @@ namespace zubarev
     return count;
   }
 
-  int task14(const int* matrix, s_t rows, s_t cols)
+  int solveTask14(const int* matrix, s_t rows, s_t cols)
   {
     int maxSum = min_int();
     int tempSum = 0;
@@ -170,7 +170,7 @@ int main(int argc, char const** argv)
 
   // output matrix
   std::ofstream output(argv[3]);
-  output << zub::task9(mtx, rows, cols) << "\n";
-  output << zub::task14(mtx, rows, cols) << "\n";
+  output << zub::solveTask9(mtx, rows, cols) << "\n";
+  output << zub::solveTask14(mtx, rows, cols) << "\n";
   free(mtx);
 }
