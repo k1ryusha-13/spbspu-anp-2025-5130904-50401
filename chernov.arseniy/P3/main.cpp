@@ -3,8 +3,6 @@
 
 namespace chernov {
   void matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols);
-  void destroy(int ** mtx, size_t created);
-  int ** create(size_t rows, size_t cols);
   bool isNumber(char * word);
   void fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t cols);
 }
@@ -14,29 +12,6 @@ void chernov::matrix_input(std::istream & input, int * mtx, size_t rows, size_t 
   for (size_t i = 0; i < rows * cols; ++i) {
     input >> mtx[i];
   }
-}
-
-void chernov::destroy(int ** mtx, size_t created)
-{
-  for (size_t i = 0; i < created; i++) {
-    delete[] mtx[i];
-  }
-  delete[] mtx;
-}
-
-int ** chernov::create(size_t rows, size_t cols)
-{
-  size_t created = 0;
-  int ** mtx = new int * [rows];
-  try {
-    for (; created < rows; created++) {
-      mtx[created] = new int[cols];
-    }
-  } catch (const std::bad_alloc & e) {
-    chernov::destroy(mtx, created);
-    throw;
-  }
-  return mtx;
 }
 
 bool chernov::isNumber(char * word)
