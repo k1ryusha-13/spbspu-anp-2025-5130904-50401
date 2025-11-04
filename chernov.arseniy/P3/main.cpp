@@ -1,12 +1,14 @@
 #include <iostream>
 #include <fstream>
 
-void matrix_input(std::ostream & input, int ** mtx, size_t rows, size_t cols);
-void destroy(int ** mtx, size_t created);
-int ** create(size_t rows, size_t cols);
-bool isNumber(char * word);
+namespace chernov {
+  void matrix_input(std::ostream & input, int ** mtx, size_t rows, size_t cols);
+  void destroy(int ** mtx, size_t created);
+  int ** create(size_t rows, size_t cols);
+  bool isNumber(char * word);
+}
 
-void matrix_input(std::istream & input, int ** mtx, size_t rows, size_t cols)
+void chernov::matrix_input(std::istream & input, int ** mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows; ++i) {
     for (size_t j = 0; j < cols; ++j) {
@@ -15,7 +17,7 @@ void matrix_input(std::istream & input, int ** mtx, size_t rows, size_t cols)
   }
 }
 
-void destroy(int ** mtx, size_t created)
+void chernov::destroy(int ** mtx, size_t created)
 {
   for (size_t i = 0; i < created; i++) {
     delete[] mtx[i];
@@ -23,7 +25,7 @@ void destroy(int ** mtx, size_t created)
   delete[] mtx;
 }
 
-int ** create(size_t rows, size_t cols)
+int ** chernov::create(size_t rows, size_t cols)
 {
   size_t created = 0;
   int ** mtx = new int * [rows];
@@ -32,13 +34,13 @@ int ** create(size_t rows, size_t cols)
       mtx[created] = new int[cols];
     }
   } catch (const std::bad_alloc & e) {
-    destroy(mtx, created);
+    chernov::destroy(mtx, created);
     throw;
   }
   return mtx;
 }
 
-bool isNumber(char * word)
+bool chernov::isNumber(char * word)
 {
   for (size_t i = 0; word[i] != '\0'; ++i) {
     if (word[i] < '0' || word[i] > '9') {
@@ -56,7 +58,7 @@ int main(int argc, char ** argv)
   } else if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
-  } else if (! isNumber(argv[1])) {
+  } else if (! chernov::isNumber(argv[1])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   } else if (! ((argv[1][0] == '1' || argv[1][0] == '2') && argv[1][1] == '\0')) {
@@ -67,10 +69,14 @@ int main(int argc, char ** argv)
   std::ifstream input(argv[2]);
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
+  if (! input) {
+    std::cerr << "Incorrect input\n";
+    if (argv[1][0] == '2') chernov::destroy(matrix, rows);
+    return 2;
+  }
 
   if (argv[1][0] == '1') {
-    int matrix[100][100];
-  } else {
-    int ** matrix = create(rows, cols);
+    int matrix[10000] = {};
+    void chernov::matrix_input(input, 
   }
 }
