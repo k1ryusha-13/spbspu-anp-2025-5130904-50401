@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream> //for ofstream/ifstream
-#include <memory>  //for malloc/free
+#include <cstdlib> //for malloc/free
 #include <cmath>   //for std::ceil()
 #include <limits>  //for limits max_int() and min_int()
 
@@ -25,7 +25,7 @@ namespace zubarev
     return int_limit::min();
   }
 
-  std::ostream& outputMatrix(std::ostream& out, int* matrix, s_t rows, s_t cols)
+  std::ostream& outputMatrix(std::ostream& out, const int* matrix, s_t rows, s_t cols)
   {
     for (s_t i = 0; i < rows; ++i) {
       for (s_t j = 0; j < cols; ++j) {
@@ -85,7 +85,7 @@ namespace zubarev
 
     return matrix;
   }
-  int task9(int* matrix, s_t rows, s_t cols)
+  int task9(const int* matrix, s_t rows, s_t cols)
   {
     s_t count = 0;
     bool equalFlag = false;
@@ -107,7 +107,7 @@ namespace zubarev
     return count;
   }
 
-  int task14(int* matrix, s_t rows, s_t cols)
+  int task14(const int* matrix, s_t rows, s_t cols)
   {
     int maxSum = min_int();
     int tempSum = 0;
