@@ -1,10 +1,13 @@
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 namespace chernov {
   void matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isNumber(char * word);
   void fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t cols);
+  void min_sum_mdg(std::ostream & output, int mtx[], size_t rows, size_t cols);
+  int get_sum_antidiagonal(int * mtx, size_t x, size_t y, size_t rows, size_t cols);
 }
 
 void chernov::matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols)
@@ -57,6 +60,32 @@ void chernov::fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t 
   output << "\n";
 }
 
+int chernov::get_sum_antidiagonal(int * mtx, size_t x, size_t y, size_t rows, size_t cols)
+{
+  int sum = 0;
+  do {
+    sum += mtx[y * cols + x];
+  } while (x-- > 0 && ++y < rows);
+  return sum;
+}
+
+void chernov::min_sum_mdg(std::ostream & output, int mtx[], size_t rows, size_t cols)
+{
+  int min_sum = 0, sum = 0;
+  if (rows != 0 && cols != 0) {
+    min_sum = std::numeric_limits< int >::max();
+  }
+  size_t x = 0, y = 0;
+  while (x < cols && y < rows) {
+    sum = get_sum_antidiagonal(mtx, x, y, rows, cols);
+    std::cout << sum << "\n";
+    if (sum < min_sum) min_sum = sum;
+    if (x < rows - 1) ++x;
+    else ++y;
+  }
+  output << min_sum << "\n";
+}
+
 int main(int argc, char ** argv)
 {
   if (argc < 4) {
@@ -73,10 +102,10 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  std::ifstream input(argv[2]);
-  //std::istream& input = std::cin;
-  std::ofstream output(argv[3]);
-  //std::ostream& output = std::cout;
+  // std::ifstream input(argv[2]);
+  std::istream& input = std::cin;
+  // std::ofstream output(argv[3]);
+  std::ostream& output = std::cout;
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
   if (! input) {
@@ -92,7 +121,8 @@ int main(int argc, char ** argv)
       return 2;
     }
 
-    chernov::fll_inc_wav(output, matrix, rows, cols);
+    // chernov::fll_inc_wav(output, matrix, rows, cols);
+    chernov::min_sum_mdg(output, matrix, rows, cols);
     return 0;
   }
 
