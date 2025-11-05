@@ -4,138 +4,20 @@
 
 #include <iostream>
 #include <fstream> //for ofstream/ifstream
-#include <cstdlib> //for malloc/free
-#include <cmath>   //for std::ceil()
+#include <memory>  //for malloc/free
 #include <limits>  //for limits max_int() and min_int()
 
 namespace zubarev
 {
   using s_t = size_t;
-
-  int max_int()
-  {
-    using namespace std;
-    using int_limit = numeric_limits<int>;
-    return int_limit::max();
-  }
-  int min_int()
-  {
-    using namespace std;
-    using int_limit = numeric_limits<int>;
-    return int_limit::min();
-  }
-
-  std::ostream& outputMatrix(std::ostream& out, const int* matrix, s_t rows, s_t cols)
-  {
-    for (s_t i = 0; i < rows; ++i) {
-      for (s_t j = 0; j < cols; ++j) {
-        out << matrix[i * cols + j] << " ";
-      }
-      out << "\n";
-    }
-    return out;
-  }
-
-  int* convertToSquare(int* matrix, s_t& rows, s_t& cols)
-  {
-    if (rows == cols) {
-      return matrix;
-    }
-
-    s_t sizeOfMatrix = std::min(rows, cols);
-    int* square = reinterpret_cast<int*>(malloc(sizeOfMatrix * sizeOfMatrix * sizeof(int)));
-    if (!square) {
-      std::cerr << "Memory allocation failed for square matrix\n";
-      free(square);
-      return matrix;
-    }
-
-    for (s_t i = 0; i < sizeOfMatrix; ++i) {
-      for (s_t j = 0; j < sizeOfMatrix; ++j) {
-        square[i * sizeOfMatrix + j] = matrix[i * cols + j];
-      }
-    }
-
-    free(matrix);
-    rows = cols = sizeOfMatrix;
-    return square;
-  }
-  int* readMatrix(std::istream& in, s_t& rows, s_t& cols)
-  {
-    in >> rows >> cols;
-    if (!in) {
-      std::cerr << "Can't read the file\n";
-      return nullptr;
-    }
-
-    int* matrix = reinterpret_cast<int*>(malloc(rows * cols * sizeof(int)));
-    if (!matrix) {
-      std::cerr << "Memory allocation failed\n";
-      return nullptr;
-    }
-
-    for (s_t i = 0; i < rows * cols; ++i) {
-      in >> matrix[i];
-      if (!in) {
-        std::cerr << "Can't read the file\n";
-        free(matrix);
-        return nullptr;
-      }
-    }
-
-    return matrix;
-  }
-  int solveTask9(const int* matrix, s_t rows, s_t cols)
-  {
-    s_t count = 0;
-    bool equalFlag = false;
-
-    for (s_t j = 0; j < cols; ++j) {
-      for (s_t i = 0; i < rows - 1; ++i) {
-        if (matrix[cols * i + j] == matrix[cols * (i + 1) + j]) {
-          equalFlag = true;
-          break;
-        }
-      }
-      if (!equalFlag) {
-        count++;
-      } else {
-        equalFlag = false;
-      }
-    }
-
-    return count;
-  }
-
-  int solveTask14(const int* matrix, s_t rows, s_t cols)
-  {
-    int maxSum = min_int();
-    int tempSum = 0;
-    // over main diagonal
-    for (s_t s = 1; s <= (cols / 2); ++s) {
-      for (s_t i = 0; i < rows - s; i++) {
-        tempSum += matrix[i * cols + (i + s)];
-      }
-      if (tempSum > maxSum) {
-        maxSum = tempSum;
-      }
-      tempSum = 0;
-    }
-
-    // under main diagonal
-    for (s_t s = 1; s <= (cols / 2); ++s) {
-      for (s_t i = s; i < rows; i++) {
-        tempSum += matrix[i * cols + (i - s)];
-      }
-      if (tempSum > maxSum) {
-        maxSum = tempSum;
-      }
-      tempSum = 0;
-    }
-
-    return maxSum;
-  }
-} // namespace zubarev
+  int max_int();
+  int min_int();
+  std::ostream& outputMatrix(std::ostream& out, const int* matrix, s_t rows, s_t cols);
+  int* convertToSquare(int* matrix, s_t& rows, s_t& cols);
+  int* readMatrix(std::istream& in, s_t& rows, s_t& cols);
+  int solveTask9(const int* matrix, s_t rows, s_t cols);
+  int solveTask14(const int* matrix, s_t rows, s_t cols);
+}
 
 int main(int argc, char const** argv)
 {
@@ -173,4 +55,127 @@ int main(int argc, char const** argv)
   output << zub::solveTask9(mtx, rows, cols) << "\n";
   output << zub::solveTask14(mtx, rows, cols) << "\n";
   free(mtx);
+}
+int zubarev::max_int()
+{
+  using namespace std;
+  using int_limit = numeric_limits<int>;
+  return int_limit::max();
+}
+int zubarev::min_int()
+{
+  using namespace std;
+  using int_limit = numeric_limits<int>;
+  return int_limit::min();
+}
+
+std::ostream& zubarev::outputMatrix(std::ostream& out, const int* matrix, s_t rows, s_t cols)
+{
+  for (s_t i = 0; i < rows; ++i) {
+    for (s_t j = 0; j < cols; ++j) {
+      out << matrix[i * cols + j] << " ";
+    }
+    out << "\n";
+  }
+  return out;
+}
+
+int* zubarev::convertToSquare(int* matrix, s_t& rows, s_t& cols)
+{
+  if (rows == cols) {
+    return matrix;
+  }
+
+  s_t sizeOfMatrix = std::min(rows, cols);
+  int* square = reinterpret_cast<int*>(malloc(sizeOfMatrix * sizeOfMatrix * sizeof(int)));
+  if (!square) {
+    std::cerr << "Memory allocation failed for square matrix\n";
+    free(square);
+    return matrix;
+  }
+
+  for (s_t i = 0; i < sizeOfMatrix; ++i) {
+    for (s_t j = 0; j < sizeOfMatrix; ++j) {
+      square[i * sizeOfMatrix + j] = matrix[i * cols + j];
+    }
+  }
+
+  free(matrix);
+  rows = cols = sizeOfMatrix;
+  return square;
+}
+int* zubarev::readMatrix(std::istream& in, s_t& rows, s_t& cols)
+{
+  in >> rows >> cols;
+  if (!in) {
+    std::cerr << "Can't read the file\n";
+    return nullptr;
+  }
+
+  int* matrix = reinterpret_cast<int*>(malloc(rows * cols * sizeof(int)));
+  if (!matrix) {
+    std::cerr << "Memory allocation failed\n";
+    return nullptr;
+  }
+
+  for (s_t i = 0; i < rows * cols; ++i) {
+    in >> matrix[i];
+    if (!in) {
+      std::cerr << "Can't read the file\n";
+      free(matrix);
+      return nullptr;
+    }
+  }
+
+  return matrix;
+}
+int zubarev::solveTask9(const int* matrix, s_t rows, s_t cols)
+{
+  s_t count = 0;
+  bool equalFlag = false;
+
+  for (s_t j = 0; j < cols; ++j) {
+    for (s_t i = 0; i < rows - 1; ++i) {
+      if (matrix[cols * i + j] == matrix[cols * (i + 1) + j]) {
+        equalFlag = true;
+        break;
+      }
+    }
+    if (!equalFlag) {
+      count++;
+    } else {
+      equalFlag = false;
+    }
+  }
+
+  return count;
+}
+
+int zubarev::solveTask14(const int* matrix, s_t rows, s_t cols)
+{
+  int maxSum = min_int();
+  int tempSum = 0;
+  // over main diagonal
+  for (s_t s = 1; s <= (cols / 2); ++s) {
+    for (s_t i = 0; i < rows - s; i++) {
+      tempSum += matrix[i * cols + (i + s)];
+    }
+    if (tempSum > maxSum) {
+      maxSum = tempSum;
+    }
+    tempSum = 0;
+  }
+
+  // under main diagonal
+  for (s_t s = 1; s <= (cols / 2); ++s) {
+    for (s_t i = s; i < rows; i++) {
+      tempSum += matrix[i * cols + (i - s)];
+    }
+    if (tempSum > maxSum) {
+      maxSum = tempSum;
+    }
+    tempSum = 0;
+  }
+
+  return maxSum;
 }
