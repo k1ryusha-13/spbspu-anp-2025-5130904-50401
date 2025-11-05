@@ -92,7 +92,7 @@ void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, siz
       min_sum = sum;
     }
   }
-  
+
   output << min_sum << "\n";
 }
 
