@@ -101,10 +101,8 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  // std::ifstream input(argv[2]);
-  std::istream& input = std::cin;
-  // std::ofstream output(argv[3]);
-  std::ostream& output = std::cout;
+  std::ifstream input(argv[2]);
+  std::ofstream output(argv[3]);
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
   if (! input) {
