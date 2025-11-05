@@ -3,31 +3,34 @@
 #include <limits>
 
 namespace chernov {
-  void matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols);
-  bool isNumber(char * word);
-  void fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t cols);
-  void min_sum_mdg(std::ostream & output, int mtx[], size_t rows, size_t cols);
-  int get_sum_antidiagonal(int * mtx, size_t x, size_t y, size_t rows, size_t cols);
+  void matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
+  bool isNumber(const char * word);
+  void fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols);
+  void minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
+  int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
 }
 
-void chernov::matrix_input(std::istream & input, int * mtx, size_t rows, size_t cols)
+void chernov::matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; ++i) {
     input >> mtx[i];
   }
 }
 
-bool chernov::isNumber(char * word)
+bool chernov::isNumber(const char * word)
 {
+  if (!word || *word == '\0') {
+    return false;
+  }
   for (size_t i = 0; word[i] != '\0'; ++i) {
     if (word[i] < '0' || word[i] > '9') {
       return false;
     }
   }
-  return (word[0] != '\0');
+  return true;
 }
 
-void chernov::fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t cols)
+void chernov::fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols)
 {
   size_t add = 1;
   size_t x = 0, y = 0, count = 0;
@@ -60,7 +63,7 @@ void chernov::fll_inc_wav(std::ostream & output, int mtx[], size_t rows, size_t 
   output << "\n";
 }
 
-int chernov::get_sum_antidiagonal(int * mtx, size_t x, size_t y, size_t rows, size_t cols)
+int chernov::getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols)
 {
   int sum = 0;
   do {
@@ -69,19 +72,27 @@ int chernov::get_sum_antidiagonal(int * mtx, size_t x, size_t y, size_t rows, si
   return sum;
 }
 
-void chernov::min_sum_mdg(std::ostream & output, int mtx[], size_t rows, size_t cols)
+void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols)
 {
-  int min_sum = 0, sum = 0;
-  if (rows != 0 && cols != 0) {
-    min_sum = std::numeric_limits< int >::max();
+  if (rows * cols == 0) {
+    output << "0\n";
+    return;
   }
-  size_t x = 0, y = 0;
-  while (x < cols && y < rows) {
-    sum = get_sum_antidiagonal(mtx, x, y, rows, cols);
-    if (sum < min_sum) min_sum = sum;
-    if (x < rows - 1) ++x;
-    else ++y;
+  int min_sum = std::numeric_limits< int >::max(), sum = 0;
+
+  for (size_t x = 0; x < cols; ++x) {
+    int sum = getSumAntiDiagonal(mtx, x, 0, rows, cols);
+    if (sum < min_sum) {
+      min_sum = sum;
+    }
   }
+  for (size_t y = 1; y < rows; ++y) {
+    int sum = getSumAntiDiagonal(mtx, cols - 1, y, rows, cols);
+    if (sum < min_sum) {
+      min_sum = sum;
+    }
+  }
+  
   output << min_sum << "\n";
 }
 
@@ -111,20 +122,21 @@ int main(int argc, char ** argv)
   }
 
   if (argv[1][0] == '1') {
-    int matrix[10000] = {};
-    chernov::matrix_input(input, matrix, rows, cols);
+    constexpr size_t MAX_STATIC_MATRIX_SIZE = 10000;
+    int matrix[MAX_STATIC_MATRIX_SIZE] = {};
+    chernov::matrixInput(input, matrix, rows, cols);
     if (!input) {
       std::cerr << "Incorrect input\n";
       return 2;
     }
 
-    chernov::min_sum_mdg(output, matrix, rows, cols);
-    chernov::fll_inc_wav(output, matrix, rows, cols);
+    chernov::minSumMdg(output, matrix, rows, cols);
+    chernov::fllIncWav(output, matrix, rows, cols);
     return 0;
   }
 
   int * matrix = new int [rows * cols];
-  chernov::matrix_input(input, matrix, rows, cols);
+  chernov::matrixInput(input, matrix, rows, cols);
   if (!input) {
     std::cerr << "Incorrect input\n";
     delete [] matrix;
@@ -132,8 +144,8 @@ int main(int argc, char ** argv)
   }
 
   try {
-    chernov::min_sum_mdg(output, matrix, rows, cols);
-    chernov::fll_inc_wav(output, matrix, rows, cols);
+    chernov::minSumMdg(output, matrix, rows, cols);
+    chernov::fllIncWav(output, matrix, rows, cols);
   } catch (const std::exception & e) {
     delete [] matrix;
     throw;
