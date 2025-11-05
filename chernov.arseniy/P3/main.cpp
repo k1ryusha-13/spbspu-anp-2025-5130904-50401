@@ -81,13 +81,13 @@ void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, siz
   int min_sum = std::numeric_limits< int >::max(), sum = 0;
 
   for (size_t x = 0; x < cols; ++x) {
-    int sum = getSumAntiDiagonal(mtx, x, 0, rows, cols);
+    sum = getSumAntiDiagonal(mtx, x, 0, rows, cols);
     if (sum < min_sum) {
       min_sum = sum;
     }
   }
   for (size_t y = 1; y < rows; ++y) {
-    int sum = getSumAntiDiagonal(mtx, cols - 1, y, rows, cols);
+    sum = getSumAntiDiagonal(mtx, cols - 1, y, rows, cols);
     if (sum < min_sum) {
       min_sum = sum;
     }
