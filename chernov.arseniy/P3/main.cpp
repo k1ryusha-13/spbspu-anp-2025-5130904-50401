@@ -78,7 +78,6 @@ void chernov::min_sum_mdg(std::ostream & output, int mtx[], size_t rows, size_t 
   size_t x = 0, y = 0;
   while (x < cols && y < rows) {
     sum = get_sum_antidiagonal(mtx, x, y, rows, cols);
-    std::cout << sum << "\n";
     if (sum < min_sum) min_sum = sum;
     if (x < rows - 1) ++x;
     else ++y;
@@ -121,8 +120,8 @@ int main(int argc, char ** argv)
       return 2;
     }
 
-    // chernov::fll_inc_wav(output, matrix, rows, cols);
     chernov::min_sum_mdg(output, matrix, rows, cols);
+    chernov::fll_inc_wav(output, matrix, rows, cols);
     return 0;
   }
 
@@ -135,6 +134,7 @@ int main(int argc, char ** argv)
   }
 
   try {
+    chernov::min_sum_mdg(output, matrix, rows, cols);
     chernov::fll_inc_wav(output, matrix, rows, cols);
   } catch (const std::exception & e) {
     delete [] matrix;
