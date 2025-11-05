@@ -6,8 +6,8 @@ namespace zharov
 {
   bool isArgNum(const char * arg);
   bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
-  bool UppTriMtx(int * mtx, size_t rows, size_t cols);
-  size_t CntColNsm(int * mtx, size_t rows, size_t cols);
+  bool UppTriMtx(const int * mtx, size_t rows, size_t cols);
+  size_t CntColNsm(const int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -38,7 +38,8 @@ int main(int argc, char ** argv)
   }
 
   if (argv[1][0] == '1') {
-    int matrix[10000] = {};
+    constexpr size_t MAX_MATRIX_SIZE = 10000;
+    int matrix[MAX_MATRIX_SIZE] = {};
     if (!zharov::createMatrix(input, matrix, rows, cols)) {
       return 2;
     }
@@ -98,7 +99,7 @@ bool zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t c
   return true;
 }
 
-bool zharov::UppTriMtx(int * mtx, size_t rows, size_t cols)
+bool zharov::UppTriMtx(const int * mtx, size_t rows, size_t cols)
 {
   if (rows != cols) {
     rows = (rows > cols) ? cols : rows;
@@ -119,7 +120,7 @@ bool zharov::UppTriMtx(int * mtx, size_t rows, size_t cols)
   return true;
 }
 
-size_t zharov::CntColNsm(int * mtx, size_t rows, size_t cols)
+size_t zharov::CntColNsm(const int * mtx, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return 0;
