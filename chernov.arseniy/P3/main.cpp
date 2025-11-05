@@ -93,10 +93,10 @@ int main(int argc, char ** argv)
   } else if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
-  } else if (! chernov::isNumber(argv[1])) {
+  } else if (!chernov::isNumber(argv[1])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
-  } else if (! ((argv[1][0] == '1' || argv[1][0] == '2') && argv[1][1] == '\0')) {
+  } else if (!((argv[1][0] == '1' || argv[1][0] == '2') && argv[1][1] == '\0')) {
     std::cerr << "First parameter is out of range\n";
     return 1;
   }
@@ -105,7 +105,7 @@ int main(int argc, char ** argv)
   std::ofstream output(argv[3]);
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
-  if (! input) {
+  if (!input) {
     std::cerr << "Incorrect input\n";
     return 2;
   }
@@ -113,7 +113,7 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1') {
     int matrix[10000] = {};
     chernov::matrix_input(input, matrix, rows, cols);
-    if (! input) {
+    if (!input) {
       std::cerr << "Incorrect input\n";
       return 2;
     }
@@ -125,7 +125,7 @@ int main(int argc, char ** argv)
 
   int * matrix = new int [rows * cols];
   chernov::matrix_input(input, matrix, rows, cols);
-  if (! input) {
+  if (!input) {
     std::cerr << "Incorrect input\n";
     delete [] matrix;
     return 2;
@@ -138,4 +138,5 @@ int main(int argc, char ** argv)
     delete [] matrix;
     throw;
   }
+  delete [] matrix;
 }
