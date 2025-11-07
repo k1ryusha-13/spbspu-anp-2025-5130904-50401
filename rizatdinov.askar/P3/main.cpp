@@ -3,7 +3,7 @@
 #include <memory>
 #include <limits>
 
-namespace rizatdinov 
+namespace rizatdinov
 {
   bool willOverflow(int result, int digit, int multiplier);
   int stringToInt(const char * string);
