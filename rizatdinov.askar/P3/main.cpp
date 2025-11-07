@@ -157,7 +157,7 @@ int rizatdinov::stringToInt(const char * string)
   }
   for (int i = count - 1; i >= start_limit; --i)
   {
-    digit = ((int)string[i]) - 48;
+    digit = static_cast<int>(string[i]) - 48;
     if (riz::willOverflow(result, digit, multiplier))
     {
       throw std::overflow_error("overflow");
