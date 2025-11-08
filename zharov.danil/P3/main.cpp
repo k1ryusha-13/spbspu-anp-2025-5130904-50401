@@ -51,7 +51,7 @@ int main(int argc, char ** argv)
       free(matrix);
       return 2;
     }
-    
+
     input.close();
     std::ofstream output(argv[3]);
     output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
@@ -106,24 +106,6 @@ std::istream& zharov::createMatrix(std::istream & input, int * mtx, size_t rows,
     }
   }
   return input;
-}
-
-bool zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
-{
-  size_t count = 0;
-  while (input >> mtx[count]) {
-    ++count;
-  }
-  if (input.eof()) {
-    if (count < (rows * cols)) {
-      std::cerr << "Not enough numbers\n";
-      return false;
-    }
-  } else if (input.fail()) {
-    std::cerr << "Bad read (wrong value)\n";
-    return false;
-  }
-  return true;
 }
 
 bool zharov::UppTriMtx(const int * mtx, size_t rows, size_t cols)
