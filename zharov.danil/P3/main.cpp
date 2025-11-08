@@ -48,7 +48,6 @@ int main(int argc, char ** argv)
       } else {
         std::cerr << "Bad read (wrong value)\n";
       }
-      free(matrix);
       return 2;
     }
 
