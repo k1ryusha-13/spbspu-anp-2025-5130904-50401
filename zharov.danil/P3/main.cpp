@@ -5,7 +5,7 @@
 namespace zharov
 {
   bool isArgNum(const char * arg);
-  std::istream& zharov::createMatrix(std::istream& input, int* mtx, size_t rows, size_t cols);
+  std::istream& createMatrix(std::istream& input, int* mtx, size_t rows, size_t cols);
   bool UppTriMtx(const int * mtx, size_t rows, size_t cols);
   size_t CntColNsm(const int * mtx, size_t rows, size_t cols);
 }
