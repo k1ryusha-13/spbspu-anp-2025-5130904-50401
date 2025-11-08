@@ -5,7 +5,7 @@
 namespace zharov
 {
   bool isArgNum(const char * arg);
-  bool createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  std::istream& zharov::createMatrix(std::istream& input, int* mtx, size_t rows, size_t cols);
   bool UppTriMtx(const int * mtx, size_t rows, size_t cols);
   size_t CntColNsm(const int * mtx, size_t rows, size_t cols);
 }
@@ -40,9 +40,18 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1') {
     constexpr size_t MAX_MATRIX_SIZE = 10000;
     int matrix[MAX_MATRIX_SIZE] = {};
-    if (!zharov::createMatrix(input, matrix, rows, cols)) {
+
+    zharov::createMatrix(input, matrix, rows, cols);
+    if (!input) {
+      if (input.eof()) {
+        std::cerr << "Not enough numbers\n";
+      } else {
+        std::cerr << "Bad read (wrong value)\n";
+      }
+      free(matrix);
       return 2;
     }
+    
     input.close();
     std::ofstream output(argv[3]);
     output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
@@ -55,16 +64,24 @@ int main(int argc, char ** argv)
     std::cerr << "Bad alloc\n";
     return 2;
   }
-  if (!zharov::createMatrix(input, matrix, rows, cols)) {
-    free(matrix);
-      return 2;
+
+  zharov::createMatrix(input, matrix, rows, cols);
+  if (!input) {
+    if (input.eof()) {
+      std::cerr << "Not enough numbers\n";
+    } else {
+      std::cerr << "Bad read (wrong value)\n";
     }
-    input.close();
-    std::ofstream output(argv[3]);
-    output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
-    output << zharov::CntColNsm(matrix, rows, cols) << "\n";
     free(matrix);
-    return 0;
+    return 2;
+  }
+
+  input.close();
+  std::ofstream output(argv[3]);
+  output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
+  output << zharov::CntColNsm(matrix, rows, cols) << "\n";
+  free(matrix);
+  return 0;
 }
 
 bool zharov::isArgNum(const char * arg)
@@ -79,6 +96,16 @@ bool zharov::isArgNum(const char * arg)
     }
   }
   return true;
+}
+
+std::istream& zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+{
+  for (size_t i = 0; i < rows * cols; ++i) {
+    if (!(input >> mtx[i])) {
+      break;
+    }
+  }
+  return input;
 }
 
 bool zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
