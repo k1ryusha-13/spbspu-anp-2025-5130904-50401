@@ -10,6 +10,32 @@ void convertIncMatrix(int * mtx, size_t rows, size_t cols);
 size_t getNumCol(const int * mtx, size_t rows, size_t cols);
 void output(const int * mtx, size_t rows, size_t cols);
 
+int main()
+{
+  size_t a1 = 0, r = 0, c = 0;
+  std::cin >> r >> c;
+  if (a1 == 1)
+  {
+    int matrix[10000];
+    input(matrix, r, c);
+    size_t res = getNumCol(matrix, r, c);
+    convertIncMatrix(matrix, r, c);
+    output(matrix, r, c);
+    std::cout << res << "\n";
+    return 0;
+  }
+  else if (a1 == 2)
+  {
+    int * matrix = create(r, c);
+    input(matrix, r, c);
+    size_t res = getNumCol(matrix, r, c);
+    convertIncMatrix(matrix, r, c);
+    output(matrix, r, c);
+    std::cout << res << "\n";
+    return 0;
+  }
+}
+
 void destroy(int * mtx)
 {
   delete[] mtx;
@@ -48,7 +74,7 @@ size_t min(size_t a, size_t b)
 
 void convertIncMatrix(int * mtx, size_t rows, size_t cols)
 {
-  size_t layer = min(rows, cols) / 2 + min(rows, cols) % 2, ind = 0;
+  size_t layer = min(rows, cols) / 2 + min(rows, cols) % 2;
   for (size_t k = 0; k < layer; ++k)
   {
     for (size_t i = k; i < rows - k; ++i)
@@ -98,9 +124,4 @@ void output(const int * mtx, size_t rows, size_t cols)
     }
     std::cout << "\n";
   }
-}
-
-int main()
-{
-  
 }
