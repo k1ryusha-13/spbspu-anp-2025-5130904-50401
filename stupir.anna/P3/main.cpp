@@ -1,6 +1,27 @@
 #include <iostream>
 #include <fstream>
 
+int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
+{
+  if(firstArg == "1")
+  {
+    arr[rows * cols] = {};
+  }
+  else
+  {
+    arr = new int[rows * cols];
+  }
+  return arr;
+}
+
+void readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
+{
+  for (size_t i = 0; i < rows * cols; ++ i)
+    {
+      input >> arr[i];
+    }
+}
+
 int main(int argc, char ** argv)
 {
   if (argc < 4)
@@ -22,5 +43,53 @@ int main(int argc, char ** argv)
   {
     std::cerr << "First parametr out of range\n";
     return 1;
+  }
+
+  const char * firstArg = argv[1];    
+  const char * secondArg = argv[2];    
+  const char * thirdArg = argv[3];
+  
+  std::ifstream input(secondArg);
+  if (!input.is_open()) 
+  {
+    std::cerr << "Error when opening a file\n";  
+    return 2;
+  }
+
+  size_t rows = 0;
+  size_t cols = 0;
+  input >> rows;
+  input >> cols;
+  if (input.fail() || (!rows && cols) || (rows && !cols))
+  {
+    std::cerr << "Irregular matrix sizes\n";
+    return 2;
+  }
+  if (!rows && !cols)
+  {
+    std::cout << 0;
+    return 0;
+  }
+
+  int * arr = nullptr;
+  try
+  {
+    arr = create(arr, firstArg, rows, cols);
+    readArr(input, rows, cols, arr);
+    if (input.fail())
+    {
+      std::cerr << "Non-correct values of matrix elements\n";
+      return 2;
+    }
+  }
+  catch (const std::bad_alloc& e)
+  {
+    std::cerr << "Not enough memory\n";
+    return 2;
+  }
+  
+  if (firstArg == "2")
+  {
+    delete [] arr;
   }
 }
