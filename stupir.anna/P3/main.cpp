@@ -22,6 +22,22 @@ void readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
     }
 }
 
+void writeArr(std::ofstream& output, size_t rows, size_t cols, int * arr)
+{
+  if (!output.fail())
+  {
+    output << arr[0];
+    for (size_t i = 1; i < rows * cols; ++ i)
+    {
+      output << " " << arr[i];
+    }
+  }
+  else
+  {
+    std::cerr << "Сouldn't open the file for writing\n";
+  }
+}
+
 int main(int argc, char ** argv)
 {
   if (argc < 4)
@@ -81,6 +97,7 @@ int main(int argc, char ** argv)
       std::cerr << "Non-correct values of matrix elements\n";
       return 2;
     }
+    input.close();
   }
   catch (const std::bad_alloc& e)
   {
@@ -88,6 +105,9 @@ int main(int argc, char ** argv)
     return 2;
   }
   
+  std::ofstream output(thirdArg);
+  writeArr(output, rows, cols, arr);
+
   if (firstArg == "2")
   {
     delete [] arr;
