@@ -1,4 +1,26 @@
-int main()
+#include <iostream>
+#include <fstream>
+
+int main(int argc, char ** argv)
 {
-  
+  if (argc < 4)
+  {
+    std::cerr << "Not enough argument\n";
+    return 1;
+  }
+  else if (argc > 4)
+  {
+    std::cerr << "Too many arguments\n";
+    return 1;
+  }
+  else if (argv[1][0] < '0' || argv[1][0] > '9')
+  {
+    std::cerr << "First parametr isn't a number\n";
+    return 1;
+  }
+  else if (argv[1][0] != '1' && argv[1][0] != '2')
+  {
+    std::cerr << "First parametr out of range\n";
+    return 1;
+  }
 }
