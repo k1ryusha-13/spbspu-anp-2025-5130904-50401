@@ -7,13 +7,12 @@ namespace goltsov
   long long * create(size_t rows, size_t cols);
   void destroy(long long * mtx);
   void get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
-  bool LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
-  size_t CNTLOCMAX(long long * mtx, size_t rows, size_t cols);
+  bool LWRTRIMTX(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
+  size_t CNTLOCMAX(const long long * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
 {
-  // Получение параметров из командной строки
   if (argc < 4)
   {
     std::cerr << "Not enough arguments\n";
@@ -44,7 +43,6 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  // Получение матрицы
   std::ifstream input(argv[2]);
   size_t rows = 0;
   size_t cols = 0;
@@ -82,7 +80,6 @@ int main(int argc, char ** argv)
     }
   }
 
-  // LWR-TRI-MTX
   bool answear_1 = goltsov::LWRTRIMTX(
     num == 1 ? auto_mtx : dyn_mtx,
     rows < cols ? rows : cols,
@@ -92,14 +89,12 @@ int main(int argc, char ** argv)
     rows < cols ? 1 : 0
   );
 
-  // CNT-LOC-MAX
   size_t answear_2 = goltsov::CNTLOCMAX(
     num == 1 ? auto_mtx : dyn_mtx,
     rows,
     cols
   );
 
-  // Вывод результата
   std::ofstream output(argv[3]);
   output << "Expects output (return code 0): " << answear_1 << '\n';
   output << "Expects output (return code 0): " << answear_2 << '\n';
@@ -112,7 +107,7 @@ int main(int argc, char ** argv)
   return 0;
 }
 
-bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
+bool goltsov::LWRTRIMTX(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
 {
   for (size_t sh = 0; sh <= shift; sh++)
   {
@@ -137,7 +132,7 @@ bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, si
   return false;
 }
 
-size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
+size_t goltsov::CNTLOCMAX(const long long * mtx, size_t rows, size_t cols)
 {
   size_t answear = 0;
   if (rows <= 2 || cols <= 2)
