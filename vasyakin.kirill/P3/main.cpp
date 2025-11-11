@@ -120,6 +120,14 @@ int quantity_dynamic(const int * const * a, size_t rows, size_t cols)
   }
   return count;
 }
+size_t min(size_t rows, size_t cols)
+{
+  if (rows >= cols)
+  {
+    return cols;
+  }
+  return rows;
+}
 int main()
 {
 }
