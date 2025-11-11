@@ -30,7 +30,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  size_t num = 0;
+  int num = 0;
   for (size_t i = 0; argv[1][i] != '\0'; ++i)
   {
     if (argv[1][i] >= '0' && argv[1][i] <= '9')
@@ -54,6 +54,11 @@ int main(int argc, char ** argv)
   size_t rows = 0;
   size_t cols = 0;
   input >> rows >> cols;
+  if (!input)
+  {
+    std::cerr << "Bad input\n";
+    return 2;
+  }
 
   long long * dynMtx = nullptr;
   long long autoMtx[10000];
@@ -75,7 +80,7 @@ int main(int argc, char ** argv)
     }
     catch (const std::bad_alloc & e)
     {
-      std::cerr << "Bad alloc " << e.what() << '\n';
+      std::cerr << e.what() << '\n';
       return 3;
     }
 
@@ -91,7 +96,7 @@ int main(int argc, char ** argv)
   bool answer1 = goltsov::lwrTriMtx(
     num == 1 ? autoMtx : dynMtx,
     rows < cols ? rows : cols,
-    rows < cols ? (cols - rows) : (cols - rows),
+    rows < cols ? (cols - rows) : (rows - cols),
     rows < cols ? rows : cols,
     rows < cols ? 0 : 1,
     rows < cols ? 1 : 0
