@@ -129,9 +129,8 @@ bool goltsov::lwrTriMtx(const long long * mtx,
 {
   for (size_t sh = 0; sh <= shift; ++sh)
   {
-    
     bool flag = false;
-    
+
     for (size_t i = 0; i < n - 1; ++i)
     {
       for (size_t j = i + 1; j < n; ++j)
@@ -142,12 +141,13 @@ bool goltsov::lwrTriMtx(const long long * mtx,
           break;
         }
       }
+
       if (flag)
       {
         break;
       }
     }
-    
+
     if (!flag)
     {
       return true;
