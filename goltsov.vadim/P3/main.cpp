@@ -127,6 +127,11 @@ bool goltsov::lwrTriMtx(const long long * mtx,
   size_t flag1,
   size_t flag2)
 {
+  if (n == 0)
+  {
+    return true;
+  }
+
   for (size_t sh = 0; sh <= shift; ++sh)
   {
     bool flag = false;
@@ -203,6 +208,11 @@ void goltsov::destroy(long long * mtx)
 
 void goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input)
 {
+  if (rows == 0 || cols == 0)
+  {
+    return;
+  }
+
   for (size_t i = 0; i < rows; ++i)
   {
     for (size_t j = 0; j < cols; ++j)
