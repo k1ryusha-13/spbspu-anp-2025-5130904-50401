@@ -2,13 +2,16 @@
 #include <cstddef>
 #include <limits>
 
-void destroy(int * mtx);
-int * create(size_t rows, size_t cols);
-void input(int * mtx, size_t rows, size_t cols);
-size_t min(size_t a, size_t b);
-void convertIncMatrix(int * mtx, size_t rows, size_t cols);
-size_t getNumCol(const int * mtx, size_t rows, size_t cols);
-void output(const int * mtx, size_t rows, size_t cols);
+namespace sedov
+{
+  void destroy(int * mtx);
+  int * create(size_t rows, size_t cols);
+  void input(int * mtx, size_t rows, size_t cols);
+  size_t min(size_t a, size_t b);
+  void convertIncMatrix(int * mtx, size_t rows, size_t cols);
+  size_t getNumCol(const int * mtx, size_t rows, size_t cols);
+  void output(const int * mtx, size_t rows, size_t cols);
+}
 
 int main()
 {
@@ -17,20 +20,20 @@ int main()
   if (a1 == 1)
   {
     int matrix[10000];
-    input(matrix, r, c);
-    size_t res = getNumCol(matrix, r, c);
-    convertIncMatrix(matrix, r, c);
-    output(matrix, r, c);
+    sedov::input(matrix, r, c);
+    size_t res = sedov::getNumCol(matrix, r, c);
+    sedov::convertIncMatrix(matrix, r, c);
+    sedov::output(matrix, r, c);
     std::cout << res << "\n";
     return 0;
   }
   else if (a1 == 2)
   {
-    int * matrix = create(r, c);
-    input(matrix, r, c);
-    size_t res = getNumCol(matrix, r, c);
-    convertIncMatrix(matrix, r, c);
-    output(matrix, r, c);
+    int * matrix = sedov::create(r, c);
+    sedov::input(matrix, r, c);
+    size_t res = sedov::getNumCol(matrix, r, c);
+    sedov::convertIncMatrix(matrix, r, c);
+    sedov::output(matrix, r, c);
     std::cout << res << "\n";
     return 0;
   }
