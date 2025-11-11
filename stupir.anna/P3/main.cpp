@@ -1,6 +1,69 @@
 #include <iostream>
 #include <fstream>
 
+bool checkAddSnail(size_t up, size_t down, size_t left, size_t right)
+{
+  return (up <= down && left <= right);
+}
+
+int * addSnail(int * arr, size_t rows, size_t cols)
+{
+  size_t sum = 1;
+  size_t left = 0; 
+  size_t right = cols - 1;
+  size_t up = 0;
+  size_t down = rows - 1;
+  while (checkAddSnail(up, down, left, right))
+  {
+    for (size_t i = down; i >= up; --i)
+    {
+      if (i > down)
+      {
+        break;
+      }
+      arr[cols * i + left] += sum;
+      sum++;
+    }
+    left++;
+    if (!checkAddSnail(up, down, left, right))
+    {
+      break;
+    }
+    for (size_t i = left; i < right + 1; ++i)
+    {
+      arr[up * cols + i] += sum;
+      sum++;
+    }
+    up++;
+    if (!checkAddSnail(up, down, left, right))
+    {
+      break;
+    }
+    for (size_t i = up; i < down + 1; ++i)
+    {
+      arr[cols * i + right] += sum;
+      sum++;
+    }
+    right--;
+    if (!checkAddSnail(up, down, left, right))
+    {
+      break;
+    }
+    for (size_t i = right; i >= left; --i)
+    {
+      if (i > right)
+      {
+        break;
+      }
+      arr[cols * down + i] += sum;
+      sum++;
+    }
+    down--;
+  }
+
+  return arr;
+}
+
 int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
 {
   if(firstArg == "1")
@@ -104,6 +167,8 @@ int main(int argc, char ** argv)
     std::cerr << "Not enough memory\n";
     return 2;
   }
+
+  arr = addSnail(arr, rows, cols);
   
   std::ofstream output(thirdArg);
   writeArr(output, rows, cols, arr);
