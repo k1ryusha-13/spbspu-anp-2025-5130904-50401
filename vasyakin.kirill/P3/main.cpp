@@ -2,6 +2,18 @@
 #include <cstddef>
 #include <limits>
 #include <fstream>
+namespace vasyakin
+{
+  void destroy(int ** a, size_t created);
+  void output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output);
+  void output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output);
+  int quantity_static(const int (* a) [100], size_t rows, size_t cols);
+  int ** create_matrix(size_t rows, size_t cols);
+  int quantity_dynamic(const int * const * a, size_t rows, size_t cols);
+  size_t min(size_t rows, size_t cols);
+  void spiral_dynamic(int ** a, size_t rows, size_t cols);
+  void spiral_static(int (* a) [100], size_t rows, size_t cols);
+}
 void destroy(int ** a, size_t created)
 {
   for (size_t i = 0; i < created; ++i)
