@@ -123,7 +123,7 @@ int vasyakin::quantity_dynamic(const int * const * a, size_t rows, size_t cols)
           is_max_in_col = false;
           break;
         }
-      } 
+      }
       if (is_min_in_row && is_max_in_col)
       {
         count++;
