@@ -316,4 +316,26 @@ int main(int argc, char ** argv)
         for (size_t j = 0; j < cols; ++j)
         {
           long long int temp = 0;
+          if (!(input >> temp))
+          {
+            if (input.eof())
+            {
+              vasyakin::destroy(matrix, rows);
+              throw std::runtime_error("unexpected end of input");
+            }
+            else if (input.fail())
+            {
+              input.clear();
+              vasyakin::destroy(matrix, rows);
+              throw std::runtime_error("unexpected input");
+            }
+          }
+          using lim_int = std::numeric_limits< int >;
+          const int MAX = lim_int::max();
+          const int MIN = lim_int::min();
+          if (temp > MAX || temp < MIN)
+          {
+            vasyakin::destroy(matrix, rows);
+            throw std::runtime_error("number out of int range");
+          }
 }
