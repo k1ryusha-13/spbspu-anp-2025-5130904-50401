@@ -68,6 +68,24 @@ int quantity_static(const int (* a) [100], size_t rows, size_t cols)
   }
   return count;
 }
+int ** create_matrix(size_t rows, size_t cols)
+{
+  int ** a = new int * [rows];
+  size_t created = 0;
+  try
+  {
+    for (; created < rows; created++)
+    {
+      a[created] = new int [cols];
+    }
+  }
+  catch (const std::bad_alloc &e)
+  {
+    destroy(a, created);
+    throw;
+  }
+  return a;
+}
 int main()
 {
 }
