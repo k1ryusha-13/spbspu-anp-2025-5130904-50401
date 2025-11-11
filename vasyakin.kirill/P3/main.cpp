@@ -343,4 +343,18 @@ int main(int argc, char ** argv)
       }
       int result = vasyakin::quantity_dynamic(matrix, rows, cols);
       output << result << '\n';
+      int ** matrix_copy = vasyakin::create_matrix(rows, cols);
+      for (size_t i = 0; i < rows; ++i)
+      {
+        for (size_t j = 0; j < cols; ++j)
+        {
+          matrix_copy[i][j] = matrix[i][j];
+        }
+      }
+      vasyakin::spiral_dynamic(matrix_copy, rows, cols);
+      vasyakin::output_dynamic(matrix_copy, rows, cols, output);
+      vasyakin::destroy(matrix, rows);
+      vasyakin::destroy(matrix_copy, rows);
+    }
+  }
 }
