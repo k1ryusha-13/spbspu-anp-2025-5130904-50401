@@ -357,4 +357,10 @@ int main(int argc, char ** argv)
       vasyakin::destroy(matrix_copy, rows);
     }
   }
+  catch (const std::exception &e)
+  {
+    std::cerr << e.what() << "\n";
+    return 2;
+  }
+  return 0;
 }
