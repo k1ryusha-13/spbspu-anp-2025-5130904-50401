@@ -129,37 +129,26 @@ bool goltsov::lwrTriMtx(const long long * mtx,
 {
   for (size_t sh = 0; sh <= shift; ++sh)
   {
-    size_t countNulls = 0;
-    size_t totalForNulls = 0;
-
+    
+    bool flag = false;
+    
     for (size_t i = 0; i < n - 1; ++i)
     {
       for (size_t j = i + 1; j < n; ++j)
       {
-        ++totalForNulls;
-        if (!mtx[(i + sh * flag1) * cols + j + sh * flag2])
-        {
-          ++countNulls;
-        }
-      }
-    }
-
-    size_t countDisNulls = 0;
-    size_t totalForDisNulls = 0;
-
-    for (size_t i = 0; i < n; ++i)
-    {
-      for (size_t j = 0; j < i + 1; ++j)
-      {
-        ++totalForDisNulls;
         if (mtx[(i + sh * flag1) * cols + j + sh * flag2])
         {
-          ++countDisNulls;
+          flag = true;
+          break;
         }
       }
+      if (flag)
+      {
+        break;
+      }
     }
-
-    if (countNulls == totalForNulls && countDisNulls == totalForDisNulls)
+    
+    if (!flag)
     {
       return true;
     }
