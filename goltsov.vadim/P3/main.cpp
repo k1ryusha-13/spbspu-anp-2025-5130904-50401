@@ -7,7 +7,12 @@ namespace goltsov
   long long * create(size_t rows, size_t cols);
   void destroy(long long * mtx);
   void get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
-  bool LWRTRIMTX(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
+  bool LWRTRIMTX(const long long * mtx,
+    size_t n,
+    size_t shift,
+    size_t cols,
+    size_t flag1,
+    size_t flag2);
   size_t CNTLOCMAX(const long long * mtx, size_t rows, size_t cols);
 }
 
@@ -24,7 +29,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  int num = 0;
+  size_t num = 0;
   for (size_t i = 0; argv[1][i] != '\0'; ++i)
   {
     if (argv[1][i] >= '0' && argv[1][i] <= '9')
@@ -107,7 +112,12 @@ int main(int argc, char ** argv)
   return 0;
 }
 
-bool goltsov::LWRTRIMTX(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
+bool goltsov::LWRTRIMTX(const long long * mtx,
+  size_t n,
+  size_t shift,
+  size_t cols,
+  size_t flag1,
+  size_t flag2)
 {
   for (size_t sh = 0; sh <= shift; sh++)
   {
@@ -143,9 +153,11 @@ size_t goltsov::CNTLOCMAX(const long long * mtx, size_t rows, size_t cols)
   {
     for (size_t j = 1; j < cols - 1; ++j)
     {
-      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] && mtx[i * cols + j] > mtx[(i + 1) * cols + j])
+      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] &&
+        mtx[i * cols + j] > mtx[(i + 1) * cols + j])
       {
-        if (mtx[i * cols + j] > mtx[i * cols + j - 1] && mtx[i * cols + j] > mtx[i * cols + j + 1])
+        if (mtx[i * cols + j] > mtx[i * cols + j - 1] &&
+          mtx[i * cols + j] > mtx[i * cols + j + 1])
         {
           ++answear;
         }
