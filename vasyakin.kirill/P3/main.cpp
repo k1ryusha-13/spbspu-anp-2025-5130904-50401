@@ -86,6 +86,40 @@ int ** create_matrix(size_t rows, size_t cols)
   }
   return a;
 }
+int quantity_dynamic(const int * const * a, size_t rows, size_t cols)
+{
+  int count = 0;
+  for (size_t i = 0; i < rows; ++i)
+  {
+    for (size_t j = 0; j < cols; ++j)
+    {
+      int current = a[i][j];
+      bool is_min_in_row = true;
+      bool is_max_in_col = true;
+      for (size_t f = 0; f < cols; ++f)
+      {
+        if (a[i][f] < current)
+        {
+          is_min_in_row = false;
+          break;
+        }
+      }
+      for (size_t f = 0; f < rows; ++f)
+      {
+        if (a[f][j] > current)
+        {
+          is_max_in_col = false;
+          break;
+        }
+      } 
+      if (is_min_in_row && is_max_in_col)
+      {
+        count++;
+      }
+    }
+  }
+  return count;
+}
 int main()
 {
 }
