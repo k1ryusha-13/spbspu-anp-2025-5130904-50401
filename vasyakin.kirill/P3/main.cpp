@@ -234,4 +234,17 @@ int main(int argc, char ** argv)
     std::cerr << "First parameter is not number" << "\n";
     return 1;
   }
+  int num = *argv[1] - '0';
+  std::ifstream input (argv[2]);
+  std::ofstream output (argv[3]);
+  if (!input)
+  {
+    std::cerr << "file not open" << "\n";
+    return 1;
+  }
+  if (!output)
+  {
+    std::cerr << "cannot create output file" << "\n";
+    return 1;
+  }
 }
