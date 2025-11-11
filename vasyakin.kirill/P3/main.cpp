@@ -308,4 +308,12 @@ int main(int argc, char ** argv)
       vasyakin::spiral_static(matrix_copy, rows, cols);
       vasyakin::output_static(matrix_copy, rows, cols, output);
     }
+    else
+    {
+      int ** matrix = vasyakin::create_matrix(rows, cols);
+      for (size_t i = 0; i < rows; ++i)
+      {
+        for (size_t j = 0; j < cols; ++j)
+        {
+          long long int temp = 0;
 }
