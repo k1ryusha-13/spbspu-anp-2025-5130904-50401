@@ -296,7 +296,7 @@ int main(int argc, char ** argv)
         }
       }
       int result = vasyakin::quantity_static(matrix, rows, cols);
-      output << result << "\n";
+      output << result << '\n';
       int matrix_copy[100][100];
       for (size_t i = 0; i < rows; ++i)
       {
@@ -338,4 +338,9 @@ int main(int argc, char ** argv)
             vasyakin::destroy(matrix, rows);
             throw std::runtime_error("number out of int range");
           }
+          matrix[i][j] = static_cast< int >(temp);
+        }
+      }
+      int result = vasyakin::quantity_dynamic(matrix, rows, cols);
+      output << result << '\n';
 }
