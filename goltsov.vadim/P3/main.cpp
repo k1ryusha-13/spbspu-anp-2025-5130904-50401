@@ -7,7 +7,7 @@ namespace goltsov
   long long * create(size_t rows, size_t cols);
   void destroy(long long * mtx);
   void get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
-  bool LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag);
+  bool LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag1, size_t flag2);
   size_t CNTLOCMAX(long long * mtx, size_t rows, size_t cols);
 }
 
@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
   }
 
   int num = 0;
-  for (int i = 0; argv[1][i] != '\0'; ++i)
+  for (size_t i = 0; argv[1][i] != '\0'; ++i)
   {
     if (argv[1][i] >= '0' && argv[1][i] <= '9')
     {
@@ -85,9 +85,10 @@ int main(int argc, char ** argv)
   bool answear_1 = goltsov::LWRTRIMTX(
     num == 1 ? auto_mtx : dyn_mtx,
     rows < cols ? rows : cols,
-    rows < cols ? (cols - rows) : (rows - cols),
+    rows < cols ? (cols - rows) : (cols - rows),
     rows,
-    rows < cols ? 0 : 1
+    rows < cols ? 0 : 1,
+    rows < cols ? 1 : 0
   );
 
   // CNT-LOC-MAX
@@ -108,23 +109,30 @@ int main(int argc, char ** argv)
   }
 }
 
-bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag)
+bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag1, size_t flag2)
 {
-  size_t bad_rez = 0;
+  
   for (size_t sh = 0; sh <= shift; sh++)
   {
-    for (size_t i = 0; i < n; ++i)
+    size_t bad_rez = 0;
+    size_t total = 0;
+    for (size_t i = 0; i < n - 1; ++i)
     {
       for (size_t j = i + 1; j < n; ++j)
       {
-        if (!mtx[(i + sh * flag) * rows + j + sh * flag])
+        ++total;
+        if (!mtx[(i + sh * flag1) * rows + j + sh * flag2])
         {
           ++bad_rez;
         }
       }
     }
+    if (bad_rez == total)
+    {
+      return true;
+    }
   }
-  return !(bad_rez == shift);
+  return false;
 }
 
 size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
@@ -134,9 +142,9 @@ size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
   {
     return 0;
   }
-  for (int i = 1; i < static_cast<int>(rows) - 1; ++i)
+  for (size_t i = 1; i < rows - 1; ++i)
   {
-    for (int j = 1; j < static_cast<int>(cols) - 1; ++j)
+    for (size_t j = 1; j < cols - 1; ++j)
     {
       if (mtx[i * rows + j] > mtx[(i - 1) * rows + j] && mtx[i * rows + j] > mtx[(i + 1) * rows + j])
       {
