@@ -21,7 +21,8 @@ int main(int argc, char ** argv)
   }
   if (argc > 4)
   {
-    std::cerr << "Too many argiments\n";
+    std::cerr << "Too many arguments\n";
+    return 1;
   }
 
   int num = 0;
@@ -33,13 +34,13 @@ int main(int argc, char ** argv)
     }
     else
     {
-      std::cerr << "First parametr is not a number\n";
+      std::cerr << "First parameter is not a number\n";
       return 1;
     }
   }
   if (num != 1 && num != 2)
   {
-    std::cerr << "First parametr is out of range\n";
+    std::cerr << "First parameter is out of range\n";
     return 1;
   }
 
@@ -86,7 +87,7 @@ int main(int argc, char ** argv)
     num == 1 ? auto_mtx : dyn_mtx,
     rows < cols ? rows : cols,
     rows < cols ? (cols - rows) : (cols - rows),
-    rows,
+    rows < cols ? rows : cols,
     rows < cols ? 0 : 1,
     rows < cols ? 1 : 0
   );
@@ -109,9 +110,8 @@ int main(int argc, char ** argv)
   }
 }
 
-bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag1, size_t flag2)
+bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
 {
-  
   for (size_t sh = 0; sh <= shift; sh++)
   {
     size_t bad_rez = 0;
@@ -121,7 +121,7 @@ bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, si
       for (size_t j = i + 1; j < n; ++j)
       {
         ++total;
-        if (!mtx[(i + sh * flag1) * rows + j + sh * flag2])
+        if (!mtx[(i + sh * flag1) * cols + j + sh * flag2])
         {
           ++bad_rez;
         }
@@ -146,9 +146,9 @@ size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
   {
     for (size_t j = 1; j < cols - 1; ++j)
     {
-      if (mtx[i * rows + j] > mtx[(i - 1) * rows + j] && mtx[i * rows + j] > mtx[(i + 1) * rows + j])
+      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] && mtx[i * cols + j] > mtx[(i + 1) * cols + j])
       {
-        if (mtx[i * rows + j] > mtx[i * rows + j - 1] && mtx[i * rows + j] > mtx[i * rows + j + 1])
+        if (mtx[i * cols + j] > mtx[i * cols + j - 1] && mtx[i * cols + j] > mtx[i * cols + j + 1])
         {
           ++answear;
         }
@@ -160,7 +160,7 @@ size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
 
 long long * goltsov::create(size_t rows, size_t cols)
 {
-  long long * mtx = reinterpret_cast<long long *>(malloc(sizeof(long long *) * rows * cols));
+  long long * mtx = reinterpret_cast<long long *>(malloc(sizeof(long long) * rows * cols));
   if (mtx == nullptr)
   {
     throw std::bad_alloc();
