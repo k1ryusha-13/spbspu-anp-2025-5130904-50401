@@ -4,14 +4,14 @@
 
 namespace goltsov
 {
-  long long * create(size_t rows, size_t cols);
-  void destroy(long long * mtx);
-  void get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
-  bool LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t rows, size_t flag1, size_t flag2);
-  size_t CNTLOCMAX(long long * mtx, size_t rows, size_t cols);
+  long long* create(size_t rows, size_t cols);
+  void destroy(long long* mtx);
+  void get_mtx(long long* mtx, size_t rows, size_t cols, std::istream& input);
+  bool LWRTRIMTX(long long* mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
+  size_t CNTLOCMAX(long long* mtx, size_t rows, size_t cols);
 }
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
   // Получение параметров из командной строки
   if (argc < 4)
@@ -50,7 +50,7 @@ int main(int argc, char ** argv)
   size_t cols = 0;
   input >> rows >> cols;
 
-  long long * dyn_mtx = nullptr;
+  long long* dyn_mtx = nullptr;
   long long auto_mtx[10000];
 
   if (num == 1)
@@ -68,7 +68,7 @@ int main(int argc, char ** argv)
     {
       dyn_mtx = goltsov::create(rows, cols);
     }
-    catch (const std::bad_alloc & e)
+    catch (const std::bad_alloc& e)
     {
       std::cerr << "Bad alloc" << e.what() << '\n';
       return 3;
@@ -108,9 +108,11 @@ int main(int argc, char ** argv)
   {
     goltsov::destroy(dyn_mtx);
   }
+
+  return 0;
 }
 
-bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
+bool goltsov::LWRTRIMTX(long long* mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2)
 {
   for (size_t sh = 0; sh <= shift; sh++)
   {
@@ -135,7 +137,7 @@ bool goltsov::LWRTRIMTX(long long * mtx, size_t n, size_t shift, size_t cols, si
   return false;
 }
 
-size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
+size_t goltsov::CNTLOCMAX(long long* mtx, size_t rows, size_t cols)
 {
   size_t answear = 0;
   if (rows <= 2 || cols <= 2)
@@ -146,9 +148,11 @@ size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
   {
     for (size_t j = 1; j < cols - 1; ++j)
     {
-      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] && mtx[i * cols + j] > mtx[(i + 1) * cols + j])
+      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] && 
+          mtx[i * cols + j] > mtx[(i + 1) * cols + j])
       {
-        if (mtx[i * cols + j] > mtx[i * cols + j - 1] && mtx[i * cols + j] > mtx[i * cols + j + 1])
+        if (mtx[i * cols + j] > mtx[i * cols + j - 1] && 
+            mtx[i * cols + j] > mtx[i * cols + j + 1])
         {
           ++answear;
         }
@@ -158,9 +162,9 @@ size_t goltsov::CNTLOCMAX(long long * mtx, size_t rows, size_t cols)
   return answear;
 }
 
-long long * goltsov::create(size_t rows, size_t cols)
+long long* goltsov::create(size_t rows, size_t cols)
 {
-  long long * mtx = reinterpret_cast<long long *>(malloc(sizeof(long long) * rows * cols));
+  long long* mtx = reinterpret_cast<long long*>(malloc(sizeof(long long) * rows * cols));
   if (mtx == nullptr)
   {
     throw std::bad_alloc();
@@ -168,12 +172,12 @@ long long * goltsov::create(size_t rows, size_t cols)
   return mtx;
 }
 
-void goltsov::destroy(long long * mtx)
+void goltsov::destroy(long long* mtx)
 {
   free(mtx);
 }
 
-void goltsov::get_mtx(long long * mtx, size_t rows, size_t cols, std::istream & input)
+void goltsov::get_mtx(long long* mtx, size_t rows, size_t cols, std::istream& input)
 {
   for (size_t i = 0; i < rows; ++i)
   {
