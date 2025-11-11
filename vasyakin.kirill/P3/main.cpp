@@ -297,4 +297,15 @@ int main(int argc, char ** argv)
       }
       int result = vasyakin::quantity_static(matrix, rows, cols);
       output << result << "\n";
+      int matrix_copy[100][100];
+      for (size_t i = 0; i < rows; ++i)
+      {
+        for (size_t j = 0; j < cols; ++j)
+        {
+          matrix_copy[i][j] = matrix[i][j];
+        }
+      }
+      vasyakin::spiral_static(matrix_copy, rows, cols);
+      vasyakin::output_static(matrix_copy, rows, cols, output);
+    }
 }
