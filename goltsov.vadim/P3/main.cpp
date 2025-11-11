@@ -97,7 +97,7 @@ int main(int argc, char ** argv)
     num == 1 ? autoMtx : dynMtx,
     rows < cols ? rows : cols,
     rows < cols ? (cols - rows) : (rows - cols),
-    rows < cols ? rows : cols,
+    cols,
     rows < cols ? 0 : 1,
     rows < cols ? 1 : 0
   );
@@ -129,22 +129,37 @@ bool goltsov::lwrTriMtx(const long long * mtx,
 {
   for (size_t sh = 0; sh <= shift; ++sh)
   {
-    size_t badRez = 0;
-    size_t total = 0;
+    size_t countNulls = 0;
+    size_t totalForNulls = 0;
 
     for (size_t i = 0; i < n - 1; ++i)
     {
       for (size_t j = i + 1; j < n; ++j)
       {
-        ++total;
+        ++totalForNulls;
         if (!mtx[(i + sh * flag1) * cols + j + sh * flag2])
         {
-          ++badRez;
+          ++countNulls;
         }
       }
     }
 
-    if (badRez == total)
+    size_t countDisNulls = 0;
+    size_t totalForDisNulls = 0;
+
+    for (size_t i = 0; i < n; ++i)
+    {
+      for (size_t j = 0; j < i + 1; ++j)
+      {
+        ++totalForDisNulls;
+        if (mtx[(i + sh * flag1) * cols + j + sh * flag2])
+        {
+          ++countDisNulls;
+        }
+      }
+    }
+
+    if (countNulls == totalForNulls && countDisNulls == totalForDisNulls)
     {
       return true;
     }
