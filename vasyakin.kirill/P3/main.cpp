@@ -247,4 +247,17 @@ int main(int argc, char ** argv)
     std::cerr << "cannot create output file" << "\n";
     return 1;
   }
+  try
+  {
+    size_t rows = 0, cols = 0;
+    if (!(input >> rows >> cols))
+    {
+      std::cerr << "cannot read matrix dimensions" << "\n";
+      return 2;
+    }
+    if (rows == 0 && cols == 0)
+    {
+      output << "0 0" << "\n";
+      return 0;
+    }
 }
