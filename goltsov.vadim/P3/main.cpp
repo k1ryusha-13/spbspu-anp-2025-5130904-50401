@@ -208,6 +208,10 @@ void goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & i
     for (size_t j = 0; j < cols; ++j)
     {
       input >> mtx[i * cols + j];
+      if (!input)
+      {
+        return;
+      }
     }
   }
 }
