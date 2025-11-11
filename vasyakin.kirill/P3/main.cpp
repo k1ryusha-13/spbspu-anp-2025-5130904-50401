@@ -14,7 +14,7 @@ namespace vasyakin
   void spiral_dynamic(int ** a, size_t rows, size_t cols);
   void spiral_static(int (* a) [100], size_t rows, size_t cols);
 }
-void destroy(int ** a, size_t created)
+void vasyakin::destroy(int ** a, size_t created)
 {
   for (size_t i = 0; i < created; ++i)
   {
@@ -22,7 +22,7 @@ void destroy(int ** a, size_t created)
   }
   delete[] a;
 }
-void output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output)
+void vasyakin::output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output)
 {
   for (size_t i = 0; i < rows; ++i)
   {
@@ -34,7 +34,7 @@ void output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstrea
     output << '\n';
   }
 }
-void output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output)
+void vasyakin::output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output)
 {
   for (size_t i = 0; i < rows; ++i)
   {
@@ -46,7 +46,7 @@ void output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstre
     output << '\n';
   }
 }
-int quantity_static(const int (* a) [100], size_t rows, size_t cols)
+int vasyakin::quantity_static(const int (* a) [100], size_t rows, size_t cols)
 {
   int count = 0;
   for (size_t i = 0; i < rows; ++i)
@@ -80,7 +80,7 @@ int quantity_static(const int (* a) [100], size_t rows, size_t cols)
   }
   return count;
 }
-int ** create_matrix(size_t rows, size_t cols)
+int ** vasyakin::create_matrix(size_t rows, size_t cols)
 {
   int ** a = new int * [rows];
   size_t created = 0;
@@ -93,12 +93,12 @@ int ** create_matrix(size_t rows, size_t cols)
   }
   catch (const std::bad_alloc &e)
   {
-    destroy(a, created);
+    vasyakin::destroy(a, created);
     throw;
   }
   return a;
 }
-int quantity_dynamic(const int * const * a, size_t rows, size_t cols)
+int vasyakin::quantity_dynamic(const int * const * a, size_t rows, size_t cols)
 {
   int count = 0;
   for (size_t i = 0; i < rows; ++i)
@@ -132,7 +132,7 @@ int quantity_dynamic(const int * const * a, size_t rows, size_t cols)
   }
   return count;
 }
-size_t min(size_t rows, size_t cols)
+size_t vasyakin::min(size_t rows, size_t cols)
 {
   if (rows >= cols)
   {
@@ -140,9 +140,9 @@ size_t min(size_t rows, size_t cols)
   }
   return rows;
 }
-void spiral_static(int (* a) [100], size_t rows, size_t cols)
+void vasyakin::spiral_static(int (* a) [100], size_t rows, size_t cols)
 {
-  size_t circle = min(rows, cols) / 2 + min(rows, cols) % 2;
+  size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
   size_t subtrahend = 1;
   for (size_t k = 0; k < circle; ++k)
   {
@@ -174,9 +174,9 @@ void spiral_static(int (* a) [100], size_t rows, size_t cols)
     }
   }
 }
-void spiral_dynamic(int ** a, size_t rows, size_t cols)
+void vasyakin::spiral_dynamic(int ** a, size_t rows, size_t cols)
 {
-  size_t circle = min(rows, cols) / 2 + min(rows, cols) % 2;
+  size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
   size_t subtrahend = 1;
   for (size_t k = 0; k < circle; ++k)
   {
