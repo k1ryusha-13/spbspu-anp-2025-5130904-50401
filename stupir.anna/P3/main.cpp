@@ -3,12 +3,18 @@
 
 namespace stupir
 {
+  int * create(size_t rows, size_t cols)
+  {
+    int * arr = new int[rows * cols];
+    return arr;
+  }
+
   bool checkAddSnail(size_t up, size_t down, size_t left, size_t right)
   {
     return (up <= down && left <= right);
   }
 
-  int * addSnail(int * arr, size_t rows, size_t cols)
+  void addSnail(const int * arr1, size_t rows, size_t cols, int * arr2)
   {
     size_t sum = 1;
     size_t left = 0; 
@@ -19,7 +25,7 @@ namespace stupir
     {
       for (size_t i = left; i < right + 1; ++i)
       {
-        arr[cols * down + i] += sum;
+        arr2[cols * down + i] += sum + arr1[cols * down + i];
         sum++;
       }
       down--;
@@ -31,10 +37,10 @@ namespace stupir
 
       for (size_t i = down; i > up ; --i)
       {
-        arr[cols * i + right] += sum;
+        arr2[cols * i + right] += sum + arr1[cols * i + right];
         sum++;
       }
-      arr[cols * up + right] += sum;
+      arr2[cols * up + right] += sum + arr1[cols * up + right];
       sum++;
       right--;
 
@@ -45,10 +51,10 @@ namespace stupir
 
       for (size_t i = right; i > left; --i)
       {
-        arr[up * cols + i] += sum;
+        arr2[up * cols + i] += sum + arr1[up * cols + i];
         sum++;
       }
-      arr[up * cols + left] += sum;
+      arr2[up * cols + left] += sum + arr1[up * cols + left];
       sum++;
       up++;
 
@@ -59,19 +65,25 @@ namespace stupir
 
       for (size_t i = up; i < down + 1; ++i)
       {
-        arr[cols * i + left] += sum;
+        arr2[cols * i + left] += sum + arr1[cols * i + left];
         sum++;
       }
       left++;
     }
-    return arr;
   }
 
   int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
   {
     if(firstArg == "1")
-    {
-      arr[rows * cols] = {};
+    { 
+      if (rows * cols < 10000)
+      {
+        arr[rows * cols] = {};
+      }
+      else
+      {
+        throw std::bad_alloc();
+      }
     }
     else
     {
@@ -128,14 +140,14 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  const char * firstArg = argv[1];    
-  const char * secondArg = argv[2];    
+  const char * firstArg = argv[1];
+  const char * secondArg = argv[2];
   const char * thirdArg = argv[3];
   
   std::ifstream input(secondArg);
   if (!input.is_open()) 
   {
-    std::cerr << "Error when opening a file\n";  
+    std::cerr << "Error when opening a file\n";
     return 2;
   }
 
@@ -155,6 +167,8 @@ int main(int argc, char ** argv)
   }
 
   int * arr = nullptr;
+  int * task1 = nullptr;
+  int * task2 = nullptr;
   namespace stu = stupir;
   try
   {
@@ -166,18 +180,24 @@ int main(int argc, char ** argv)
       return 2;
     }
     input.close();
+    task1 = stu::create(rows, cols);
+    stu::addSnail(arr, rows, cols, task1);
+    task2 = stu::create(rows, cols);
   }
   catch (const std::bad_alloc& e)
-  {
+  { 
+    delete [] arr;
+    delete [] task1;
     std::cerr << "Not enough memory\n";
     return 2;
   }
-  arr = stu::addSnail(arr, rows, cols);
   std::ofstream output(thirdArg);
-  stu::writeArr(output, rows, cols, arr);
+  stu::writeArr(output, rows, cols, task1);
 
   if (firstArg == "2")
   {
     delete [] arr;
   }
+  delete [] task1;
+  delete [] task2;
 }
