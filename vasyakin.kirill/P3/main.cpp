@@ -292,4 +292,9 @@ int main(int argc, char ** argv)
           {
             throw std::runtime_error("number out of int range");
           }
+          matrix[i][j] = static_cast< int >(temp);
+        }
+      }
+      int result = vasyakin::quantity_static(matrix, rows, cols);
+      output << result << "\n";
 }
