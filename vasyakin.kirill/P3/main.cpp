@@ -128,6 +128,40 @@ size_t min(size_t rows, size_t cols)
   }
   return rows;
 }
+void spiral_static(int (* a) [100], size_t rows, size_t cols)
+{
+  size_t circle = min(rows, cols) / 2 + min(rows, cols) % 2;
+  size_t subtrahend = 1;
+  for (size_t k = 0; k < circle; ++k)
+  {
+    for (size_t i = k; i < cols - k; ++i)
+    {
+      a[k][i] -= subtrahend;
+      subtrahend++;
+    }
+    for (size_t i = k + 1; i < rows - k; ++i)
+    {
+      a[i][cols - 1 - k] -= subtrahend;
+      subtrahend++;
+    }
+    if (k < rows - k - 1)
+    {
+      for (size_t i = cols - k - 2; i + 1 > k; --i)
+      {
+        a[rows - 1 - k][i] -= subtrahend;
+        subtrahend++;
+      }
+    }
+    if (k < cols - k - 1)
+    {
+      for (size_t i = rows - k - 2; i > k; --i)
+      {
+        a[i][k] -= subtrahend;
+        subtrahend++;
+      }
+    }
+  }
+}
 int main()
 {
 }
