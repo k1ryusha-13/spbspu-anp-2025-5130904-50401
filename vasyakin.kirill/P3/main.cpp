@@ -260,4 +260,17 @@ int main(int argc, char ** argv)
       output << "0 0" << "\n";
       return 0;
     }
+    if (num == 1)
+    {
+      if (rows * cols > 10000)
+      {
+        std::cerr << "too much" << "\n";
+        return 2;
+      }
+      int matrix[100][100];
+      for (size_t i = 0; i < rows; ++i)
+      {
+        for (size_t j = 0; j < cols; ++j)
+        {
+          long long int temp = 0;
 }
