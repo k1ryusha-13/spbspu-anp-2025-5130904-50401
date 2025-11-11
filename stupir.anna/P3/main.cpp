@@ -17,52 +17,53 @@ namespace stupir
     size_t down = rows - 1;
     while (checkAddSnail(up, down, left, right))
     {
-      for (size_t i = down; i >= up; --i)
-      {
-        if (i > down)
-        {
-          break;
-        }
-        arr[cols * i + left] += sum;
-        sum++;
-      }
-      left++;
-      if (!checkAddSnail(up, down, left, right))
-      {
-        break;
-      }
       for (size_t i = left; i < right + 1; ++i)
       {
-        arr[up * cols + i] += sum;
-        sum++;
-      }
-      up++;
-      if (!checkAddSnail(up, down, left, right))
-      {
-        break;
-      }
-      for (size_t i = up; i < down + 1; ++i)
-      {
-        arr[cols * i + right] += sum;
-        sum++;
-      }
-      right--;
-      if (!checkAddSnail(up, down, left, right))
-      {
-        break;
-      }
-      for (size_t i = right; i >= left; --i)
-      {
-        if (i > right)
-        {
-          break;
-        }
         arr[cols * down + i] += sum;
         sum++;
       }
       down--;
-    }
+      
+      if (!checkAddSnail(up, down, left, right))
+      {
+        break;
+      }
 
+      for (size_t i = down; i > up ; --i)
+      {
+        arr[cols * i + right] += sum;
+        sum++;
+      }
+      arr[cols * up + right] += sum;
+      sum++;
+      right--;
+
+      if (!checkAddSnail(up, down, left, right))
+      {
+        break;
+      }
+
+      for (size_t i = right; i > left; --i)
+      {
+        arr[up * cols + i] += sum;
+        sum++;
+      }
+      arr[up * cols + left] += sum;
+      sum++;
+      up++;
+
+      if (!checkAddSnail(up, down, left, right))
+      {
+        break;
+      }
+
+      for (size_t i = up; i < down + 1; ++i)
+      {
+        arr[cols * i + left] += sum;
+        sum++;
+      }
+      left++;
+    }
     return arr;
   }
 
