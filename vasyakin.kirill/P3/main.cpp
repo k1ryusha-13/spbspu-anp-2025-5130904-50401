@@ -24,26 +24,34 @@ void vasyakin::destroy(int ** a, size_t created)
 }
 void vasyakin::output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output)
 {
-  for (size_t i = 0; i < rows; ++i)
+  output << rows << ' ' << cols << '\n';
+  if (rows != 0 && cols != 0)
   {
-    output << a[i][0];
-    for (size_t j = 1; j < cols; ++j)
-    {
-      output << ' ' << a[i][j];
+    for (size_t i = 0; i < rows; ++i)
+    {		
+      output << a[i][0];
+      for (size_t j = 1; j < cols; ++j)
+      {
+        output << ' ' << a[i][j];
+      }
+      output << '\n';
     }
-    output << '\n';
   }
 }
 void vasyakin::output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output)
 {
-  for (size_t i = 0; i < rows; ++i)
+  output << rows << ' ' << cols << '\n';
+  if (rows != 0 && cols != 0)
   {
-    output << a[i][0];
-    for (size_t j = 1; j < cols; ++j)
+    for (size_t i = 0; i < rows; ++i)
     {
-      output << ' ' << a[i][j];
+      output << a[i][0];
+      for (size_t j = 1; j < cols; ++j)
+      {
+        output << ' ' << a[i][j];
+      }
+      output << '\n';
     }
-    output << '\n';
   }
 }
 int vasyakin::quantity_static(const int (* a) [100], size_t rows, size_t cols)
