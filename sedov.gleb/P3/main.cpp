@@ -1,16 +1,17 @@
 #include <iostream>
 #include <cstddef>
 #include <limits>
+#include <fstream>
 
 namespace sedov
 {
+  bool checkFirstArg(const char * a);
   void destroy(int * mtx);
   int * create(size_t rows, size_t cols);
-  void input(int * mtx, size_t rows, size_t cols);
-  size_t min(size_t a, size_t b);
+  size_t input_mtx(std::istream & input, int * mtx, size_t rows, size_t cols);
   void convertIncMatrix(int * mtx, size_t rows, size_t cols);
   size_t getNumCol(const int * mtx, size_t rows, size_t cols);
-  void output(const int * mtx, size_t rows, size_t cols);
+  void output_mtx(std::ostream & out, const int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -37,24 +38,82 @@ int main(int argc, char ** argv)
   }
 
   size_t r = 0, c = 0;
-  std::cin >> r >> c;
+  std::ifstream input(argv[2]);
+  if (!input.is_open())
+  {
+    std::cerr << "Can't open file\n";
+    return 2;
+  }
+  input >> r >> c;
+  if (!input)
+  {
+    std::cerr << "Bad reading\n";
+    input.close();
+    return 2;
+  }
+
   if (argv[1][0] == '1')
   {
     int matrix[10000];
-    sedov::input(matrix, r, c);
+    size_t st = sedov::input_mtx(input, matrix, r, c);
+    input.close();
+    if (st == 1)
+    {
+      std::cerr << "Not enough arguments for matrix\n";
+      return 2;
+    }
+    else if (st == 2)
+    {
+      std::cerr << "Bad reading file\n";
+      return 2;
+    }
     size_t res = sedov::getNumCol(matrix, r, c);
     sedov::convertIncMatrix(matrix, r, c);
-    sedov::output(matrix, r, c);
-    std::cout << res << "\n";
+    std::ofstream output(argv[3]);
+    sedov::output_mtx(output, matrix, r, c);
+    output << res << "\n";
     return 0;
   }
+
   int * matrix = sedov::create(r, c);
-  sedov::input(matrix, r, c);
+  if (matrix == nullptr)
+  {
+    std::cerr << "Bad alloc\n";
+    return 3;
+  }
+  size_t st = sedov::input_mtx(input, matrix, r, c);
+  input.close();
+  if (st == 1)
+  {
+    std::cerr << "Not enough arguments for matrix\n";
+    delete[] matrix;
+    return 2;
+  }
+  else if (st == 2)
+  {
+    std::cerr << "Bad reading file\n";
+    delete[] matrix;
+    return 2;
+  }
   size_t res = sedov::getNumCol(matrix, r, c);
   sedov::convertIncMatrix(matrix, r, c);
-  sedov::output(matrix, r, c);
-  std::cout << res << "\n";
+  std::ofstream output(argv[3]);
+  sedov::output(output, matrix, r, c);
+  sedov::destroy(matrix);
+  output << res << "\n";
   return 0;
+}
+
+bool checkFirstArg(const char * a)
+{
+  for (size_t i = 0; a[i] != '\0'; ++i)
+  {
+    if (a[i] < '0' || a[i] > '9')
+    {
+      return false;
+    }
+  }
+  return true;
 }
 
 void sedov::destroy(int * mtx)
@@ -65,36 +124,34 @@ void sedov::destroy(int * mtx)
 int * sedov::create(size_t rows, size_t cols)
 {
   int * mtx = nullptr;
-  try
-  {
-    mtx = new int[rows * cols];
-  }
-  catch (const std::bad_alloc &e)
-  {
-    destroy(mtx);
-    throw;
-  }
+  mtx = new int[rows * cols];
   return mtx;
 }
 
-void sedov::input(int * mtx, size_t rows, size_t cols)
+size_t sedov::input_mtx(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
-  for (size_t i = 0; i < rows; ++i)
+  size_t c = 0;
+  while (input >> mtx[c])
   {
-    for (size_t j = 0; j < cols; ++j)
+    ++c;
+  }
+  if (input.eof())
+  {
+    if (c < rows * cols)
     {
-      std::cin >> mtx[i * cols + j];
+      return 1;
     }
   }
-}
-
-size_t min(size_t a, size_t b)
-{
-  return a < b ? a : b;
+  else if (input.fail())
+  {
+    return 2;
+  }
+  return 0;
 }
 
 void sedov::convertIncMatrix(int * mtx, size_t rows, size_t cols)
 {
+  size_t minrc = (rows < cols) ? rows : cols;
   size_t layer = min(rows, cols) / 2 + min(rows, cols) % 2;
   for (size_t k = 0; k < layer; ++k)
   {
@@ -134,15 +191,15 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
   return maxCol;
 }
 
-void sedov::output(const int * mtx, size_t rows, size_t cols)
+void sedov::output_mtx(std::ostream & out, const int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows; ++i)
   {
-    std::cout << mtx[i * cols];
+    out << mtx[i * cols];
     for (size_t j = 1; j < cols; ++j)
     {
-      std::cout << " " << mtx[i * cols + j];
+      out << " " << mtx[i * cols + j];
     }
-    std::cout << "\n";
+    out << "\n";
   }
 }
