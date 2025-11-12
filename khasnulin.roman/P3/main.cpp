@@ -6,40 +6,42 @@
 
 namespace khasnulin
 {
-  size_t get_first_parametr(const char *num);
-  std::ostream &print_output(std::ostream &output, const int *a, size_t n, size_t m);
+  namespace ErrMessages
+  {
+    const char *manyArgs = "Too many arguments\n";
+    const char *notEnoughArgs = "Not enough arguments\n";
+    const char *FP_out_of_range = "First parameter is out of range\n";
+    const char *FP_not_a_number = "First parameter is not a number\n";
+  };
 
+  size_t get_first_parametr(const char *num);
+  void check_argc_validity(int argc);
+
+  std::ostream &print_output(std::ostream &output, const int *a, size_t n, size_t m);
 }
 
 int main(int argc, char **argv)
 {
-  if (argc == 4)
+  try
   {
-    try
-    {
-      char *num = argv[1];
-      size_t mode = khasnulin::get_first_parametr(num);
+    khasnulin::check_argc_validity(argc);
 
-      std::ifstream input(argv[2]);
-      size_t n = 0, m = 0;
-      input >> n >> m;
-      if (mode == 1)
-      {
-      }
-      else if (mode == 2)
-      {
-      }
-    }
-    catch (std::runtime_error &e)
+    char *num = argv[1];
+    size_t mode = khasnulin::get_first_parametr(num);
+
+    std::ifstream input(argv[2]);
+    size_t n = 0, m = 0;
+    input >> n >> m;
+    if (mode == 1)
     {
-      std::cerr << e.what() << "\n";
-      return 1;
+    }
+    else if (mode == 2)
+    {
     }
   }
-  else
+  catch (std::runtime_error &e)
   {
-    const char *Err_message = argc > 4 ? "Too many arguments\n" : "Not enough arguments\n";
-    std::cerr << Err_message;
+    std::cerr << e.what() << "\n";
     return 1;
   }
 }
@@ -53,7 +55,7 @@ size_t khasnulin::get_first_parametr(const char *num)
     std::cout << *ch << " ";
     if (*ch < '0' || *ch > '9')
     {
-      throw std::runtime_error("First parameter is not a number");
+      throw std::runtime_error(ErrMessages::FP_not_a_number);
     }
     len++;
     ch++;
@@ -71,12 +73,21 @@ size_t khasnulin::get_first_parametr(const char *num)
     }
     else
     {
-      throw std::runtime_error("First parameter is out of range");
+      throw std::runtime_error(ErrMessages::FP_out_of_range);
     }
   }
   else
   {
-    throw std::runtime_error("First parameter is out of range");
+    throw std::runtime_error(ErrMessages::FP_out_of_range);
+  }
+}
+
+void khasnulin::check_argc_validity(int argc)
+{
+  if (argc != 4)
+  {
+    const char *message = argc > 4 ? ErrMessages::manyArgs : ErrMessages::notEnoughArgs;
+    throw std::runtime_error(message);
   }
 }
 
