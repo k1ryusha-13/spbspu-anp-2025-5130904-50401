@@ -18,12 +18,14 @@ namespace khasnulin
     const char *unknown = "Error during task execution, something went wrong\n";
   };
 
-  size_t get_first_parametr(const char *num);
+  size_t get_first_parameter(const char *num);
   void check_argc_validity(int argc);
 
   std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m);
 
-  std::ostream &print_output(std::ostream &output, const int *a, size_t n, size_t m);
+  int *LFT_BOT_CLK(const int *arr, size_t n, size_t m);
+
+  std::ostream &print_matrix(std::ostream &output, const int *a, size_t n, size_t m);
 }
 
 int main(int argc, char **argv)
@@ -33,7 +35,7 @@ int main(int argc, char **argv)
     khasnulin::check_argc_validity(argc);
 
     char *num = argv[1];
-    size_t mode = khasnulin::get_first_parametr(num);
+    size_t mode = khasnulin::get_first_parameter(num);
 
     std::ifstream input(argv[2]);
     size_t n = 0, m = 0;
@@ -48,7 +50,13 @@ int main(int argc, char **argv)
       khasnulin::read_matrix(input, currArr, n, m);
 
       std::ofstream output(argv[3]);
-      khasnulin::print_output(output, currArr, n, m);
+
+      int *result = khasnulin::LFT_BOT_CLK(currArr, n, m);
+      khasnulin::print_matrix(std::cout, result, n, m);
+
+      delete[] result;
+      if (mode == 2)
+        delete currArr;
     }
     catch (std::runtime_error &e)
     {
@@ -81,13 +89,12 @@ int main(int argc, char **argv)
   }
 }
 
-size_t khasnulin::get_first_parametr(const char *num)
+size_t khasnulin::get_first_parameter(const char *num)
 {
   size_t len = 0;
   const char *ch = num;
   while (*ch)
   {
-    std::cout << *ch << " ";
     if (*ch < '0' || *ch > '9')
     {
       throw std::runtime_error(ErrMessages::FP_not_a_number);
@@ -106,15 +113,8 @@ size_t khasnulin::get_first_parametr(const char *num)
     {
       return 2;
     }
-    else
-    {
-      throw std::runtime_error(ErrMessages::FP_out_of_range);
-    }
   }
-  else
-  {
-    throw std::runtime_error(ErrMessages::FP_out_of_range);
-  }
+  throw std::runtime_error(ErrMessages::FP_out_of_range);
 }
 
 void khasnulin::check_argc_validity(int argc)
@@ -126,7 +126,63 @@ void khasnulin::check_argc_validity(int argc)
   }
 }
 
-std::istream &khasnulin::read_matrix(std::istream &input, int *arr, size_t n, size_t m)
+int *khasnulin::LFT_BOT_CLK(const int *arr, size_t n, size_t m)
+{
+  int *newArr = new int[n * m];
+  for (size_t i = 0; i < n * m; i++)
+  {
+    newArr[i] = arr[i];
+  }
+  if (n > 0 && m > 0)
+  {
+
+    size_t currI = (n - 1) * m;
+
+    int directionI = -1;
+    int directionJ = 0;
+    int factor = 1;
+    size_t spiral_circle = 0;
+    size_t elem_counter = 0;
+    for (size_t i = 0; i < n * m; i++)
+    {
+      newArr[currI] -= factor;
+      factor++;
+      elem_counter++;
+      if (directionI && elem_counter == (n - spiral_circle))
+      {
+        if (directionI == -1)
+        {
+          directionJ = 1;
+        }
+        else
+        {
+          directionJ = -1;
+        }
+        spiral_circle++;
+        elem_counter = 0;
+        directionI = 0;
+      }
+      else if (directionJ && elem_counter == (m - spiral_circle))
+      {
+        if (directionJ == -1)
+        {
+          directionI = -1;
+        }
+        else
+        {
+          directionI = 1;
+        }
+        elem_counter = 0;
+        directionJ = 0;
+      }
+      currI += directionI * m + directionJ;
+    }
+  }
+  return newArr;
+}
+
+using is_t = std::istream;
+is_t &khasnulin::read_matrix(is_t &input, int *arr, size_t n, size_t m)
 {
   size_t i = 0;
   while (input >> arr[i] && i < n * m)
@@ -141,16 +197,17 @@ std::istream &khasnulin::read_matrix(std::istream &input, int *arr, size_t n, si
 }
 
 using os_t = std::ostream;
-using s_t = size_t;
-os_t &khasnulin::print_output(os_t &output, const int *a, s_t n, s_t m)
+os_t &khasnulin::print_matrix(os_t &output, const int *a, size_t n, size_t m)
 {
-  for (s_t i = 0; i < n; i++)
+  output << n << " " << m << " ";
+  if (n > 0 && n > 0)
   {
-    for (s_t j = 0; j < m; j++)
+    for (size_t i = 0; i < n * m - 1; i++)
     {
-      output << a[i * m + j] << " ";
+      output << a[i] << " ";
     }
-    output << "\n";
+    output << a[m * n - 1];
   }
+  output << "\n";
   return output;
 }
