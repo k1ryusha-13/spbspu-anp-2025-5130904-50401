@@ -285,20 +285,23 @@ int main(int argc, char ** argv)
           {
             if (input.eof())
             {
-              throw std::runtime_error("unexpected end of input");
+              std::cerr << "Not enough elements for matrix" << '\n';
+              return 2;
             }
             else if (input.fail())
             {
               input.clear();
-              throw std::runtime_error("unexpected input");
+              std::cerr << "Unexpected input" << '\n';
+              return 2;
             }
           }
           using lim_int = std::numeric_limits< int >;
-          const int MAX = lim_int::max();
-          const int MIN = lim_int::min();
+          const long long int MAX = static_cast< long long int > (lim_int::max());
+          const long long int MIN = static_cast< long long int > (lim_int::min());
           if (temp > MAX || temp < MIN)
           {
-            throw std::runtime_error("number out of int range");
+            std::cerr << "number out of int range" << '\n';
+            return 2;
           }
           matrix[i][j] = static_cast< int >(temp);
         }
@@ -329,22 +332,25 @@ int main(int argc, char ** argv)
             if (input.eof())
             {
               vasyakin::destroy(matrix, rows);
-              throw std::runtime_error("unexpected end of input");
+              std::cerr << "Not enough elements for matrix" << '\n';
+              return 2;
             }
             else if (input.fail())
             {
               input.clear();
               vasyakin::destroy(matrix, rows);
-              throw std::runtime_error("unexpected input");
+              std::cerr << "Unexpected input" << '\n';
+              return 2;
             }
           }
           using lim_int = std::numeric_limits< int >;
-          const int MAX = lim_int::max();
-          const int MIN = lim_int::min();
+          const long long int MAX = static_cast< long long int > (lim_int::max());
+          const long long int MIN = static_cast< long long int > (lim_int::min());
           if (temp > MAX || temp < MIN)
           {
             vasyakin::destroy(matrix, rows);
-            throw std::runtime_error("number out of int range");
+            std::cerr << "number out of int range" << '\n';
+            return 2;
           }
           matrix[i][j] = static_cast< int >(temp);
         }
