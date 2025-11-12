@@ -173,7 +173,7 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
     size_t length = 0;
     for (size_t i = 1; i < rows; ++i)
     {
-      if (mtx[i * cols + j] == mtx[i * cols + j - 1])
+      if (mtx[i * rows + j] == mtx[(i - 1) * rows + j])
       {
         length += 1;
         if (length > maxLength)
@@ -193,13 +193,28 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
 
 void sedov::output_mtx(std::ostream & out, const int * mtx, size_t rows, size_t cols)
 {
-  for (size_t i = 0; i < rows; ++i)
+  if (rows && cols)
   {
-    out << mtx[i * cols];
-    for (size_t j = 1; j < cols; ++j)
+    out << rows << " " << cols << " ";
+    for (size_t i = 0; i < rows; ++i)
     {
-      out << " " << mtx[i * cols + j];
+      out << mtx[i * cols];
+      for (size_t j = 1; j < cols; ++j)
+      {
+        out << " " << mtx[i * cols + j];
+      }
+      if (i == rows - 1)
+      {
+        out << "\n";
+      }
+      else
+      {
+        out << " ";
+      }
     }
-    out << "\n";
+  }
+  else
+  {
+    out << rows << " " << cols << "\n";
   }
 }
