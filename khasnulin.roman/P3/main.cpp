@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <istream>
 #include <ostream>
 #include <stdexcept>
 
@@ -12,10 +13,15 @@ namespace khasnulin
     const char *notEnoughArgs = "Not enough arguments\n";
     const char *FP_out_of_range = "First parameter is out of range\n";
     const char *FP_not_a_number = "First parameter is not a number\n";
+    const char *input_file_not_valid = "Error while reading input file data, can't read as matrix\n";
+    const char *memory_bad_alloc = "Error memory allocation\n";
+    const char *unknown = "Error during task execution, something went wrong\n";
   };
 
   size_t get_first_parametr(const char *num);
   void check_argc_validity(int argc);
+
+  std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m);
 
   std::ostream &print_output(std::ostream &output, const int *a, size_t n, size_t m);
 }
@@ -31,12 +37,41 @@ int main(int argc, char **argv)
 
     std::ifstream input(argv[2]);
     size_t n = 0, m = 0;
+
+    int arr[10000] = {};
+    int *currArr = nullptr;
+
     input >> n >> m;
-    if (mode == 1)
+    try
     {
+      currArr = mode == 1 ? arr : new int[n * m];
+      khasnulin::read_matrix(input, currArr, n, m);
+
+      std::ofstream output(argv[3]);
+      khasnulin::print_output(output, currArr, n, m);
     }
-    else if (mode == 2)
+    catch (std::runtime_error &e)
     {
+      std::cerr << e.what() << "\n";
+      if (mode == 2)
+      {
+        delete[] currArr;
+      }
+      return 2;
+    }
+    catch (std::bad_alloc &e)
+    {
+      std::cerr << khasnulin::ErrMessages::memory_bad_alloc;
+      return 2;
+    }
+    catch (...)
+    {
+      std::cerr << khasnulin::ErrMessages::unknown;
+      if (mode == 2)
+      {
+        delete[] currArr;
+      }
+      return 2;
     }
   }
   catch (std::runtime_error &e)
@@ -89,6 +124,20 @@ void khasnulin::check_argc_validity(int argc)
     const char *message = argc > 4 ? ErrMessages::manyArgs : ErrMessages::notEnoughArgs;
     throw std::runtime_error(message);
   }
+}
+
+std::istream &khasnulin::read_matrix(std::istream &input, int *arr, size_t n, size_t m)
+{
+  size_t i = 0;
+  while (input >> arr[i] && i < n * m)
+  {
+    i++;
+  }
+  if ((!input.eof() && input.fail()) || i != n * m)
+  {
+    throw std::runtime_error(ErrMessages::input_file_not_valid);
+  }
+  return input;
 }
 
 using os_t = std::ostream;
