@@ -4,69 +4,46 @@
 #include <fstream>
 namespace vasyakin
 {
-  void destroy(int ** a, size_t created);
-  void output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output);
-  void output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output);
-  int quantity_static(const int (* a) [100], size_t rows, size_t cols);
-  int ** create_matrix(size_t rows, size_t cols);
-  int quantity_dynamic(const int * const * a, size_t rows, size_t cols);
+  void destroy(int * a);
+  void output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output);
+  int quantity_static_dynamic(const int * a, size_t rows, size_t cols);
+  int * create_matrix(size_t rows, size_t cols);
   size_t min(size_t rows, size_t cols);
-  void spiral_dynamic(int ** a, size_t rows, size_t cols);
-  void spiral_static(int (* a) [100], size_t rows, size_t cols);
+  void spiral_static_dynamic(int * a, size_t rows, size_t cols);
 }
-void vasyakin::destroy(int ** a, size_t created)
+void vasyakin::destroy(int * a)
 {
-  for (size_t i = 0; i < created; ++i)
-  {
-    delete[] a[i];
-  }
   delete[] a;
 }
-void vasyakin::output_static(const int (* a) [100], size_t rows, size_t cols, std::ofstream & output)
+void vasyakin::output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output)
 {
   output << rows << ' ' << cols << '\n';
   if (rows != 0 && cols != 0)
   {
     for (size_t i = 0; i < rows; ++i)
     {
-      output << a[i][0];
+      output << a[i * cols + 0];
       for (size_t j = 1; j < cols; ++j)
       {
-        output << ' ' << a[i][j];
+        output << ' ' << a[i * cols + j];
       }
       output << '\n';
     }
   }
 }
-void vasyakin::output_dynamic(const int * const * a, size_t rows, size_t cols, std::ofstream & output)
-{
-  output << rows << ' ' << cols << '\n';
-  if (rows != 0 && cols != 0)
-  {
-    for (size_t i = 0; i < rows; ++i)
-    {
-      output << a[i][0];
-      for (size_t j = 1; j < cols; ++j)
-      {
-        output << ' ' << a[i][j];
-      }
-      output << '\n';
-    }
-  }
-}
-int vasyakin::quantity_static(const int (* a) [100], size_t rows, size_t cols)
+int vasyakin::quantity_static_dynamic(const int * a, size_t rows, size_t cols)
 {
   int count = 0;
   for (size_t i = 0; i < rows; ++i)
   {
     for (size_t j = 0; j < cols; ++j)
     {
-      int current = a[i][j];
+      int current = a[i * cols + j];
       bool is_min_in_row = true;
       bool is_max_in_col = true;
       for (size_t f = 0; f < cols; ++f)
       {
-        if (a[i][f] < current)
+        if (a[i * cols + f]< current)
         {
           is_min_in_row = false;
           break;
@@ -74,7 +51,7 @@ int vasyakin::quantity_static(const int (* a) [100], size_t rows, size_t cols)
       }
       for (size_t f = 0; f < rows; ++f)
       {
-        if (a[f][j] > current)
+        if (a[f * cols + j] > current)
         {
           is_max_in_col = false;
           break;
@@ -88,57 +65,11 @@ int vasyakin::quantity_static(const int (* a) [100], size_t rows, size_t cols)
   }
   return count;
 }
-int ** vasyakin::create_matrix(size_t rows, size_t cols)
+int * vasyakin::create_matrix(size_t rows, size_t cols)
 {
-  int ** a = new int * [rows];
-  size_t created = 0;
-  try
-  {
-    for (; created < rows; created++)
-    {
-      a[created] = new int [cols];
-    }
-  }
-  catch (const std::bad_alloc &e)
-  {
-    vasyakin::destroy(a, created);
-    throw;
-  }
+  int * a = nullptr;
+  a = new int [rows * cols];
   return a;
-}
-int vasyakin::quantity_dynamic(const int * const * a, size_t rows, size_t cols)
-{
-  int count = 0;
-  for (size_t i = 0; i < rows; ++i)
-  {
-    for (size_t j = 0; j < cols; ++j)
-    {
-      int current = a[i][j];
-      bool is_min_in_row = true;
-      bool is_max_in_col = true;
-      for (size_t f = 0; f < cols; ++f)
-      {
-        if (a[i][f] < current)
-        {
-          is_min_in_row = false;
-          break;
-        }
-      }
-      for (size_t f = 0; f < rows; ++f)
-      {
-        if (a[f][j] > current)
-        {
-          is_max_in_col = false;
-          break;
-        }
-      }
-      if (is_min_in_row && is_max_in_col)
-      {
-        count++;
-      }
-    }
-  }
-  return count;
 }
 size_t vasyakin::min(size_t rows, size_t cols)
 {
@@ -148,7 +79,7 @@ size_t vasyakin::min(size_t rows, size_t cols)
   }
   return rows;
 }
-void vasyakin::spiral_static(int (* a) [100], size_t rows, size_t cols)
+void vasyakin::spiral_static_dynamic(int * a, size_t rows, size_t cols)
 {
   size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
   size_t subtrahend = 1;
@@ -156,19 +87,19 @@ void vasyakin::spiral_static(int (* a) [100], size_t rows, size_t cols)
   {
     for (size_t i = k; i < cols - k; ++i)
     {
-      a[k][i] -= subtrahend;
+      a[k * cols + i] -= subtrahend;
       subtrahend++;
     }
     for (size_t i = k + 1; i < rows - k; ++i)
     {
-      a[i][cols - 1 - k] -= subtrahend;
+      a[i * cols + (cols - 1 - k)] -= subtrahend;
       subtrahend++;
     }
     if (k < rows - k - 1)
     {
       for (size_t i = cols - k - 2; i + 1 > k; --i)
       {
-        a[rows - 1 - k][i] -= subtrahend;
+        a[(rows - 1 - k) * cols + i] -= subtrahend;
         subtrahend++;
       }
     }
@@ -176,41 +107,7 @@ void vasyakin::spiral_static(int (* a) [100], size_t rows, size_t cols)
     {
       for (size_t i = rows - k - 2; i > k; --i)
       {
-        a[i][k] -= subtrahend;
-        subtrahend++;
-      }
-    }
-  }
-}
-void vasyakin::spiral_dynamic(int ** a, size_t rows, size_t cols)
-{
-  size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
-  size_t subtrahend = 1;
-  for (size_t k = 0; k < circle; ++k)
-  {
-    for (size_t i = k; i < cols - k; ++i)
-    {
-      a[k][i] -= subtrahend;
-      subtrahend++;
-    }
-    for (size_t i = k + 1; i < rows - k; ++i)
-    {
-      a[i][cols - 1 - k] -= subtrahend;
-      subtrahend++;
-    }
-    if (k < rows - k - 1)
-    {
-      for (size_t i = cols - k - 2; i + 1 > k; --i)
-      {
-        a[rows - 1 - k][i] -= subtrahend;
-        subtrahend++;
-      }
-    }
-    if (k < cols - k - 1)
-    {
-      for (size_t i = rows - k - 2; i > k; --i)
-      {
-        a[i][k] -= subtrahend;
+        a[i * cols + k] -= subtrahend;
         subtrahend++;
       }
     }
@@ -270,17 +167,12 @@ int main(int argc, char ** argv)
     }
     if (num == 1)
     {
-      if (rows > 100 || cols > 100)
-      {
-        std::cerr << "Matrix dimensions exceed" << '\n';
-        return 2;
-      }
       if (rows * cols > 10000)
       {
         std::cerr << "too much" << "\n";
         return 2;
       }
-      int matrix[100][100];
+      int matrix[10000];
       for (size_t i = 0; i < rows; ++i)
       {
         for (size_t j = 0; j < cols; ++j)
@@ -308,25 +200,22 @@ int main(int argc, char ** argv)
             std::cerr << "number out of int range" << '\n';
             return 2;
           }
-          matrix[i][j] = static_cast< int >(temp);
+          matrix[i * cols + j] = static_cast< int >(temp);
         }
       }
-      int result = vasyakin::quantity_static(matrix, rows, cols);
+      int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
       output << result << '\n';
-      int matrix_copy[100][100];
+      int matrix_copy[10000];
       for (size_t i = 0; i < rows; ++i)
       {
-        for (size_t j = 0; j < cols; ++j)
-        {
-          matrix_copy[i][j] = matrix[i][j];
-        }
+        matrix_copy[i] = matrix[i];
       }
-      vasyakin::spiral_static(matrix_copy, rows, cols);
-      vasyakin::output_static(matrix_copy, rows, cols, output);
+      vasyakin::spiral_static_dynamic(matrix_copy, rows, cols);
+      vasyakin::output_static_dynamic(matrix_copy, rows, cols, output);
     }
     else
     {
-      int ** matrix = vasyakin::create_matrix(rows, cols);
+      int * matrix = vasyakin::create_matrix(rows, cols);
       for (size_t i = 0; i < rows; ++i)
       {
         for (size_t j = 0; j < cols; ++j)
@@ -336,14 +225,14 @@ int main(int argc, char ** argv)
           {
             if (input.eof())
             {
-              vasyakin::destroy(matrix, rows);
+              vasyakin::destroy(matrix);
               std::cerr << "Not enough elements for matrix" << '\n';
               return 2;
             }
             else if (input.fail())
             {
               input.clear();
-              vasyakin::destroy(matrix, rows);
+              vasyakin::destroy(matrix);
               std::cerr << "Unexpected input" << '\n';
               return 2;
             }
@@ -353,27 +242,24 @@ int main(int argc, char ** argv)
           const long long int MIN = static_cast< long long int > (lim_int::min());
           if (temp > MAX || temp < MIN)
           {
-            vasyakin::destroy(matrix, rows);
+            vasyakin::destroy(matrix);
             std::cerr << "number out of int range" << '\n';
             return 2;
           }
-          matrix[i][j] = static_cast< int >(temp);
+          matrix[i * cols + j] = static_cast< int >(temp);
         }
       }
-      int result = vasyakin::quantity_dynamic(matrix, rows, cols);
+      int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
       output << result << '\n';
-      int ** matrix_copy = vasyakin::create_matrix(rows, cols);
+      int * matrix_copy = vasyakin::create_matrix(rows, cols);
       for (size_t i = 0; i < rows; ++i)
       {
-        for (size_t j = 0; j < cols; ++j)
-        {
-          matrix_copy[i][j] = matrix[i][j];
-        }
+        matrix_copy[i] = matrix[i];
       }
-      vasyakin::spiral_dynamic(matrix_copy, rows, cols);
-      vasyakin::output_dynamic(matrix_copy, rows, cols, output);
-      vasyakin::destroy(matrix, rows);
-      vasyakin::destroy(matrix_copy, rows);
+      vasyakin::spiral_static_dynamic(matrix_copy, rows, cols);
+      vasyakin::output_static_dynamic(matrix_copy, rows, cols, output);
+      vasyakin::destroy(matrix);
+      vasyakin::destroy(matrix_copy);
     }
   }
   catch (const std::exception &e)
