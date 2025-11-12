@@ -17,7 +17,7 @@ namespace stupir
   void addSnail(const int * arr1, size_t rows, size_t cols, int * arr2)
   {
     size_t sum = 1;
-    size_t left = 0; 
+    size_t left = 0;
     size_t right = cols - 1;
     size_t up = 0;
     size_t down = rows - 1;
@@ -29,7 +29,7 @@ namespace stupir
         sum++;
       }
       down--;
-      
+
       if (!checkAddSnail(up, down, left, right))
       {
         break;
@@ -75,7 +75,7 @@ namespace stupir
   int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
   {
     if(firstArg == "1")
-    { 
+    {
       if (rows * cols < 10000)
       {
         arr[rows * cols] = {};
@@ -94,10 +94,10 @@ namespace stupir
 
   void readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
   {
-    for (size_t i = 0; i < rows * cols; ++ i)
-      {
-        input >> arr[i];
-      }
+    for (size_t i = 0; i < rows * cols; ++i)
+    {
+      input >> arr[i];
+    }
   }
 
   void writeArr(std::ofstream& output, size_t rows, size_t cols, int * arr)
@@ -115,8 +115,54 @@ namespace stupir
       std::cerr << "Сouldn't open the file for writing\n";
     }
   }
-}
 
+  size_t countNotZeroD(const int * arr, size_t rows, size_t cols)
+  {
+    size_t result = 0;
+    if (rows == 0 && cols == 0)
+    {
+      return 0;
+    }
+    for (size_t k = 0; k < rows; ++k)
+    {
+      size_t num = 0;
+      for (size_t i = 0; i < rows; ++i)
+      {
+        if (i - k < cols)
+        {
+          if (arr[cols * i + i - k] == 0)
+          {
+            num++;
+          }
+        }
+      }
+      if (num == 0)
+      {
+        result++;
+      }
+    }
+
+    for (size_t k = 1; k < cols; ++k)
+    {
+      size_t num = 0;
+      for (size_t i = 0; i < rows; ++i)
+      {
+        if (i + k < cols)
+        {
+          if (arr[cols * i + i + k] == 0)
+          {
+            num++;
+          }
+        }
+      }
+      if (num == 0)
+      {
+        result++;
+      }
+    }
+    return result;
+  }
+}
 int main(int argc, char ** argv)
 {
   if (argc < 4)
@@ -143,9 +189,9 @@ int main(int argc, char ** argv)
   const char * firstArg = argv[1];
   const char * secondArg = argv[2];
   const char * thirdArg = argv[3];
-  
+
   std::ifstream input(secondArg);
-  if (!input.is_open()) 
+  if (!input.is_open())
   {
     std::cerr << "Error when opening a file\n";
     return 2;
@@ -160,15 +206,10 @@ int main(int argc, char ** argv)
     std::cerr << "Irregular matrix sizes\n";
     return 2;
   }
-  if (!rows && !cols)
-  {
-    std::cout << 0;
-    return 0;
-  }
 
   int * arr = nullptr;
   int * task1 = nullptr;
-  int * task2 = nullptr;
+  size_t task2 = 0;
   namespace stu = stupir;
   try
   {
@@ -181,23 +222,33 @@ int main(int argc, char ** argv)
     }
     input.close();
     task1 = stu::create(rows, cols);
-    stu::addSnail(arr, rows, cols, task1);
-    task2 = stu::create(rows, cols);
+    if (rows != 0 && cols != 0)
+    {
+      stu::addSnail(arr, rows, cols, task1);
+    }
+    task2 = stu::countNotZeroD(arr, rows, cols);
   }
   catch (const std::bad_alloc& e)
-  { 
+  {
     delete [] arr;
     delete [] task1;
     std::cerr << "Not enough memory\n";
     return 2;
   }
   std::ofstream output(thirdArg);
-  stu::writeArr(output, rows, cols, task1);
+  if (rows != 0 && cols != 0)
+  {
+    stu::writeArr(output, rows, cols, task1);
+  }
+  else
+  {
+    output << rows << " " << cols;
+  }
+  output << "\n" << task2;
 
   if (firstArg == "2")
   {
     delete [] arr;
   }
   delete [] task1;
-  delete [] task2;
 }
