@@ -195,7 +195,7 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
     size_t length = 0;
     for (size_t i = 1; i < rows; ++i)
     {
-      if (mtx[i * rows + j] == mtx[(i - 1) * rows + j])
+      if (mtx[i * cols + j] == mtx[(i - 1) * cols + j])
       {
         length += 1;
         if (length > maxLength)
