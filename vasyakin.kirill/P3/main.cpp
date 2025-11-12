@@ -28,7 +28,7 @@ void vasyakin::output_static(const int (* a) [100], size_t rows, size_t cols, st
   if (rows != 0 && cols != 0)
   {
     for (size_t i = 0; i < rows; ++i)
-    {		
+    {
       output << a[i][0];
       for (size_t j = 1; j < cols; ++j)
       {
