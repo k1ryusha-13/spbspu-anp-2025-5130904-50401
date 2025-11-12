@@ -270,6 +270,11 @@ int main(int argc, char ** argv)
     }
     if (num == 1)
     {
+      if (rows > 100 || cols > 100)
+      {
+        std::cerr << "Matrix dimensions exceed" << '\n';
+        return 2;
+      }
       if (rows * cols > 10000)
       {
         std::cerr << "too much" << "\n";
