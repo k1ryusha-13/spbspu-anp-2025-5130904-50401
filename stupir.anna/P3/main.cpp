@@ -74,7 +74,7 @@ namespace stupir
 
   int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
   {
-    if(firstArg == "1")
+    if (firstArg[0] == '1')
     {
       if (rows * cols < 10000)
       {
@@ -246,7 +246,7 @@ int main(int argc, char ** argv)
   }
   output << "\n" << task2;
 
-  if (firstArg == "2")
+  if (firstArg[0] == '2')
   {
     delete [] arr;
   }
