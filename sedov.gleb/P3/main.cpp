@@ -202,7 +202,7 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
         {
           maxLength = length;
           maxCol = j + 1;
-	}
+        }
       }
       else
       {
