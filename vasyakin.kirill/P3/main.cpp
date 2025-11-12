@@ -206,7 +206,7 @@ int main(int argc, char ** argv)
       int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
       output << result << '\n';
       int matrix_copy[10000];
-      for (size_t i = 0; i < rows; ++i)
+      for (size_t i = 0; i < rows * cols; ++i)
       {
         matrix_copy[i] = matrix[i];
       }
@@ -252,7 +252,7 @@ int main(int argc, char ** argv)
       int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
       output << result << '\n';
       int * matrix_copy = vasyakin::create_matrix(rows, cols);
-      for (size_t i = 0; i < rows; ++i)
+      for (size_t i = 0; i < rows * cols; ++i)
       {
         matrix_copy[i] = matrix[i];
       }
