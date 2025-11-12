@@ -68,11 +68,19 @@ int main(int argc, char ** argv)
       return 2;
     }
     size_t res = sedov::getNumCol(matrix, r, c);
-    sedov::convertIncMatrix(matrix, r, c);
-    std::ofstream output(argv[3]);
-    sedov::output_mtx(output, matrix, r, c);
-    output << res << "\n";
-    return 0;
+    try
+    {
+      sedov::convertIncMatrix(matrix, r, c);
+      std::ofstream output(argv[3]);
+      sedov::output_mtx(output, matrix, r, c);
+      output << res << "\n";
+      return 0;
+    }
+    catch (const std::overflow_error &e)
+    {
+      std::cerr << e.what() << "\n";
+      return 4;
+    }
   }
 
   int * matrix = sedov::create(r, c);
@@ -96,15 +104,24 @@ int main(int argc, char ** argv)
     return 2;
   }
   size_t res = sedov::getNumCol(matrix, r, c);
-  sedov::convertIncMatrix(matrix, r, c);
-  std::ofstream output(argv[3]);
-  sedov::output(output, matrix, r, c);
-  sedov::destroy(matrix);
-  output << res << "\n";
-  return 0;
+  try
+  {
+    sedov::convertIncMatrix(matrix, r, c);
+    std::ofstream output(argv[3]);
+    sedov::output_mtx(output, matrix, r, c);
+    sedov::destroy(matrix);
+    output << res << "\n";
+    return 0;
+  }
+  catch (const std::overflow_error &e)
+  {
+    std::cerr << e.what() << "\n";
+    delete[] matrix;
+    return 4;
+  }
 }
 
-bool checkFirstArg(const char * a)
+bool sedov::checkFirstArg(const char * a)
 {
   for (size_t i = 0; a[i] != '\0'; ++i)
   {
@@ -152,13 +169,18 @@ size_t sedov::input_mtx(std::istream & input, int * mtx, size_t rows, size_t col
 void sedov::convertIncMatrix(int * mtx, size_t rows, size_t cols)
 {
   size_t minrc = (rows < cols) ? rows : cols;
-  size_t layer = min(rows, cols) / 2 + min(rows, cols) % 2;
+  size_t layer = minrc / 2 + minrc % 2;
+  const int MAX = std::numeric_limits<int>::max();
   for (size_t k = 0; k < layer; ++k)
   {
     for (size_t i = k; i < rows - k; ++i)
     {
       for (size_t j = k; j < cols - j; ++j)
       {
+        if (mtx[i * cols + j] > MAX - 1)
+        {
+          throw std::overflow_error("Increment matrix overflow");
+        }
         mtx[i * cols + j] += 1;
       }
     }
