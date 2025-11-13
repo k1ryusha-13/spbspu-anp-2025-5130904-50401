@@ -60,8 +60,8 @@ int main(int argc, char **argv)
 
       std::ofstream output(argv[3]);
 
-      khasnulin::print_matrix(std::cout, currArr, n, m);
-      khasnulin::print_bool(std::cout, isLWR_TRI_MTX);
+      khasnulin::print_matrix(output, currArr, n, m);
+      khasnulin::print_bool(output, isLWR_TRI_MTX);
 
       if (mode == 2)
       {
