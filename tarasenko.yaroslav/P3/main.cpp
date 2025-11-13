@@ -121,7 +121,7 @@ int main(int argc, char ** argv)
     std::cerr << "Incorrect file" << '\n';
     return 2;
   }
-  if (!(rows * cols))
+  if (rows == 0 || cols == 0)
   {
     output << 0 << '\n';
     output << 0 << '\n';
