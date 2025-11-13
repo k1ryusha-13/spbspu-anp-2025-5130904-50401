@@ -113,7 +113,6 @@ int main(int argc, char ** argv)
     return 1;
   }
   std::ifstream input(argv[2]);
-  std::ofstream output(argv[3]);
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
   if (!input)
@@ -123,8 +122,10 @@ int main(int argc, char ** argv)
   }
   if (rows == 0 || cols == 0)
   {
+    std::ofstream output(argv[3]);
     output << 0 << '\n';
     output << 0 << '\n';
+    output.close();
     return 0;
   }
   if (*argv[1] == '1')
@@ -133,6 +134,7 @@ int main(int argc, char ** argv)
     try
     {
       tarasenko::input(input, arr, rows, cols);
+      input.close();
     }
     catch (size_t e)
     {
@@ -141,8 +143,10 @@ int main(int argc, char ** argv)
     }
     size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
     size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
+    std::ofstream output(argv[3]);
     output << max << '\n';
     output << min << '\n';
+    output.close();
   }
   else
   {
@@ -155,6 +159,7 @@ int main(int argc, char ** argv)
     try
     {
       tarasenko::input(input, arr, rows, cols);
+      input.close();
     }
     catch (size_t e)
     {
@@ -164,8 +169,10 @@ int main(int argc, char ** argv)
     }
     size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
     size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
+    std::ofstream output(argv[3]);
     output << max << '\n';
     output << min << '\n';
+    output.close();
     free(arr);
   }
 }
