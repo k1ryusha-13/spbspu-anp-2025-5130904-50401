@@ -248,6 +248,7 @@ int main(int argc, char ** argv)
   std::ofstream output(thirdArg);
   if (rows != 0 && cols != 0)
   {
+    output << rows << " " << cols << " ";
     stu::writeArr(output, rows, cols, task1);
   }
   else
