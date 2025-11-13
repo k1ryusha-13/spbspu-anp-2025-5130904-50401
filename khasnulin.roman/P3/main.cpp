@@ -23,9 +23,13 @@ namespace khasnulin
 
   std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m);
 
-  int *LFT_BOT_CLK(const int *arr, size_t n, size_t m);
+  void LFT_BOT_CLK(int *arr, size_t n, size_t m);
+
+  size_t min(size_t a, size_t b);
+  bool LWR_TRI_MTX(const int *arr, size_t n, size_t m);
 
   std::ostream &print_matrix(std::ostream &output, const int *a, size_t n, size_t m);
+  std::ostream &print_bool(std::ostream &output, bool val);
 }
 
 int main(int argc, char **argv)
@@ -47,16 +51,22 @@ int main(int argc, char **argv)
     try
     {
       currArr = mode == 1 ? arr : new int[n * m];
+
       khasnulin::read_matrix(input, currArr, n, m);
+      input.close();
+
+      bool isLWR_TRI_MTX = khasnulin::LWR_TRI_MTX(currArr, n, m);
+      khasnulin::LFT_BOT_CLK(currArr, n, m);
 
       std::ofstream output(argv[3]);
 
-      int *result = khasnulin::LFT_BOT_CLK(currArr, n, m);
-      khasnulin::print_matrix(std::cout, result, n, m);
+      khasnulin::print_matrix(std::cout, currArr, n, m);
+      khasnulin::print_bool(std::cout, isLWR_TRI_MTX);
 
-      delete[] result;
       if (mode == 2)
-        delete currArr;
+      {
+        delete[] currArr;
+      }
     }
     catch (std::runtime_error &e)
     {
@@ -126,16 +136,10 @@ void khasnulin::check_argc_validity(int argc)
   }
 }
 
-int *khasnulin::LFT_BOT_CLK(const int *arr, size_t n, size_t m)
+void khasnulin::LFT_BOT_CLK(int *arr, size_t n, size_t m)
 {
-  int *newArr = new int[n * m];
-  for (size_t i = 0; i < n * m; i++)
-  {
-    newArr[i] = arr[i];
-  }
   if (n > 0 && m > 0)
   {
-
     size_t currI = (n - 1) * m;
 
     int directionI = -1;
@@ -145,7 +149,7 @@ int *khasnulin::LFT_BOT_CLK(const int *arr, size_t n, size_t m)
     size_t elem_counter = 0;
     for (size_t i = 0; i < n * m; i++)
     {
-      newArr[currI] -= factor;
+      arr[currI] -= factor;
       factor++;
       elem_counter++;
       if (directionI && elem_counter == (n - spiral_circle))
@@ -178,7 +182,32 @@ int *khasnulin::LFT_BOT_CLK(const int *arr, size_t n, size_t m)
       currI += directionI * m + directionJ;
     }
   }
-  return newArr;
+}
+
+size_t khasnulin::min(size_t a, size_t b)
+{
+  return a < b ? a : b;
+}
+
+bool khasnulin::LWR_TRI_MTX(const int *arr, size_t n, size_t m)
+{
+  size_t minSide = min(n, m);
+  if (minSide == 0)
+  {
+    return false;
+  }
+  for (size_t i = 0; i < minSide; i++)
+  {
+    for (size_t j = i + 1; j < m; j++)
+    {
+      if (arr[i * m + j] != 0)
+      {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 using is_t = std::istream;
@@ -210,4 +239,9 @@ os_t &khasnulin::print_matrix(os_t &output, const int *a, size_t n, size_t m)
   }
   output << "\n";
   return output;
+}
+
+os_t &khasnulin::print_bool(os_t &output, bool val)
+{
+  return output << (val ? "true\n" : "false\n");
 }
