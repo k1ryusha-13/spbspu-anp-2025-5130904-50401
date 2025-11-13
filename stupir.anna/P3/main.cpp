@@ -76,9 +76,9 @@ namespace stupir
   {
     if (firstArg[0] == '1')
     {
-      if (rows * cols < 10000)
+      if (rows * cols <= 10000)
       {
-        arr[rows * cols] = {};
+        arr[rows * cols] = {0};
       }
       else
       {
@@ -87,7 +87,7 @@ namespace stupir
     }
     else
     {
-      arr = new int[rows * cols];
+      arr = new int[rows * cols]();
     }
     return arr;
   }
@@ -100,7 +100,7 @@ namespace stupir
     }
   }
 
-  void writeArr(std::ofstream& output, size_t rows, size_t cols, int * arr)
+  void writeArr(std::ofstream& output, size_t rows, size_t cols, const int * arr)
   {
     if (!output.fail())
     {
@@ -201,7 +201,7 @@ int main(int argc, char ** argv)
   size_t cols = 0;
   input >> rows;
   input >> cols;
-  if (input.fail() || (!rows && cols) || (rows && !cols))
+  if (input.fail() || (rows == 0 && cols) || (rows && cols == 0))
   {
     std::cerr << "Irregular matrix sizes\n";
     return 2;
