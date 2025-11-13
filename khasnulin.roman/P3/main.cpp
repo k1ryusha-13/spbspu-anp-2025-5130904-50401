@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     size_t mode = khasnulin::get_first_parameter(num);
 
     std::ifstream input(argv[2]);
-    size_t n = 0, m = 0;
+    size_t n = 1, m = 1;
 
     int arr[10000] = {};
     int *currArr = nullptr;
