@@ -121,6 +121,12 @@ int main(int argc, char ** argv)
     std::cerr << "Incorrect file" << '\n';
     return 2;
   }
+  if (!(rows * cols))
+  {
+    output << 0 << '\n';
+    output << 0 << '\n';
+    return 0;
+  }
   if (*argv[1] == '1')
   {
     int arr[10000] = {};
@@ -133,8 +139,8 @@ int main(int argc, char ** argv)
       std::cerr << "Managed to read "<< e << " numbers from file" << '\n';
       return 2;
     }
-    int max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
-    int min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
+    size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
+    size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
     output << max << '\n';
     output << min << '\n';
   }
@@ -156,8 +162,8 @@ int main(int argc, char ** argv)
       free(arr);
       return 2;
     }
-    int max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
-    int min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
+    size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
+    size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
     output << max << '\n';
     output << min << '\n';
     free(arr);
