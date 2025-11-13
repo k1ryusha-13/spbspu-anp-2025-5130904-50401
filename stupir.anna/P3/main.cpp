@@ -5,7 +5,7 @@ namespace stupir
 {
   int * create(size_t rows, size_t cols)
   {
-    int * arr = new int[rows * cols];
+    int * arr = new int[rows * cols]();
     return arr;
   }
 
@@ -74,11 +74,17 @@ namespace stupir
 
   int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
   {
+    static const size_t maxStat = 10000;
+    static int statMem[maxStat];
     if (firstArg[0] == '1')
     {
-      if (rows * cols <= 10000)
+      if (rows * cols <= maxStat)
       {
-        arr[rows * cols] = {0};
+        arr = statMem;
+        for (size_t i = 0; i < rows * cols; ++i)
+        {
+          arr[i] = 0;
+        }
       }
       else
       {
@@ -218,6 +224,10 @@ int main(int argc, char ** argv)
     if (input.fail())
     {
       std::cerr << "Non-correct values of matrix elements\n";
+      if (firstArg[0] == '2')
+      {
+        delete [] arr;
+      }
       return 2;
     }
     input.close();
