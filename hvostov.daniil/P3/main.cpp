@@ -45,7 +45,7 @@ int main(int argc, char ** argv)
     hvostov::task_execution(output, matrix, rows, cols);
     return 0;
   }
-  
+
   int * matrix = reinterpret_cast<int *>(malloc(sizeof(int) * rows * cols));
   if (matrix == nullptr) {
     std::cerr << "Bad alloc!\n";
