@@ -1,2 +1,2 @@
-﻿int main()
+int main()
 {}
