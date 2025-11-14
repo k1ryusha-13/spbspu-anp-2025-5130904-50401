@@ -3,9 +3,10 @@
 
 namespace hvostov {
   bool is_number(const char * str);
-  void input_matrix(std::ifstream & input, int* mtx, size_t rows, size_t cols);
-  size_t count_local_max(int *mtx, size_t rows, size_t cols);
-  void modify_matrix(int* mtx, size_t rows, size_t cols);
+  void input_matrix(std::ifstream & input, int * mtx, size_t rows, size_t cols);
+  size_t count_local_max(int * mtx, size_t rows, size_t cols);
+  void modify_matrix(int * mtx, size_t rows, size_t cols);
+  void output_matrix(std::ofstream & output, int * mtx, size_t rows, size_t cols);
 }
 
 bool hvostov::is_number(const char * str)
@@ -28,14 +29,14 @@ bool hvostov::is_number(const char * str)
   return true;
 }
 
-void hvostov::input_matrix(std::ifstream & input, int *mtx, size_t rows, size_t cols)
+void hvostov::input_matrix(std::ifstream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; i++) {
     input >> mtx[i];
   }
 }
 
-size_t hvostov::count_local_max(int* mtx, size_t rows, size_t cols)
+size_t hvostov::count_local_max(int * mtx, size_t rows, size_t cols)
 {
   if (rows < 3 || cols < 3) {
     return 0;
@@ -55,18 +56,16 @@ size_t hvostov::count_local_max(int* mtx, size_t rows, size_t cols)
   return counter;
 }
 
-void output_matrix(int* mtx, size_t rows, size_t cols)
+void hvostov::output_matrix(std::ofstream & output, int * mtx, size_t rows, size_t cols)
 {
-  for (size_t i = 0; i < rows; i++) {
-    std::cout << mtx[i*cols];
-    for (size_t j = 1; j < cols; j++) {
-      std::cout << " " << mtx[i*cols + j];
-    }
-    std::cout << "\n";
+  output << rows << " " << cols;
+  for (size_t i = 0; i < rows * cols; i++) {
+    output << " " << mtx[i];
   }
+  output << "\n";
 }
 
-void hvostov::modify_matrix(int* mtx, size_t rows, size_t cols)
+void hvostov::modify_matrix(int * mtx, size_t rows, size_t cols)
 {
   size_t top = 0, right = cols - 1, bot = rows - 1, left = 0, decrease_by = 1;
   while (top <= bot && left <= right) { 
@@ -123,8 +122,11 @@ int main(int argc, char ** argv)
       std::cerr << "Problems with input_matrix!\n";
       return 2;
     }
+    input.close();
     size_t counter = hvostov::count_local_max(mtx, rows, cols);
+    output << counter << "\n";
     hvostov::modify_matrix(mtx, rows, cols);
+    hvostov::output_matrix(output, mtx, rows, cols);
   }  
   return 0; 
 }
