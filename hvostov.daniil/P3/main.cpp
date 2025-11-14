@@ -33,6 +33,9 @@ int main(int argc, char ** argv)
     std::cerr << "Problems with input_matrix!\n";
     return 2;
   }
+  if (rows == 0 && cols == 0) {
+    return 0;
+  }
   if (argv[1][0] == '1') {
     constexpr size_t MATRIX_SIZE = 10000;
     int matrix[MATRIX_SIZE] = {};
