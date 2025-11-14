@@ -2,15 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
-
 namespace kudaev
 {
   void inputmtx(std::ifstream &, int *, size_t, size_t);
   void lft_bot_clk(int *, size_t, size_t);
   void bld_smt_mtr(std::ostream &, int *, size_t, size_t);
   void outputmtx(std::ostream &, int *, size_t, size_t);
-} // namespace kudaev
-
+}
 int main(int argc, char **argv)
 {
   try
@@ -93,8 +91,7 @@ int main(int argc, char **argv)
   try
   {
     kudaev::inputmtx(input, target, m, n);
-  } catch (const std::exception &ex)
-  {
+  } catch (const std::exception &ex) {
     std::cerr << ex.what() << '\n';
     return 2;
   }
