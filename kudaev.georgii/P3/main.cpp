@@ -1,16 +1,17 @@
-﻿#include <iostream>
+﻿#include <cmath>
+#include <iostream>
 #include <fstream>
 #include <limits>
 
 namespace kudaev
 {
-  void inputmtx(std::ifstream&, int*, size_t, size_t);
-  void lft_bot_clk(int*, size_t, size_t);
-  void bld_smt_mtr(std::ostream&, int*, size_t, size_t);
-  void outputmtx(std::ostream&, int*, size_t, size_t);
-}
+  void inputmtx(std::ifstream &, int *, size_t, size_t);
+  void lft_bot_clk(int *, size_t, size_t);
+  void bld_smt_mtr(std::ostream &, int *, size_t, size_t);
+  void outputmtx(std::ostream &, int *, size_t, size_t);
+} // namespace kudaev
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
   try
   {
@@ -29,8 +30,7 @@ int main(int argc, char** argv)
     }
     if (!all_digits || argv[1][0] == '\0')
       throw std::exception("First parameter is not a number");
-  }
-  catch (const std::exception& ex)
+  } catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 1;
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
     std::cerr << "Cannot open output file\n";
     return 2;
   }
-  int* target = nullptr;
+  int *target = nullptr;
   int a[10000] = {};
   size_t m, n;
   if (!(input >> m >> n))
@@ -61,10 +61,10 @@ int main(int argc, char** argv)
     output << m << ' ' << n << '\n';
     return 0;
   }
-  else switch (choice)
-  {
-    case 1:
+  else
+    switch (choice)
     {
+    case 1: {
       if (m * n <= 10000)
         target = a;
       else
@@ -74,30 +74,26 @@ int main(int argc, char** argv)
       }
       break;
     }
-    case 2:
-    {
+    case 2: {
       try
       {
         target = new int[m * n];
-      }
-      catch (const std::bad_alloc& ex)
+      } catch (const std::bad_alloc &ex)
       {
         std::cerr << ex.what() << '\n';
         return 2;
       }
       break;
     }
-    default:
-    {
+    default: {
       std::cerr << "First parameter is out of range" << '\n';
       return 1;
     }
-  }
+    }
   try
   {
     kudaev::inputmtx(input, target, m, n);
-  }
-  catch (const std::exception& ex)
+  } catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -120,8 +116,7 @@ int main(int argc, char** argv)
     try
     {
       target = new int[m * n];
-    }
-    catch (const std::bad_alloc& ex)
+    } catch (const std::bad_alloc &ex)
     {
       std::cerr << ex.what() << '\n';
       return 2;
@@ -130,8 +125,7 @@ int main(int argc, char** argv)
   try
   {
     kudaev::inputmtx(input, target, m, n);
-  }
-  catch (const std::exception& ex)
+  } catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -140,8 +134,7 @@ int main(int argc, char** argv)
   try
   {
     kudaev::bld_smt_mtr(output, target, m, n);
-  }
-  catch(const std::exception& ex)
+  } catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -150,7 +143,7 @@ int main(int argc, char** argv)
     delete[] target;
 }
 
-void kudaev::inputmtx(std::ifstream& input, int* a, size_t m, size_t n)
+void kudaev::inputmtx(std::ifstream &input, int *a, size_t m, size_t n)
 {
   for (size_t i = 0; i < m * n; ++i)
   {
@@ -159,7 +152,7 @@ void kudaev::inputmtx(std::ifstream& input, int* a, size_t m, size_t n)
   }
 }
 
-void kudaev::lft_bot_clk(int* a, size_t m, size_t n)
+void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
 {
   size_t pos = (m - 1) * n;
   size_t rows = m, cols = n;
@@ -169,35 +162,43 @@ void kudaev::lft_bot_clk(int* a, size_t m, size_t n)
     for (size_t i = 0; i < rows; i++)
     {
       a[pos] -= k++;
-      if (i < rows - 1) pos -= n;
+      if (i < rows - 1)
+        pos -= n;
     }
-    if (--cols == 0) break;
+    if (--cols == 0)
+      break;
     pos++;
     for (size_t i = 0; i < cols; i++)
     {
       a[pos] -= k++;
-      if (i < cols - 1) pos++;
+      if (i < cols - 1)
+        pos++;
     }
-    if (--rows == 0) break;
+    if (--rows == 0)
+      break;
     pos += n;
     for (size_t i = 0; i < rows; i++)
     {
       a[pos] -= k++;
-      if (i < rows - 1) pos += n;
+      if (i < rows - 1)
+        pos += n;
     }
-    if (--cols == 0) break;
+    if (--cols == 0)
+      break;
     pos--;
     for (size_t i = 0; i < cols; i++)
     {
       a[pos] -= k++;
-      if (i < cols - 1) pos--;
+      if (i < cols - 1)
+        pos--;
     }
-    if (--rows == 0) break;
+    if (--rows == 0)
+      break;
     pos -= n;
   }
 }
 
-void kudaev::outputmtx(std::ostream& out, int* a, size_t m, size_t n)
+void kudaev::outputmtx(std::ostream &out, int *a, size_t m, size_t n)
 {
   out << m << ' ' << n << ' ';
   for (size_t i = 0; i < m * n; ++i)
@@ -207,16 +208,15 @@ void kudaev::outputmtx(std::ostream& out, int* a, size_t m, size_t n)
   out << '\n';
 }
 
-void kudaev::bld_smt_mtr(std::ostream& out, int* a, size_t m, size_t n)
+void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
 {
-  int* tmp = nullptr;
-  float* res_mas = nullptr;
+  int *tmp = nullptr;
+  float *res_mas = nullptr;
   try
   {
     tmp = new int[m * n];
     res_mas = new float[m * n];
-  }
-  catch (const std::bad_alloc& ex)
+  } catch (const std::bad_alloc &ex)
   {
     throw;
   }
