@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
     return 1;
   } else if (!hvostov::is_number(argv[1])) {
     std::cerr << "First parameter is not a number!\n";
-    return 1; 
+    return 1;
   } else if (argv[1][0] < '1' || argv[1][0] > '2') {
     std::cerr << "First parameter is out of range!\n";
     return 1;
@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
   input.close();
   hvostov::task_execution(output, matrix, rows, cols);
   free(matrix);
-  return 0; 
+  return 0;
 }
 
 void hvostov::task_execution(std::ofstream & output, int * matrix, size_t rows, size_t cols)
@@ -76,7 +76,7 @@ bool hvostov::is_number(const char * str)
   if (*str == '\0' || !str) {
     return false;
   }
-  size_t index = 0; 
+  size_t index = 0;
   while (str[index] != '\0') {
     if (str[index] < '0' || str[index] > '9') {
       return false;
@@ -105,11 +105,11 @@ size_t hvostov::count_local_max(int * matrix, size_t rows, size_t cols)
   }
   size_t counter = 0;
   for (size_t i = 1; i < rows - 1; i++) {
-    for (size_t j = 1; j < cols - 1; j++) { 
+    for (size_t j = 1; j < cols - 1; j++) {
       bool is_local_max = matrix[i*cols + j] > matrix[i*cols + j - 1];
       is_local_max = is_local_max && matrix[i*cols + j] > matrix[i*cols + j + 1];
       is_local_max = is_local_max && matrix[i*cols + j] > matrix[i*(cols - 1) + j];
-      is_local_max = is_local_max && matrix[i*cols + j] > matrix[i*(cols + 1) + j];      
+      is_local_max = is_local_max && matrix[i*cols + j] > matrix[i*(cols + 1) + j];
       if (is_local_max) {
         counter++;
       }
@@ -130,7 +130,7 @@ void hvostov::output_matrix(std::ofstream & output, int * matrix, size_t rows, s
 void hvostov::modify_matrix(int * matrix, size_t rows, size_t cols)
 {
   size_t top = 0, right = cols - 1, bot = rows - 1, left = 0, decrease_by = 1;
-  while (top <= bot && left <= right) { 
+  while (top <= bot && left <= right) {
     for (size_t i = bot; i > top; i--) {
       matrix[i*cols+left] -= decrease_by;
       decrease_by++;
