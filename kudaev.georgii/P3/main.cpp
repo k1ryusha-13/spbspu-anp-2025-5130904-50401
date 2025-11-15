@@ -60,6 +60,7 @@ int main(int argc, char **argv)
   if (m == 0 || n == 0)
     output << m << ' ' << n << '\n';
   else
+  {
     switch (choice)
     {
     case 1:
@@ -92,62 +93,23 @@ int main(int argc, char **argv)
       return 1;
     }
     }
-  try
-  {
+  }
+  try {
     kudaev::inputmtx(input, target, m, n);
+    kudaev::lft_bot_clk(target, m, n);
+    kudaev::outputmtx(output, target, m, n);
+    kudaev::bld_smt_mtr(output, target, m, n);
   }
   catch (const std::exception& ex)
   {
+    if (choice == 2) delete[] target;
     std::cerr << ex.what() << '\n';
     return 2;
   }
-  kudaev::lft_bot_clk(target, m, n);
-  kudaev::outputmtx(output, target, m, n);
-  if (!(input >> m >> n))
-  {
-    std::cerr << "Error reading a file" << '\n';
-    return 2;
-  }
-  if (m == 0 || n == 0)
-  {
-    output << m << ' ' << n << '\n';
-    return 0;
-  }
-  if (choice == 2)
+  if (choice == 2 && target != nullptr)
   {
     delete[] target;
-    target = nullptr;
-    try
-    {
-      target = new int[m * n];
-    }
-    catch (const std::exception &ex)
-    {
-      std::cerr << ex.what() << '\n';
-      return 2;
-    }
   }
-  try
-  {
-    kudaev::inputmtx(input, target, m, n);
-  }
-  catch (const std::exception &ex)
-  {
-    std::cerr << ex.what() << '\n';
-    return 2;
-  }
-  input.close();
-  try
-  {
-    kudaev::bld_smt_mtr(output, target, m, n);
-  }
-  catch (const std::exception &ex)
-  {
-    std::cerr << ex.what() << '\n';
-    return 2;
-  }
-  if (choice == 2)
-    delete[] target;
 }
 
 void kudaev::inputmtx(std::ifstream &input, int *a, size_t m, size_t n)
