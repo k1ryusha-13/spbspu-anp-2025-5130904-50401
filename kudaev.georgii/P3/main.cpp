@@ -16,9 +16,9 @@ int main(int argc, char **argv)
   try
   {
     if (argc < 4)
-      throw std::exception("Not enough arguments");
+      throw std::invalid_argument("Not enough arguments");
     if (argc > 4)
-      throw std::exception("Too many arguments");
+      throw std::out_of_range("Too many arguments");
     bool all_digits = true;
     for (int i = 0; argv[1][i] != '\0'; i++)
     {
@@ -29,8 +29,9 @@ int main(int argc, char **argv)
       }
     }
     if (!all_digits || argv[1][0] == '\0')
-      throw std::exception("First parameter is not a number");
-  } catch (const std::exception &ex)
+      throw std::invalid_argument("First parameter is not a number");
+  }
+  catch (const std::exception& ex)
   {
     std::cerr << ex.what() << '\n';
     return 1;
@@ -57,14 +58,12 @@ int main(int argc, char **argv)
     return 2;
   }
   if (m == 0 || n == 0)
-  {
     output << m << ' ' << n << '\n';
-    return 0;
-  }
   else
     switch (choice)
     {
-    case 1: {
+    case 1:
+    {
       if (m * n <= 10000)
         target = a;
       else
@@ -74,18 +73,21 @@ int main(int argc, char **argv)
       }
       break;
     }
-    case 2: {
+    case 2:
+    {
       try
       {
         target = new int[m * n];
-      } catch (const std::bad_alloc &ex)
+      }
+      catch (const std::exception& ex)
       {
         std::cerr << ex.what() << '\n';
         return 2;
       }
       break;
     }
-    default: {
+    default:
+    {
       std::cerr << "First parameter is out of range" << '\n';
       return 1;
     }
@@ -93,7 +95,8 @@ int main(int argc, char **argv)
   try
   {
     kudaev::inputmtx(input, target, m, n);
-  } catch (const std::exception &ex)
+  }
+  catch (const std::exception& ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -113,10 +116,12 @@ int main(int argc, char **argv)
   if (choice == 2)
   {
     delete[] target;
+    target = nullptr;
     try
     {
       target = new int[m * n];
-    } catch (const std::bad_alloc &ex)
+    }
+    catch (const std::exception &ex)
     {
       std::cerr << ex.what() << '\n';
       return 2;
@@ -125,7 +130,8 @@ int main(int argc, char **argv)
   try
   {
     kudaev::inputmtx(input, target, m, n);
-  } catch (const std::exception &ex)
+  }
+  catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -134,7 +140,8 @@ int main(int argc, char **argv)
   try
   {
     kudaev::bld_smt_mtr(output, target, m, n);
-  } catch (const std::exception &ex)
+  }
+  catch (const std::exception &ex)
   {
     std::cerr << ex.what() << '\n';
     return 2;
@@ -148,7 +155,7 @@ void kudaev::inputmtx(std::ifstream &input, int *a, size_t m, size_t n)
   for (size_t i = 0; i < m * n; ++i)
   {
     if (!(input >> a[i]))
-      throw std::exception("Incorrect input");
+      throw std::invalid_argument("Incorrect input");
   }
 }
 
@@ -215,9 +222,19 @@ void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
   try
   {
     tmp = new int[m * n];
-    res_mas = new float[m * n];
-  } catch (const std::bad_alloc &ex)
+    try
+    {
+      res_mas = new float[m * n];
+    }
+    catch (...)
+    {
+      delete[] tmp;
+      throw;
+    }
+  }
+  catch (const std::exception& ex)
   {
+    delete[] tmp;
     throw;
   }
   for (size_t i = 0; i < m * n; ++i)
@@ -227,7 +244,7 @@ void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
     int sum = 0;
     int k = 0;
     int higherrow = i - n;
-    int lowerrow = i + n;
+    size_t lowerrow = i + n;
     if (higherrow >= 0)
     {
       sum += tmp[higherrow];
