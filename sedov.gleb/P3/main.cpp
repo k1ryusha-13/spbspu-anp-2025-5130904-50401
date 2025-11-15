@@ -143,9 +143,10 @@ void sedov::destroy(int * mtx)
 
 int * sedov::create(size_t rows, size_t cols)
 {
+  int * mtx = nullptr;
   try
   {
-    int * mtx = new int[rows * cols];
+    mtx = new int[rows * cols];
   }
   catch (const std::bad_alloc &e)
   {
