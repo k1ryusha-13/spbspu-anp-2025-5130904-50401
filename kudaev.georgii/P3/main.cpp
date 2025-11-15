@@ -9,7 +9,7 @@ namespace kudaev
   void lft_bot_clk(int *, size_t, size_t);
   void bld_smt_mtr(std::ostream &, int *, size_t, size_t);
   void outputmtx(std::ostream &, int *, size_t, size_t);
-} // namespace kudaev
+}
 
 int main(int argc, char **argv)
 {
@@ -94,7 +94,8 @@ int main(int argc, char **argv)
     }
     }
   }
-  try {
+  try
+  {
     kudaev::inputmtx(input, target, m, n);
     kudaev::lft_bot_clk(target, m, n);
     kudaev::outputmtx(output, target, m, n);
