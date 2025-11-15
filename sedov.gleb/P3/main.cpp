@@ -83,41 +83,44 @@ int main(int argc, char ** argv)
     }
   }
 
-  int * matrix = sedov::create(r, c);
-  if (matrix == nullptr)
-  {
-    std::cerr << "Bad alloc\n";
-    return 3;
-  }
-  size_t st = sedov::input_mtx(input, matrix, r, c);
-  input.close();
-  if (st == 1)
-  {
-    std::cerr << "Not enough arguments for matrix\n";
-    delete[] matrix;
-    return 2;
-  }
-  else if (st == 2)
-  {
-    std::cerr << "Bad reading file\n";
-    delete[] matrix;
-    return 2;
-  }
-  size_t res = sedov::getNumCol(matrix, r, c);
   try
   {
-    sedov::convertIncMatrix(matrix, r, c);
-    std::ofstream output(argv[3]);
-    sedov::output_mtx(output, matrix, r, c);
-    sedov::destroy(matrix);
-    output << res << "\n";
-    return 0;
+    int * matrix = sedov::create(r, c);
+    size_t st = sedov::input_mtx(input, matrix, r, c);
+    input.close();
+    if (st == 1)
+    {
+      std::cerr << "Not enough arguments for matrix\n";
+      delete[] matrix;
+      return 2;
+    }
+    else if (st == 2)
+    {
+      std::cerr << "Bad reading file\n";
+      delete[] matrix;
+      return 2;
+    }
+    size_t res = sedov::getNumCol(matrix, r, c);
+    try
+    {
+      sedov::convertIncMatrix(matrix, r, c);
+      std::ofstream output(argv[3]);
+      sedov::output_mtx(output, matrix, r, c);
+      sedov::destroy(matrix);
+      output << res << "\n";
+      return 0;
+    }
+    catch (const std::overflow_error &e)
+    {
+      std::cerr << e.what() << "\n";
+      delete[] matrix;
+      return 4;
+    }
   }
-  catch (const std::overflow_error &e)
+  catch (const std::bad_alloc &e)
   {
     std::cerr << e.what() << "\n";
-    delete[] matrix;
-    return 4;
+    return 3;
   }
 }
 
@@ -140,8 +143,14 @@ void sedov::destroy(int * mtx)
 
 int * sedov::create(size_t rows, size_t cols)
 {
-  int * mtx = nullptr;
-  mtx = new int[rows * cols];
+  try
+  {
+    int * mtx = new int[rows * cols];
+  }
+  catch (const std::bad_alloc &e)
+  {
+    throw;
+  }
   return mtx;
 }
 
