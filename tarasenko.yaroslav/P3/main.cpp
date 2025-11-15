@@ -10,7 +10,7 @@ namespace tarasenko
       in >> arr[i];
       if (!in)
       {
-        throw i;
+        return i;
       }
     }
     return n * m;
@@ -131,14 +131,11 @@ int main(int argc, char ** argv)
   if (*argv[1] == '1')
   {
     int arr[10000] = {};
-    try
+    size_t k = tarasenko::input(input, arr, rows, cols);
+    input.close();
+    if (k < rows * cols)
     {
-      tarasenko::input(input, arr, rows, cols);
-      input.close();
-    }
-    catch (size_t e)
-    {
-      std::cerr << "Managed to read "<< e << " numbers from file" << '\n';
+      std::cerr << "Managed to read "<< k << " numbers from file" << '\n';
       return 2;
     }
     size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
@@ -156,14 +153,11 @@ int main(int argc, char ** argv)
       std::cerr << "failed to allocate memory" << '\n';
       return 1;
     }
-    try
+    size_t k = tarasenko::input(input, arr, rows, cols);
+    input.close();
+    if (k < rows * cols)
     {
-      tarasenko::input(input, arr, rows, cols);
-      input.close();
-    }
-    catch (size_t e)
-    {
-      std::cerr << "Managed to read "<< e << " numbers from file" << '\n';
+      std::cerr << "Managed to read "<< k << " numbers from file" << '\n';
       free(arr);
       return 2;
     }
