@@ -43,7 +43,10 @@ int main(int argc, char const** argv)
     return 1;
   }
   input >> rows >> cols;
-
+  if (!(input)) {
+    std::cerr << "Can't read the file\n";
+    return 1;
+  }
   int* mtx = nullptr;
   if (std::stoi(argv[1]) == 1) {
     int statMatrix[10000];
@@ -62,8 +65,6 @@ int main(int argc, char const** argv)
     dynamic = true;
     mtx = zub::readMatrix(input, rows, cols, mtx, dynamic);
   }
-
-  input.close();
 
   if (!mtx) {
     return 2;
