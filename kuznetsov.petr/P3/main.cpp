@@ -42,7 +42,6 @@ int main(int argc, char** argv)
   input >> rows >> cols;
   if (!input) {
     std::cerr << "Bad reading\n";
-    input.close();
     return 2;
   }
 
@@ -50,7 +49,6 @@ int main(int argc, char** argv)
     int mtx[kuz::MAX_SIZE] {};
 
     int status = kuz::initMatr(input, mtx, rows, cols);
-    input.close();
     if (status == -1) {
       std::cerr << "Not enough elements for matrix\n";
       return 1;
@@ -76,7 +74,6 @@ int main(int argc, char** argv)
   }
 
   int status = kuz::initMatr(input, mtrx, rows, cols);
-  input.close();
 
   if (status == -1) {
     std::cerr << "Not enough elements for matrix\n";
@@ -188,6 +185,5 @@ int kuznetsov::outputRes(char* output, int res1, int res2)
   }
   out << res1 << '\n';
   out << res2 << '\n';
-  out.close();
   return 0;
 }
