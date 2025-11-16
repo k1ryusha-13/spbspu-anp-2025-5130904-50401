@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <cctype>
 
 namespace zharov
 {
@@ -58,7 +59,7 @@ bool zharov::isArgNum(const char * arg)
     return false;
   } else {
     for (int i = 0; arg[i] != '\0'; ++i) {
-      if (arg[i] < '0' || arg[i] > '9') {
+      if (!std::isdigit(arg[i])) {
         return false;
       }
     }
