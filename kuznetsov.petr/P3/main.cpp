@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <cctype>
 
 namespace kuznetsov {
   const size_t MAX_SIZE = 10'000;
