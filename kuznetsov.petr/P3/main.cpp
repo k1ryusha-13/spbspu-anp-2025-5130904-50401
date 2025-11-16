@@ -15,12 +15,14 @@ namespace kuznetsov {
   {
     initMatr(input, mtx, rows, cols);
 
-    if (input.eof()) {
-      std::cerr << "Not enough elements for matrix\n";
-      return 1;
-    } else if (input.fail()) {
-      std::cerr << "Bad reading file\n";
-      return 2;
+    if (!input) {
+      if (input.eof()) {
+        std::cerr << "Not enough elements for matrix\n";
+        return 1;
+      } else {
+        std::cerr << "Bad read\n";
+        return 2;
+      }
     }
 
     int res1 = getCntColNsm(mtx, rows, cols);
@@ -128,7 +130,8 @@ int kuznetsov::getCntLocMax(const int* mtx, size_t rows, size_t cols)
 std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, size_t cols)
 {
   size_t c = 0;
-  while (input >> mtx[c] && c < rows*cols) {
+  while (c < rows*cols) {
+    input >> mtx[c];
     ++c;
   }
   return input;
