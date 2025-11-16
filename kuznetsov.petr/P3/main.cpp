@@ -109,7 +109,9 @@ std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, si
 {
   size_t c = 0;
   while (c < rows*cols) {
-    input >> mtx[c];
+    if (input >> mtx[c]) {
+      break;
+    }
     ++c;
   }
   return input;
