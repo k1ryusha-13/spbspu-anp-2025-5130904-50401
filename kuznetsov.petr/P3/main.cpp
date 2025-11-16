@@ -6,8 +6,8 @@ namespace kuznetsov {
   const size_t MAX_SIZE = 10'000;
   bool isNumber(const char* str);
 
-  int CntColNsm(const int* mtx, size_t rows, size_t cols);
-  int CntLocMax(const int* mtx, size_t rows, size_t cols);
+  int getCntColNsm(const int* mtx, size_t rows, size_t cols);
+  int getCntLocMax(const int* mtx, size_t rows, size_t cols);
 
   int initMatr(std::istream& input, int* mtx, size_t rows, size_t cols);
 
@@ -59,8 +59,8 @@ int main(int argc, char** argv)
       return 2;
     }
 
-    int res1 = kuz::CntColNsm(mtx, rows, cols);
-    int res2 = kuz::CntLocMax(mtx, rows, cols);
+    int res1 = kuz::getCntColNsm(mtx, rows, cols);
+    int res2 = kuz::getCntLocMax(mtx, rows, cols);
 
     int statusWrite = kuz::outputRes(argv[3], res1, res2);
     if (statusWrite == 2) {
@@ -88,8 +88,8 @@ int main(int argc, char** argv)
     return 2;
   }
 
-  int res1 = kuz::CntColNsm(mtrx, rows, cols);
-  int res2 = kuz::CntLocMax(mtrx, rows, cols);
+  int res1 = kuz::getCntColNsm(mtrx, rows, cols);
+  int res2 = kuz::getCntLocMax(mtrx, rows, cols);
 
 
   int statusWrite = kuz::outputRes(argv[3], res1, res2);
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
   return 0;
 }
 
-int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
+int kuznetsov::getCntColNsm(const int* mtx, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return 0;
@@ -121,7 +121,7 @@ int kuznetsov::CntColNsm(const int* mtx, size_t rows, size_t cols)
   return res;
 }
 
-int kuznetsov::CntLocMax(const int* mtx, size_t rows, size_t cols)
+int kuznetsov::getCntLocMax(const int* mtx, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return 0;
