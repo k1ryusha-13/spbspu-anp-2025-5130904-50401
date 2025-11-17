@@ -34,6 +34,7 @@ int main(int argc, char ** argv)
     return 2;
   }
   if (rows == 0 && cols == 0) {
+    output << 0 << "\n" << 0 << " " << 0 << "\n";
     return 0;
   }
   if (argv[1][0] == '1') {
