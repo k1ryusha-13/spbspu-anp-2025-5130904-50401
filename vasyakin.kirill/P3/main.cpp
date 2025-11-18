@@ -4,13 +4,13 @@
 #include <fstream>
 namespace vasyakin
 {
-  void output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output);
-  int quantity_static_dynamic(const int * a, size_t rows, size_t cols);
-  int * create_matrix(size_t rows, size_t cols);
+  void outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output);
+  int countSaddlePoints(const int* a, size_t rows, size_t cols);
+  int* create_matrix(size_t rows, size_t cols);
   size_t min(size_t rows, size_t cols);
-  void spiral_static_dynamic(int * a, size_t rows, size_t cols);
+  void transformSpiral(int* a, size_t rows, size_t cols);
 }
-void vasyakin::output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output)
+void vasyakin::outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output)
 {
   output << rows << ' ' << cols << '\n';
   if (rows != 0 && cols != 0)
@@ -26,7 +26,7 @@ void vasyakin::output_static_dynamic(const int * a, size_t rows, size_t cols, st
     }
   }
 }
-int vasyakin::quantity_static_dynamic(const int * a, size_t rows, size_t cols)
+int vasyakin::countSaddlePoints(const int* a, size_t rows, size_t cols)
 {
   int count = 0;
   for (size_t i = 0; i < rows; ++i)
@@ -60,9 +60,9 @@ int vasyakin::quantity_static_dynamic(const int * a, size_t rows, size_t cols)
   }
   return count;
 }
-int * vasyakin::create_matrix(size_t rows, size_t cols)
+int* vasyakin::create_matrix(size_t rows, size_t cols)
 {
-  int * a = nullptr;
+  int* a = nullptr;
   a = new int [rows * cols];
   return a;
 }
@@ -74,7 +74,7 @@ size_t vasyakin::min(size_t rows, size_t cols)
   }
   return rows;
 }
-void vasyakin::spiral_static_dynamic(int * a, size_t rows, size_t cols)
+void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
 {
   size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
   size_t subtrahend = 1;
@@ -108,24 +108,19 @@ void vasyakin::spiral_static_dynamic(int * a, size_t rows, size_t cols)
     }
   }
 }
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
   if (argc != 4)
   {
     std::cerr << (argc < 4 ? "Not enough arguments" : "Too many arguments") << '\n';
     return 1;
   }
-  if (*argv[1] != '1' && *argv[1] != '2')
+  if (argv[1][0] != '1' && argv[1][0] != '2' || argv[1][1] != '\0')
   {
-    std::cerr << "First parameter is out of range" << "\n";
+    std::cerr << "First parameter must be 1 or 2" << "\n";
     return 1;
   }
-  else if (argv[1][1] != '\0')
-  {
-    std::cerr << "First parameter is not number" << "\n";
-    return 1;
-  }
-  int num = *argv[1] - '0';
+  int num = argv[1][1] - '0';
   std::ifstream input(argv[2]);
   std::ofstream output(argv[3]);
   if (!input)
@@ -189,19 +184,19 @@ int main(int argc, char ** argv)
           matrix[i * cols + j] = static_cast< int >(temp);
         }
       }
-      int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
+      int result = vasyakin::countSaddlePoints(matrix, rows, cols);
       output << result << '\n';
       int matrix_copy[10000];
       for (size_t i = 0; i < rows * cols; ++i)
       {
         matrix_copy[i] = matrix[i];
       }
-      vasyakin::spiral_static_dynamic(matrix_copy, rows, cols);
-      vasyakin::output_static_dynamic(matrix_copy, rows, cols, output);
+      vasyakin::transformSpiral(matrix_copy, rows, cols);
+      vasyakin::outputMatrix(matrix_copy, rows, cols, output);
     }
     else
     {
-      int * matrix = vasyakin::create_matrix(rows, cols);
+      int* matrix = vasyakin::create_matrix(rows, cols);
       for (size_t i = 0; i < rows; ++i)
       {
         for (size_t j = 0; j < cols; ++j)
@@ -235,15 +230,15 @@ int main(int argc, char ** argv)
           matrix[i * cols + j] = static_cast< int >(temp);
         }
       }
-      int result = vasyakin::quantity_static_dynamic(matrix, rows, cols);
+      int result = vasyakin::countSaddlePoints(matrix, rows, cols);
       output << result << '\n';
-      int * matrix_copy = vasyakin::create_matrix(rows, cols);
+      int* matrix_copy = vasyakin::create_matrix(rows, cols);
       for (size_t i = 0; i < rows * cols; ++i)
       {
         matrix_copy[i] = matrix[i];
       }
-      vasyakin::spiral_static_dynamic(matrix_copy, rows, cols);
-      vasyakin::output_static_dynamic(matrix_copy, rows, cols, output);
+      vasyakin::transformSpiral(matrix_copy, rows, cols);
+      vasyakin::outputMatrix(matrix_copy, rows, cols, output);
       delete[] matrix;
       delete[] matrix_copy;
     }
