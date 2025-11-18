@@ -88,10 +88,10 @@ size_t hvostov::count_local_max(int * matrix, size_t rows, size_t cols)
   size_t counter = 0;
   for (size_t i = 1; i < rows - 1; i++) {
     for (size_t j = 1; j < cols - 1; j++) {
-      bool is_local_max = matrix[i*cols+j] > matrix[i*cols+j-1];
-      is_local_max = is_local_max && matrix[i*cols+j] > matrix[i*cols+j+1];
-      is_local_max = is_local_max && matrix[i*cols+j] > matrix[i*(cols-1)+j];
-      is_local_max = is_local_max && matrix[i*cols+j] > matrix[i*(cols+1)+j];
+      bool is_local_max = matrix[i * cols + j] > matrix[i * cols + j - 1];
+      is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * cols + j + 1];
+      is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * (cols - 1) + j];
+      is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * (cols+1) + j];
       if (is_local_max) {
         counter++;
       }
@@ -114,19 +114,19 @@ void hvostov::modify_matrix(int * matrix, size_t rows, size_t cols)
   size_t top = 0, right = cols - 1, bot = rows - 1, left = 0, decrease_by = 1;
   while (top <= bot && left <= right) {
     for (size_t i = bot; i > top; i--) {
-      matrix[i*cols+left] -= decrease_by;
+      matrix[i * cols + left] -= decrease_by;
       decrease_by++;
     }
     for (size_t j = left; j < right; j++) {
-      matrix[j+top*cols] -= decrease_by;
+      matrix[j + top * cols] -= decrease_by;
       decrease_by++;
     }
     for (size_t i = top; i < bot; i++) {
-      matrix[i*cols + right] -= decrease_by;
+      matrix[i * cols + right] -= decrease_by;
       decrease_by++;
     }
     for (size_t j = right; j > left; j--) {
-      matrix[bot*cols + j] -= decrease_by;
+      matrix[bot * cols + j] -= decrease_by;
       decrease_by++;
     }
     top++;
