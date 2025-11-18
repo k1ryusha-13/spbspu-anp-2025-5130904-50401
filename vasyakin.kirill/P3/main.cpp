@@ -5,7 +5,7 @@ namespace vasyakin
 {
   void outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output);
   int countSaddlePoints(const int* a, size_t rows, size_t cols);
-  int* create_matrix(size_t rows, size_t cols);
+  int* createMatrix(size_t rows, size_t cols);
   size_t min(size_t rows, size_t cols);
   void transformSpiral(int* a, size_t rows, size_t cols);
   void readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
@@ -60,7 +60,7 @@ int vasyakin::countSaddlePoints(const int* a, size_t rows, size_t cols)
   }
   return count;
 }
-int* vasyakin::create_matrix(size_t rows, size_t cols)
+int* vasyakin::createMatrix(size_t rows, size_t cols)
 {
   int* a = nullptr;
   a = new int [rows * cols];
@@ -108,7 +108,7 @@ void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
     }
   }
 }
-void readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
+void vasyakin::readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
 {
   for (size_t i = 0; i < rows; ++i)
   {
@@ -126,7 +126,7 @@ void readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
           throw std::runtime_error("Unexpected input");
         }
       }
-      matrix[i * cols + j] = temp;
+      a[i * cols + j] = temp;
     }
   }
 }
@@ -197,7 +197,7 @@ int main(int argc, char** argv)
     }
     else
     {
-      int* matrix = vasyakin::create_matrix(rows, cols);
+      int* matrix = vasyakin::createMatrix(rows, cols);
       try
       {
         vasyakin::readMatrix(matrix, rows, cols, input);
@@ -210,7 +210,7 @@ int main(int argc, char** argv)
       }
       int result = vasyakin::countSaddlePoints(matrix, rows, cols);
       output << result << '\n';
-      int* matrix_copy = vasyakin::create_matrix(rows, cols);
+      int* matrix_copy = vasyakin::createMatrix(rows, cols);
       for (size_t i = 0; i < rows * cols; ++i)
       {
         matrix_copy[i] = matrix[i];
