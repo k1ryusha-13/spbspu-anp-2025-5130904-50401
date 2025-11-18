@@ -112,17 +112,8 @@ int main(int argc, char ** argv)
 {
   if (argc != 4)
   {
-    std::cerr << "Error:" << " ";
-    if (argc < 4)
-    {
-      std::cerr << "Not enough arguments" << "\n";
-      return 1;
-    }
-    else
-    {
-      std::cerr << "Too many arguments" << "\n";
-      return 1;
-    }
+    std::cerr << (argc < 4 ? "Not enough arguments" : "Too many arguments") << '\n';
+    return 1;
   }
   if (*argv[1] != '1' && *argv[1] != '2')
   {
