@@ -5,14 +5,8 @@
 namespace goltsov
 {
   long long * create(size_t rows, size_t cols);
-  void destroy(long long * mtx);
   void getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
-  bool lwrTriMtx(const long long * mtx,
-    size_t n,
-    size_t shift,
-    size_t cols,
-    size_t flag1,
-    size_t flag2);
+  bool lwrTriMtx(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
   size_t cntLocMax(const long long * mtx, size_t rows, size_t cols);
 }
 
@@ -33,7 +27,7 @@ int main(int argc, char ** argv)
   int num = 0;
   for (size_t i = 0; argv[1][i] != '\0'; ++i)
   {
-    if (argv[1][i] >= '0' && argv[1][i] <= '9')
+    if (isdigit(argv[1][i]))
     {
       num = num * 10 + (argv[1][i] - '0');
     }
@@ -60,20 +54,40 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  long long * dynMtx = nullptr;
-  long long autoMtx[10000];
-
   if (num == 1)
   {
+    long long autoMtx[10000];
     goltsov::getMtx(autoMtx, rows, cols, input);
+
     if (!input)
     {
       std::cerr << "Bad input\n";
       return 2;
     }
+
+    bool answer1;
+
+    if (rows < cols)
+    {
+      answer1 = goltsov::lwrTriMtx(autoMtx, rows, cols - rows, cols, 0, 1);
+    }
+    else
+    {
+      answer1 = goltsov::lwrTriMtx(autoMtx, cols, rows - cols, cols, 1, 0);
+    }
+
+    size_t answer2 = goltsov::cntLocMax(autoMtx, rows, cols);
+
+    std::ofstream output(argv[3]);
+    output << "Expects output (return code 0): " << answer1 << '\n';
+    output << "Expects output (return code 0): " << answer2 << '\n';
+
+    return 0;
   }
   else
   {
+    long long * dynMtx = nullptr;
+
     try
     {
       dynMtx = goltsov::create(rows, cols);
@@ -88,36 +102,31 @@ int main(int argc, char ** argv)
     if (!input)
     {
       std::cerr << "Bad input\n";
-      goltsov::destroy(dynMtx);
+      free(dynMtx);
       return 2;
     }
+
+    bool answer1;
+
+    if (rows < cols)
+    {
+      answer1 = goltsov::lwrTriMtx(dynMtx, rows, cols - rows, cols, 0, 1);
+    }
+    else
+    {
+      answer1 = goltsov::lwrTriMtx(dynMtx, cols, rows - cols, cols, 1, 0);
+    }
+
+    size_t answer2 = goltsov::cntLocMax(dynMtx, rows, cols);
+
+    std::ofstream output(argv[3]);
+    output << "Expects output (return code 0): " << answer1 << '\n';
+    output << "Expects output (return code 0): " << answer2 << '\n';
+
+    free(dynMtx);
+
+    return 0;
   }
-
-  bool answer1 = goltsov::lwrTriMtx(
-    num == 1 ? autoMtx : dynMtx,
-    rows < cols ? rows : cols,
-    rows < cols ? (cols - rows) : (rows - cols),
-    cols,
-    rows < cols ? 0 : 1,
-    rows < cols ? 1 : 0
-  );
-
-  size_t answer2 = goltsov::cntLocMax(
-    num == 1 ? autoMtx : dynMtx,
-    rows,
-    cols
-  );
-
-  std::ofstream output(argv[3]);
-  output << "Expects output (return code 0): " << answer1 << '\n';
-  output << "Expects output (return code 0): " << answer2 << '\n';
-
-  if (num == 2)
-  {
-    goltsov::destroy(dynMtx);
-  }
-
-  return 0;
 }
 
 bool goltsov::lwrTriMtx(const long long * mtx,
@@ -191,19 +200,13 @@ size_t goltsov::cntLocMax(const long long * mtx, size_t rows, size_t cols)
 
 long long * goltsov::create(size_t rows, size_t cols)
 {
-  long long * mtx =
-    reinterpret_cast<long long *>(malloc(sizeof(long long) * rows * cols));
+  long long * mtx = reinterpret_cast<long long *>(malloc(sizeof(long long) * rows * cols));
   if (mtx == nullptr)
   {
     throw std::bad_alloc();
   }
 
   return mtx;
-}
-
-void goltsov::destroy(long long * mtx)
-{
-  free(mtx);
 }
 
 void goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input)
