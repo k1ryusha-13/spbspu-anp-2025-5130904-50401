@@ -71,11 +71,11 @@ namespace stupir
       left++;
     }
   }
-
+  
+  const size_t maxStat = 10000;
+  int statMem[maxStat];
   int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
   {
-    static const size_t maxStat = 10000;
-    static int statMem[maxStat];
     if (firstArg[0] == '1')
     {
       if (rows * cols <= maxStat)
