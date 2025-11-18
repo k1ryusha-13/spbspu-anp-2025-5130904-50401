@@ -1,6 +1,5 @@
 #include <iostream>
 #include <cstddef>
-#include <limits>
 #include <fstream>
 namespace vasyakin
 {
@@ -9,6 +8,7 @@ namespace vasyakin
   int* create_matrix(size_t rows, size_t cols);
   size_t min(size_t rows, size_t cols);
   void transformSpiral(int* a, size_t rows, size_t cols);
+  void readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
 }
 void vasyakin::outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output)
 {
@@ -38,7 +38,7 @@ int vasyakin::countSaddlePoints(const int* a, size_t rows, size_t cols)
       bool is_max_in_col = true;
       for (size_t f = 0; f < cols; ++f)
       {
-        if (a[i * cols + f]< current)
+        if (a[i * cols + f] < current)
         {
           is_min_in_row = false;
           break;
@@ -108,6 +108,28 @@ void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
     }
   }
 }
+void readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
+{
+  for (size_t i = 0; i < rows; ++i)
+  {
+    for (size_t j = 0; j < cols; ++j)
+    {
+      int temp = 0;
+      if (!(input >> temp))
+      {
+        if (input.eof())
+        {
+          throw std::runtime_error("Not enough elements for matrix");
+        }
+        if (input.fail())
+        {
+          throw std::runtime_error("Unexpected input");
+        }
+      }
+      matrix[i * cols + j] = temp;
+    }
+  }
+}
 int main(int argc, char** argv)
 {
   if (argc != 4)
@@ -120,7 +142,7 @@ int main(int argc, char** argv)
     std::cerr << "First parameter must be 1 or 2" << "\n";
     return 1;
   }
-  int num = argv[1][1] - '0';
+  int num = argv[1][0] - '0';
   std::ifstream input(argv[2]);
   std::ofstream output(argv[3]);
   if (!input)
@@ -154,35 +176,14 @@ int main(int argc, char** argv)
         return 2;
       }
       int matrix[10000];
-      for (size_t i = 0; i < rows; ++i)
+      try
       {
-        for (size_t j = 0; j < cols; ++j)
-        {
-          long long int temp = 0;
-          if (!(input >> temp))
-          {
-            if (input.eof())
-            {
-              std::cerr << "Not enough elements for matrix" << '\n';
-              return 2;
-            }
-            else if (input.fail())
-            {
-              input.clear();
-              std::cerr << "Unexpected input" << '\n';
-              return 2;
-            }
-          }
-          using lim_int = std::numeric_limits< int >;
-          const long long int MAX = static_cast< long long int > (lim_int::max());
-          const long long int MIN = static_cast< long long int > (lim_int::min());
-          if (temp > MAX || temp < MIN)
-          {
-            std::cerr << "number out of int range" << '\n';
-            return 2;
-          }
-          matrix[i * cols + j] = static_cast< int >(temp);
-        }
+        vasyakin::readMatrix(int* matrix, rows, cols, input);
+      }
+      catch (const std::exception& e)
+      {
+        std::cerr << e.what() << '\n';
+        return 2;
       }
       int result = vasyakin::countSaddlePoints(matrix, rows, cols);
       output << result << '\n';
@@ -197,38 +198,15 @@ int main(int argc, char** argv)
     else
     {
       int* matrix = vasyakin::create_matrix(rows, cols);
-      for (size_t i = 0; i < rows; ++i)
+      try
       {
-        for (size_t j = 0; j < cols; ++j)
-        {
-          long long int temp = 0;
-          if (!(input >> temp))
-          {
-            if (input.eof())
-            {
-              delete[] matrix;
-              std::cerr << "Not enough elements for matrix" << '\n';
-              return 2;
-            }
-            else if (input.fail())
-            {
-              input.clear();
-              delete[] matrix;
-              std::cerr << "Unexpected input" << '\n';
-              return 2;
-            }
-          }
-          using lim_int = std::numeric_limits< int >;
-          const long long int MAX = static_cast< long long int > (lim_int::max());
-          const long long int MIN = static_cast< long long int > (lim_int::min());
-          if (temp > MAX || temp < MIN)
-          {
-            delete[] matrix;
-            std::cerr << "number out of int range" << '\n';
-            return 2;
-          }
-          matrix[i * cols + j] = static_cast< int >(temp);
-        }
+        vasyakin::readMatrix(matrix, rows, cols, input);
+      }
+      catch (const std::exception& e)
+      {
+        delete[] matrix;
+        std::cerr << e.what() << '\n';
+        return 2;
       }
       int result = vasyakin::countSaddlePoints(matrix, rows, cols);
       output << result << '\n';
@@ -243,7 +221,7 @@ int main(int argc, char** argv)
       delete[] matrix_copy;
     }
   }
-  catch (const std::exception &e)
+  catch (const std::exception& e)
   {
     std::cerr << e.what() << "\n";
     return 2;
