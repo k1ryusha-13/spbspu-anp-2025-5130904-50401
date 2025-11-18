@@ -98,12 +98,13 @@ namespace stupir
     return arr;
   }
 
-  void readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
+  std::ifstream& readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
   {
     for (size_t i = 0; i < rows * cols; ++i)
     {
       input >> arr[i];
     }
+    return input;
   }
 
   void writeArr(std::ofstream& output, size_t rows, size_t cols, const int * arr)
@@ -181,7 +182,7 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  else if (argv[1][0] < '0' || argv[1][0] > '9')
+  else if (!std::isdigit(argv[1][0]))
   {
     std::cerr << "First parametr isn't a number\n";
     return 1;
@@ -220,8 +221,7 @@ int main(int argc, char ** argv)
   try
   {
     arr = stu::create(arr, firstArg, rows, cols);
-    stu::readArr(input, rows, cols, arr);
-    if (input.fail())
+    if (!stu::readArr(input, rows, cols, arr))
     {
       std::cerr << "Non-correct values of matrix elements\n";
       if (firstArg[0] == '2')
