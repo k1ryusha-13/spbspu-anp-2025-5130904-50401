@@ -138,7 +138,7 @@ int main(int argc, char** argv)
     std::cerr << (argc < 4 ? "Not enough arguments" : "Too many arguments") << '\n';
     return 1;
   }
-  if (argv[1][0] != '1' && argv[1][0] != '2' || argv[1][1] != '\0')
+  if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0')
   {
     std::cerr << "First parameter must be 1 or 2" << "\n";
     return 1;
