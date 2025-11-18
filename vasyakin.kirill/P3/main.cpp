@@ -4,16 +4,11 @@
 #include <fstream>
 namespace vasyakin
 {
-  void destroy(int * a);
   void output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output);
   int quantity_static_dynamic(const int * a, size_t rows, size_t cols);
   int * create_matrix(size_t rows, size_t cols);
   size_t min(size_t rows, size_t cols);
   void spiral_static_dynamic(int * a, size_t rows, size_t cols);
-}
-void vasyakin::destroy(int * a)
-{
-  delete[] a;
 }
 void vasyakin::output_static_dynamic(const int * a, size_t rows, size_t cols, std::ofstream & output)
 {
@@ -225,14 +220,14 @@ int main(int argc, char ** argv)
           {
             if (input.eof())
             {
-              vasyakin::destroy(matrix);
+              delete[] matrix;
               std::cerr << "Not enough elements for matrix" << '\n';
               return 2;
             }
             else if (input.fail())
             {
               input.clear();
-              vasyakin::destroy(matrix);
+              delete[] matrix;
               std::cerr << "Unexpected input" << '\n';
               return 2;
             }
@@ -242,7 +237,7 @@ int main(int argc, char ** argv)
           const long long int MIN = static_cast< long long int > (lim_int::min());
           if (temp > MAX || temp < MIN)
           {
-            vasyakin::destroy(matrix);
+            delete[] matrix;
             std::cerr << "number out of int range" << '\n';
             return 2;
           }
@@ -258,8 +253,8 @@ int main(int argc, char ** argv)
       }
       vasyakin::spiral_static_dynamic(matrix_copy, rows, cols);
       vasyakin::output_static_dynamic(matrix_copy, rows, cols, output);
-      vasyakin::destroy(matrix);
-      vasyakin::destroy(matrix_copy);
+      delete[] matrix;
+      delete[] matrix_copy;
     }
   }
   catch (const std::exception &e)
