@@ -126,8 +126,8 @@ int main(int argc, char ** argv)
     return 1;
   }
   int num = *argv[1] - '0';
-  std::ifstream input (argv[2]);
-  std::ofstream output (argv[3]);
+  std::ifstream input(argv[2]);
+  std::ofstream output(argv[3]);
   if (!input)
   {
     std::cerr << "file not open" << "\n";
