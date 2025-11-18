@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstddef>
 #include <fstream>
+#include <stdexcept>
 namespace vasyakin
 {
   void outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output);
@@ -178,7 +179,7 @@ int main(int argc, char** argv)
       int matrix[10000];
       try
       {
-        vasyakin::readMatrix(int* matrix, rows, cols, input);
+        vasyakin::readMatrix(matrix, rows, cols, input);
       }
       catch (const std::exception& e)
       {
