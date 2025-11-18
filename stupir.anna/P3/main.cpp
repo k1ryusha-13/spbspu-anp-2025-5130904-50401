@@ -98,7 +98,7 @@ namespace stupir
     return arr;
   }
 
-  std::ifstream& readArr(std::ifstream& input, size_t rows, size_t cols, int * arr)
+  std::ifstream & readArr(std::ifstream & input, size_t rows, size_t cols, int * arr)
   {
     for (size_t i = 0; i < rows * cols; ++i)
     {
@@ -107,7 +107,7 @@ namespace stupir
     return input;
   }
 
-  void writeArr(std::ofstream& output, size_t rows, size_t cols, const int * arr)
+  void writeArr(std::ofstream & output, size_t rows, size_t cols, const int * arr)
   {
     if (!output.fail())
     {
@@ -238,7 +238,7 @@ int main(int argc, char ** argv)
     }
     task2 = stu::countNotZeroD(arr, rows, cols);
   }
-  catch (const std::bad_alloc& e)
+  catch (const std::bad_alloc & e)
   {
     delete [] arr;
     delete [] task1;
