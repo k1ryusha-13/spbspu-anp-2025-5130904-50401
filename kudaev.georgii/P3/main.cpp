@@ -182,7 +182,7 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
   }
 }
 
-void kudaev::outputmtx(std::ostream& out, int* a, size_t m, size_t n)
+void kudaev::outputMtx(std::ostream& out, int* a, size_t m, size_t n)
 {
   out << m << ' ' << n << ' ';
   for (size_t i = 0; i < m * n; ++i)
