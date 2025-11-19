@@ -6,8 +6,8 @@
 namespace chernov {
   std::istream & matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isNumber(const char * word);
-  void fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols);
-  int minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
+  void fllIncWav(int * mtx, size_t rows, size_t cols);
+  int minSumMdg(const int * mtx, size_t rows, size_t cols);
   int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
   int processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols);
 }
@@ -37,7 +37,7 @@ bool chernov::isNumber(const char * word)
   return true;
 }
 
-void chernov::fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols)
+void chernov::fllIncWav(int * mtx, size_t rows, size_t cols)
 {
   int add = 1;
   size_t x = 0, y = 0, count = 0, border = 0;
@@ -74,7 +74,7 @@ int chernov::getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows
   return sum;
 }
 
-int chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols)
+int chernov::minSumMdg(const int * mtx, size_t rows, size_t cols)
 {
   if (rows * cols == 0) {
     return 0;
@@ -106,9 +106,9 @@ int chernov::processMatrix(std::istream & input, std::ostream & output, int * ma
     return 2;
   }
 
-  output << chernov::minSumMdg(output, matrix, rows, cols) << "\n";
+  output << chernov::minSumMdg(matrix, rows, cols) << "\n";
 
-  chernov::fllIncWav(output, matrix, rows, cols);
+  chernov::fllIncWav(matrix, rows, cols);
   output << rows << " " << cols;
   for (size_t i = 0; i < rows * cols; ++i) {
     output << " " << matrix[i];
