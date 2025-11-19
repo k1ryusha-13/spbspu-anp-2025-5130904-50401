@@ -7,7 +7,7 @@ namespace chernov {
   std::istream & matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isNumber(const char * word);
   void fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols);
-  void minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
+  int minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
   int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
   int processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols);
 }
@@ -62,12 +62,6 @@ void chernov::fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t co
       }
     }
   }
-
-  output << rows << " " << cols;
-  for (size_t i = 0; i < rows * cols; ++i) {
-    output << " " << mtx[i];
-  }
-  output << "\n";
 }
 
 int chernov::getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols)
@@ -79,11 +73,10 @@ int chernov::getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows
   return sum;
 }
 
-void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols)
+int chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols)
 {
   if (rows * cols == 0) {
-    output << "0\n";
-    return;
+    return 0;
   }
   int min_sum = std::numeric_limits< int >::max(), sum = 0;
 
@@ -99,8 +92,7 @@ void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, siz
       min_sum = sum;
     }
   }
-
-  output << min_sum << "\n";
+  return min_sum;
 }
 
 int chernov::processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols)
@@ -113,8 +105,15 @@ int chernov::processMatrix(std::istream & input, std::ostream & output, int * ma
     return 2;
   }
 
-  chernov::minSumMdg(output, matrix, rows, cols);
+  output << chernov::minSumMdg(output, matrix, rows, cols) << "\n";
+
   chernov::fllIncWav(output, matrix, rows, cols);
+  output << rows << " " << cols;
+  for (size_t i = 0; i < rows * cols; ++i) {
+    output << " " << matrix[i];
+  }
+  output << "\n";
+
   if (type == '2') {
     delete [] matrix;
   }
