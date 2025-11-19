@@ -7,7 +7,6 @@ namespace vasyakin
   void outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output);
   int countSaddlePoints(const int* a, size_t rows, size_t cols);
   int* createMatrix(size_t rows, size_t cols);
-  size_t min(size_t rows, size_t cols);
   void transformSpiral(int* a, size_t rows, size_t cols);
   void readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
 }
@@ -67,17 +66,9 @@ int* vasyakin::createMatrix(size_t rows, size_t cols)
   a = new int [rows * cols];
   return a;
 }
-size_t vasyakin::min(size_t rows, size_t cols)
-{
-  if (rows >= cols)
-  {
-    return cols;
-  }
-  return rows;
-}
 void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
 {
-  size_t circle = vasyakin::min(rows, cols) / 2 + vasyakin::min(rows, cols) % 2;
+  size_t circle = std::min(rows, cols) / 2 + std::min(rows, cols) % 2;
   size_t subtrahend = 1;
   for (size_t k = 0; k < circle; ++k)
   {
