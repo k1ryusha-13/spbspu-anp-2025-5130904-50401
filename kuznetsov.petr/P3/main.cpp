@@ -108,7 +108,6 @@ std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, si
 {
   for(size_t c = 0; c < rows * cols; ++c) {
     input >> mtx[c];
-    ++c;
   }
   return input;
 }
