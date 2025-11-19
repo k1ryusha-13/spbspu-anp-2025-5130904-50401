@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <cctype>
 
 namespace chernov {
   void matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
@@ -22,8 +23,12 @@ bool chernov::isNumber(const char * word)
   if (!word || *word == '\0') {
     return false;
   }
-  for (size_t i = 0; word[i] != '\0'; ++i) {
-    if (word[i] < '0' || word[i] > '9') {
+  size_t i = 0;
+  if (word[0] == '-') {
+    ++i;
+  }
+  for (; word[i] != '\0'; ++i) {
+    if (!std::isdigit(word[i])) {
       return false;
     }
   }
