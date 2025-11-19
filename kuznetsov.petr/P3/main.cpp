@@ -113,7 +113,7 @@ std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, si
   return input;
 }
 
-int kuznetsov::processMatrix(std::istream& input, int* mtx,size_t rows, size_t cols, const char* out)
+int kuznetsov::processMatrix(std::istream& input, int* mtx, size_t rows, size_t cols, const char* out)
 {
   initMatr(input, mtx, rows, cols);
   if (!input) {
