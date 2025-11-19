@@ -8,7 +8,7 @@ namespace zharov
   std::istream & createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isUppTriMtx(const int * mtx, size_t rows, size_t cols);
   size_t getCntColNsm(const int * mtx, size_t rows, size_t cols);
-  int processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file);
+  void processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file);
 }
 
 int main(int argc, char ** argv)
@@ -115,7 +115,7 @@ size_t zharov::getCntColNsm(const int * mtx, size_t rows, size_t cols)
   return res;
 }
 
-int zharov::processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file)
+void zharov::processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file)
 {
   zharov::createMatrix(input, matrix, rows, cols);
   std::ofstream output(output_file);
