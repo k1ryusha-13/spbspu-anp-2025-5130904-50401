@@ -81,14 +81,7 @@ bool sedov::checkFirstArg(const char * a)
 int * sedov::createMatrix(size_t rows, size_t cols)
 {
   int * mtx = nullptr;
-  try
-  {
-    mtx = new int[rows * cols];
-  }
-  catch (const std::bad_alloc & e)
-  {
-    throw;
-  }
+  mtx = new int[rows * cols];
   return mtx;
 }
 
