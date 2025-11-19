@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     return status_exit;
   }
 
-  int* mtrx = reinterpret_cast< int* >(malloc(sizeof(int)*rows*cols));
+  int* mtrx = reinterpret_cast< int* >(malloc(sizeof(int) * rows * cols));
   if (mtrx == nullptr) {
     std::cerr << "Bad alloc\n";
     return 3;
@@ -106,10 +106,9 @@ int kuznetsov::getCntLocMax(const int* mtx, size_t rows, size_t cols)
 
 std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, size_t cols)
 {
-  size_t c = 0;
-  while (c < rows * cols) {
-   input >> mtx[c];
-   ++c;
+  for(size_t c = 0; c < rows * cols; ++c) {
+    input >> mtx[c];
+    ++c;
   }
   return input;
 }
@@ -117,7 +116,6 @@ std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, si
 int kuznetsov::processMatrix(std::istream& input, int* mtx,size_t rows, size_t cols, const char* out)
 {
   initMatr(input, mtx, rows, cols);
-
   if (!input) {
     if (input.eof()) {
       std::cerr << "Not enough elements for matrix\n";
