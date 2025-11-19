@@ -9,6 +9,7 @@ namespace chernov {
   void fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols);
   void minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
   int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
+  int processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols);
 }
 
 void chernov::matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols)
@@ -101,6 +102,26 @@ void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, siz
   output << min_sum << "\n";
 }
 
+int chernov::processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols)
+{
+  chernov::matrixInput(input, matrix, rows, cols);
+  if (!input) {
+    std::cerr << "Incorrect input\n";
+    if (type == '2') {
+      delete [] matrix;
+    }
+    return 2;
+  }
+
+  chernov::minSumMdg(output, matrix, rows, cols);
+  chernov::fllIncWav(output, matrix, rows, cols);
+  if (type == '2') {
+    delete [] matrix;
+  }
+
+  return 0;
+}
+
 int main(int argc, char ** argv)
 {
   if (argc < 4) {
@@ -126,34 +147,19 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  if (argv[1][0] == '1') {
+  char type = argv[1][0];
+  if (type == '1') {
     constexpr size_t MAX_STATIC_MATRIX_SIZE = 10000;
     int matrix[MAX_STATIC_MATRIX_SIZE] = {};
-    chernov::matrixInput(input, matrix, rows, cols);
-    if (!input) {
-      std::cerr << "Incorrect input\n";
-      return 2;
-    }
-
-    chernov::minSumMdg(output, matrix, rows, cols);
-    chernov::fllIncWav(output, matrix, rows, cols);
-    return 0;
+    return chernov::processMatrix(input, output, matrix, type, rows, cols);
   }
 
-  int * matrix = new int [rows * cols];
-  chernov::matrixInput(input, matrix, rows, cols);
-  if (!input) {
-    std::cerr << "Incorrect input\n";
-    delete [] matrix;
+  int * matrix = nullptr;
+  try {
+    matrix = new int[rows * cols];
+  } catch (const std::bad_alloc & e) {
+    std::cerr << "Bad alloc\n";
     return 2;
   }
-
-  try {
-    chernov::minSumMdg(output, matrix, rows, cols);
-    chernov::fllIncWav(output, matrix, rows, cols);
-  } catch (const std::exception & e) {
-    delete [] matrix;
-    throw;
-  }
-  delete [] matrix;
+  return chernov::processMatrix(input, output, matrix, type, rows, cols);
 }
