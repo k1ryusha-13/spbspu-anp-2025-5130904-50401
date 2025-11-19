@@ -98,7 +98,7 @@ void sedov::convertIncMatrix(int * mtx, size_t rows, size_t cols)
 {
   size_t minrc = (rows < cols) ? rows : cols;
   size_t layer = minrc / 2 + minrc % 2;
-  const int MAX = std::numeric_limits<int>::max();
+  const int MAX = std::numeric_limits< int >::max();
   for (size_t k = 0; k < layer; ++k)
   {
     for (size_t i = k; i < rows - k; ++i)
@@ -157,9 +157,17 @@ size_t sedov::completeMatrix(std::istream & input, int * mtx, size_t rows, size_
     return 2;
   }
   size_t res1 = getNumCol(mtx, rows, cols);
-  convertIncMatrix(mtx, rows, cols);
-  std::ofstream output(out);
-  output << mtx << "\n";
-  output << res1 << "\n";
-  return 0;
+  try
+  {
+    convertIncMatrix(mtx, rows, cols);
+    std::ofstream output(out);
+    output << mtx << "\n";
+    output << res1 << "\n";
+    return 0;
+  }
+  catch (const std::overflow_error & e)
+  {
+    std::cerr << e.what() << "\n";
+    return 3;
+  }
 }
