@@ -39,23 +39,24 @@ bool chernov::isNumber(const char * word)
 
 void chernov::fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols)
 {
-  size_t add = 1;
-  size_t x = 0, y = 0, count = 0;
+  int add = 1;
+  size_t x = 0, y = 0, count = 0, border = 0;
   while (count++ < rows * cols) {
-    mtx[cols * y + x] += static_cast<int>(add);
-    if (y == add - 1 && x != cols - add) {
+    mtx[cols * y + x] += add;
+    if (y == border && x != cols - border - 1) {
       ++x;
     }
-    else if (x == cols - add && y != rows - add) {
+    else if (x == cols - border - 1 && y != rows - border - 1) {
       ++y;
     }
-    else if (y == rows - add && x != add - 1) {
+    else if (y == rows - border - 1 && x != border) {
       --x;
     }
-    else if (x == add - 1) {
-      if (y == add) {
-        add++;
-        x++;
+    else if (x == border) {
+      if (y == border - 1) {
+        ++add;
+        ++border;
+        ++x;
       }
       else {
         --y;
