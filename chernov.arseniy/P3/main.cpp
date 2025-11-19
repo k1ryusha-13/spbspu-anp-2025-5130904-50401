@@ -4,7 +4,7 @@
 #include <cctype>
 
 namespace chernov {
-  void matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
+  std::istream & matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isNumber(const char * word);
   void fllIncWav(std::ostream & output, int * mtx, size_t rows, size_t cols);
   void minSumMdg(std::ostream & output, const int * mtx, size_t rows, size_t cols);
@@ -12,11 +12,12 @@ namespace chernov {
   int processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols);
 }
 
-void chernov::matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols)
+std::istream & chernov::matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; ++i) {
     input >> mtx[i];
   }
+  return input;
 }
 
 bool chernov::isNumber(const char * word)
@@ -104,8 +105,7 @@ void chernov::minSumMdg(std::ostream & output, const int * mtx, size_t rows, siz
 
 int chernov::processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols)
 {
-  chernov::matrixInput(input, matrix, rows, cols);
-  if (!input) {
+  if (!chernov::matrixInput(input, matrix, rows, cols)) {
     std::cerr << "Incorrect input\n";
     if (type == '2') {
       delete [] matrix;
