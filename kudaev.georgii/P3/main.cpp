@@ -5,31 +5,28 @@
 
 namespace kudaev
 {
-  void inputmtx(std::ifstream &, int *, size_t, size_t);
-  void lft_bot_clk(int *, size_t, size_t);
-  void bld_smt_mtr(std::ostream &, int *, size_t, size_t);
-  void outputmtx(std::ostream &, int *, size_t, size_t);
+  std::ifstream& inputMtx(std::ifstream&, int*, size_t, size_t);
+  void lftBotClk(int*, size_t, size_t);
+  void bldSmtMtr(std::ostream&, int*, size_t, size_t);
+  void outputMtx(std::ostream&, int*, size_t, size_t);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   try
   {
     if (argc < 4)
-      throw std::invalid_argument("Not enough arguments");
-    if (argc > 4)
-      throw std::out_of_range("Too many arguments");
-    bool all_digits = true;
-    for (int i = 0; argv[1][i] != '\0'; i++)
     {
-      if (!std::isdigit(argv[1][i]))
-      {
-        all_digits = false;
-        break;
-      }
+      throw std::invalid_argument("Not enough arguments");
     }
-    if (!all_digits || argv[1][0] == '\0')
+    if (argc > 4)
+    {
+      throw std::out_of_range("Too many arguments");
+    }
+    if (!std::isdigit(argv[1][0]) || argv[1][0] == '\0')
+    {
       throw std::invalid_argument("First parameter is not a number");
+    }
   }
   catch (const std::exception& ex)
   {
@@ -49,16 +46,18 @@ int main(int argc, char **argv)
     std::cerr << "Cannot open output file\n";
     return 2;
   }
-  int *target = nullptr;
+  int* target = nullptr;
   int a[10000] = {};
   size_t m, n;
   if (!(input >> m >> n))
   {
-    std::cerr << "Error reading a file" << '\n';
+    std::cerr << "Error reading a file\n";
     return 2;
   }
   if (m == 0 || n == 0)
+  {
     output << m << ' ' << n << '\n';
+  }
   else
   {
     switch (choice)
@@ -69,7 +68,7 @@ int main(int argc, char **argv)
         target = a;
       else
       {
-        std::cerr << "Too many elements for static array" << '\n';
+        std::cerr << "Too many elements for static array\n";
         return 2;
       }
       break;
@@ -89,21 +88,24 @@ int main(int argc, char **argv)
     }
     default:
     {
-      std::cerr << "First parameter is out of range" << '\n';
+      std::cerr << "First parameter is out of range\n";
       return 1;
     }
     }
   }
   try
   {
-    kudaev::inputmtx(input, target, m, n);
-    kudaev::lft_bot_clk(target, m, n);
-    kudaev::outputmtx(output, target, m, n);
-    kudaev::bld_smt_mtr(output, target, m, n);
+    kudaev::inputMtx(input, target, m, n);
+    kudaev::lftBotClk(target, m, n);
+    kudaev::outputMtx(output, target, m, n);
+    kudaev::bldSmtMtr(output, target, m, n);
   }
   catch (const std::exception& ex)
   {
-    if (choice == 2) delete[] target;
+    if (choice == 2)
+    {
+      delete[] target;
+    }
     std::cerr << ex.what() << '\n';
     return 2;
   }
@@ -113,16 +115,20 @@ int main(int argc, char **argv)
   }
 }
 
-void kudaev::inputmtx(std::ifstream &input, int *a, size_t m, size_t n)
+std::ifstream& kudaev::inputMtx(std::ifstream& input, int* a, size_t m, size_t n)
 {
   for (size_t i = 0; i < m * n; ++i)
   {
     if (!(input >> a[i]))
-      throw std::invalid_argument("Incorrect input");
+    {
+      input.setstate(std::ios::failbit);
+      break;
+    }
   }
+  return input;
 }
 
-void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
+void kudaev::lftBotClk(int* a, size_t m, size_t n)
 {
   size_t pos = (m - 1) * n;
   size_t rows = m, cols = n;
@@ -136,7 +142,9 @@ void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
         pos -= n;
     }
     if (--cols == 0)
+    {
       break;
+    }
     pos++;
     for (size_t i = 0; i < cols; i++)
     {
@@ -145,7 +153,9 @@ void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
         pos++;
     }
     if (--rows == 0)
+    {
       break;
+    }
     pos += n;
     for (size_t i = 0; i < rows; i++)
     {
@@ -154,7 +164,9 @@ void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
         pos += n;
     }
     if (--cols == 0)
+    {
       break;
+    }
     pos--;
     for (size_t i = 0; i < cols; i++)
     {
@@ -163,12 +175,14 @@ void kudaev::lft_bot_clk(int *a, size_t m, size_t n)
         pos--;
     }
     if (--rows == 0)
+    {
       break;
+    }
     pos -= n;
   }
 }
 
-void kudaev::outputmtx(std::ostream &out, int *a, size_t m, size_t n)
+void kudaev::outputmtx(std::ostream& out, int* a, size_t m, size_t n)
 {
   out << m << ' ' << n << ' ';
   for (size_t i = 0; i < m * n; ++i)
@@ -178,10 +192,10 @@ void kudaev::outputmtx(std::ostream &out, int *a, size_t m, size_t n)
   out << '\n';
 }
 
-void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
+void kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
 {
-  int *tmp = nullptr;
-  float *res_mas = nullptr;
+  int* tmp = nullptr;
+  float* res_mas = nullptr;
   try
   {
     tmp = new int[m * n];
@@ -201,7 +215,9 @@ void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
     throw;
   }
   for (size_t i = 0; i < m * n; ++i)
+  {
     tmp[i] = a[i];
+  }
   for (size_t i = 0; i < m * n; ++i)
   {
     int sum = 0;
@@ -248,7 +264,7 @@ void kudaev::bld_smt_mtr(std::ostream &out, int *a, size_t m, size_t n)
       sum += tmp[i + 1];
       k++;
     }
-    float res = static_cast<float>(sum) / k;
+    float res = static_cast <float> (sum) / k;
     res_mas[i] = res;
   }
   delete[] tmp;
