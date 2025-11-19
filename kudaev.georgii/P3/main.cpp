@@ -57,6 +57,7 @@ int main(int argc, char** argv)
   if (m == 0 || n == 0)
   {
     output << m << ' ' << n << '\n';
+    return 0;
   }
   else
   {
@@ -95,7 +96,10 @@ int main(int argc, char** argv)
   }
   try
   {
-    kudaev::inputMtx(input, target, m, n);
+    if (!kudaev::inputMtx(input, target, m, n))
+    {
+      throw std::runtime_error("Can't read a file properly");
+    }
     kudaev::lftBotClk(target, m, n);
     kudaev::outputMtx(output, target, m, n);
     kudaev::bldSmtMtr(output, target, m, n);
@@ -199,79 +203,79 @@ void kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
   try
   {
     tmp = new int[m * n];
-    try
+    res_mas = new float[m * n];
+    for (size_t i = 0; i < m * n; ++i)
     {
-      res_mas = new float[m * n];
+        tmp[i] = a[i];
     }
-    catch (...)
+    for (size_t i = 0; i < m * n; ++i)
     {
-      delete[] tmp;
-      throw;
+      int sum = 0;
+      int k = 0;
+      int higherrow = i - n;
+      size_t lowerrow = i + n;
+      if (higherrow >= 0)
+      {
+        sum += tmp[higherrow];
+        k++;
+        if (higherrow % n != 0)
+        {
+          sum += tmp[higherrow - 1];
+          k++;
+        }
+        if ((higherrow + 1) % n != 0)
+        {
+          sum += tmp[higherrow + 1];
+          k++;
+        }
+      }
+      if (lowerrow < m * n)
+      {
+        sum += tmp[lowerrow];
+        k++;
+        if (lowerrow % n != 0)
+        {
+          sum += tmp[lowerrow - 1];
+          k++;
+        }
+        if ((lowerrow + 1) % n != 0)
+        {
+          sum += tmp[lowerrow + 1];
+          k++;
+        }
+      }
+      if (i % n != 0)
+      {
+        sum += tmp[i - 1];
+        k++;
+      }
+      if ((i + 1) % n != 0)
+      {
+        sum += tmp[i + 1];
+        k++;
+      }
+      if (k == 0)
+      {
+        res_mas[i] = 0.0f;
+      }
+      else
+      {
+        float res = static_cast <float> (sum) / k;
+        res_mas[i] = res;
+      }
     }
+    out << m << ' ' << n << ' ';
+    for (size_t i = 0; i < m * n; ++i)
+    {
+        out << std::floor(10 * res_mas[i] + 0.5f) / 10 << ' ';
+    }
+    delete[] tmp;
+    delete[] res_mas;
   }
-  catch (const std::exception& ex)
+  catch (...)
   {
     delete[] tmp;
+    delete[] res_mas;
     throw;
   }
-  for (size_t i = 0; i < m * n; ++i)
-  {
-    tmp[i] = a[i];
-  }
-  for (size_t i = 0; i < m * n; ++i)
-  {
-    int sum = 0;
-    int k = 0;
-    int higherrow = i - n;
-    size_t lowerrow = i + n;
-    if (higherrow >= 0)
-    {
-      sum += tmp[higherrow];
-      k++;
-      if (higherrow % n != 0)
-      {
-        sum += tmp[higherrow - 1];
-        k++;
-      }
-      if ((higherrow + 1) % n != 0)
-      {
-        sum += tmp[higherrow + 1];
-        k++;
-      }
-    }
-    if (lowerrow < m * n)
-    {
-      sum += tmp[lowerrow];
-      k++;
-      if (lowerrow % n != 0)
-      {
-        sum += tmp[lowerrow - 1];
-        k++;
-      }
-      if ((lowerrow + 1) % n != 0)
-      {
-        sum += tmp[lowerrow + 1];
-        k++;
-      }
-    }
-    if (i % n != 0)
-    {
-      sum += tmp[i - 1];
-      k++;
-    }
-    if ((i + 1) % n != 0)
-    {
-      sum += tmp[i + 1];
-      k++;
-    }
-    float res = static_cast <float> (sum) / k;
-    res_mas[i] = res;
-  }
-  delete[] tmp;
-  out << m << ' ' << n << ' ';
-  for (size_t i = 0; i < m * n; ++i)
-  {
-    out << floor(10 * res_mas[i] + 0.5f) / 10 << ' ';
-  }
-  delete[] res_mas;
 }
