@@ -59,7 +59,7 @@ int main(int argc, char ** argv)
     delete[] matrix;
     return st;
   }
-  catch (const std::bad_alloc &e)
+  catch (const std::bad_alloc & e)
   {
     std::cerr << e.what() << "\n";
     return 3;
@@ -85,7 +85,7 @@ int * sedov::createMatrix(size_t rows, size_t cols)
   {
     mtx = new int[rows * cols];
   }
-  catch (const std::bad_alloc &e)
+  catch (const std::bad_alloc & e)
   {
     throw;
   }
