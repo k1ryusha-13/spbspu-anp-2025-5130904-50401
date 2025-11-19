@@ -49,8 +49,6 @@ int main(int argc, char ** argv)
   size_t cols = 0;
   input >> rows >> cols;
 
-
-
   if (!input)
   {
     std::cerr << "Bad input\n";
@@ -214,7 +212,6 @@ std::istream & goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::i
 {
   if (rows == 0 || cols == 0)
   {
-    
     return input;
   }
 
