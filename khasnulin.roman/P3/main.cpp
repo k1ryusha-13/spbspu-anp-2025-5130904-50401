@@ -9,10 +9,10 @@ namespace khasnulin
 {
   namespace ErrMessages
   {
-    const char *manyArgs = "Too many arguments\n";
-    const char *notEnoughArgs = "Not enough arguments\n";
-    const char *FP_out_of_range = "First parameter is out of range\n";
-    const char *FP_not_a_number = "First parameter is not a number\n";
+    const char *many_args = "Too many arguments\n";
+    const char *not_enough_args = "Not enough arguments\n";
+    const char *fp_out_of_range = "First parameter is out of range\n";
+    const char *fp_not_a_number = "First parameter is not a number\n";
     const char *input_file_not_valid = "Error while reading input file data, can't read as matrix\n";
     const char *memory_bad_alloc = "Error memory allocation\n";
     const char *unknown = "Error during task execution, something went wrong\n";
@@ -21,12 +21,11 @@ namespace khasnulin
   size_t get_first_parameter(const char *num);
   void check_argc_validity(int argc);
 
-  std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m);
+  std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m, size_t &elems_count);
 
-  void LFT_BOT_CLK(int *arr, size_t n, size_t m);
+  void lft_bot_clk(int *arr, size_t n, size_t m);
 
-  size_t min(size_t a, size_t b);
-  bool LWR_TRI_MTX(const int *arr, size_t n, size_t m);
+  bool lwr_tri_mtx(const int *arr, size_t n, size_t m);
 
   std::ostream &print_matrix(std::ostream &output, const int *a, size_t n, size_t m);
   std::ostream &print_bool(std::ostream &output, bool val);
@@ -34,68 +33,67 @@ namespace khasnulin
 
 int main(int argc, char **argv)
 {
+  size_t mode = 0;
+  int *currArr = nullptr;
   try
   {
     khasnulin::check_argc_validity(argc);
 
-    char *num = argv[1];
-    size_t mode = khasnulin::get_first_parameter(num);
+    mode = khasnulin::get_first_parameter(argv[1]);
 
     std::ifstream input(argv[2]);
     size_t n = 1, m = 1;
 
     int arr[10000] = {};
-    int *currArr = nullptr;
 
     input >> n >> m;
-    try
+    currArr = mode == 1 ? arr : new int[n * m];
+
+    size_t elems_count = 0;
+    khasnulin::read_matrix(input, currArr, n, m, elems_count);
+
+    if ((!input.eof() && input.fail()) || (elems_count != n * m))
     {
-      currArr = mode == 1 ? arr : new int[n * m];
-
-      khasnulin::read_matrix(input, currArr, n, m);
-      input.close();
-
-      bool isLWR_TRI_MTX = khasnulin::LWR_TRI_MTX(currArr, n, m);
-      khasnulin::LFT_BOT_CLK(currArr, n, m);
-
-      std::ofstream output(argv[3]);
-
-      khasnulin::print_matrix(output, currArr, n, m);
-      khasnulin::print_bool(output, isLWR_TRI_MTX);
-
-      if (mode == 2)
-      {
-        delete[] currArr;
-      }
-    }
-    catch (std::runtime_error &e)
-    {
-      std::cerr << e.what() << "\n";
-      if (mode == 2)
-      {
-        delete[] currArr;
-      }
+      std::cerr << khasnulin::ErrMessages::input_file_not_valid;
       return 2;
     }
-    catch (std::bad_alloc &e)
+    input.close();
+
+    bool isLWR_TRI_MTX = khasnulin::lwr_tri_mtx(currArr, n, m);
+    khasnulin::lft_bot_clk(currArr, n, m);
+
+    std::ofstream output(argv[3]);
+
+    khasnulin::print_matrix(output, currArr, n, m);
+    khasnulin::print_bool(output, isLWR_TRI_MTX);
+
+    if (mode == 2)
     {
-      std::cerr << khasnulin::ErrMessages::memory_bad_alloc;
-      return 2;
+      delete[] currArr;
     }
-    catch (...)
-    {
-      std::cerr << khasnulin::ErrMessages::unknown;
-      if (mode == 2)
-      {
-        delete[] currArr;
-      }
-      return 2;
-    }
+  }
+  catch (std::bad_alloc &e)
+  {
+    std::cerr << khasnulin::ErrMessages::memory_bad_alloc;
+    return 2;
   }
   catch (std::runtime_error &e)
   {
+    if (mode == 2)
+    {
+      delete[] currArr;
+    }
     std::cerr << e.what() << "\n";
     return 1;
+  }
+  catch (...)
+  {
+    std::cerr << khasnulin::ErrMessages::unknown;
+    if (mode == 2)
+    {
+      delete[] currArr;
+    }
+    return 2;
   }
 }
 
@@ -107,7 +105,7 @@ size_t khasnulin::get_first_parameter(const char *num)
   {
     if (*ch < '0' || *ch > '9')
     {
-      throw std::runtime_error(ErrMessages::FP_not_a_number);
+      throw std::runtime_error(ErrMessages::fp_not_a_number);
     }
     len++;
     ch++;
@@ -124,19 +122,19 @@ size_t khasnulin::get_first_parameter(const char *num)
       return 2;
     }
   }
-  throw std::runtime_error(ErrMessages::FP_out_of_range);
+  throw std::runtime_error(ErrMessages::fp_out_of_range);
 }
 
 void khasnulin::check_argc_validity(int argc)
 {
   if (argc != 4)
   {
-    const char *message = argc > 4 ? ErrMessages::manyArgs : ErrMessages::notEnoughArgs;
+    const char *message = argc > 4 ? ErrMessages::many_args : ErrMessages::not_enough_args;
     throw std::runtime_error(message);
   }
 }
 
-void khasnulin::LFT_BOT_CLK(int *arr, size_t n, size_t m)
+void khasnulin::lft_bot_clk(int *arr, size_t n, size_t m)
 {
   if (n > 0 && m > 0)
   {
@@ -184,14 +182,9 @@ void khasnulin::LFT_BOT_CLK(int *arr, size_t n, size_t m)
   }
 }
 
-size_t khasnulin::min(size_t a, size_t b)
+bool khasnulin::lwr_tri_mtx(const int *arr, size_t n, size_t m)
 {
-  return a < b ? a : b;
-}
-
-bool khasnulin::LWR_TRI_MTX(const int *arr, size_t n, size_t m)
-{
-  size_t minSide = min(n, m);
+  size_t minSide = std::min(n, m);
   if (minSide == 0)
   {
     return false;
@@ -211,17 +204,14 @@ bool khasnulin::LWR_TRI_MTX(const int *arr, size_t n, size_t m)
 }
 
 using is_t = std::istream;
-is_t &khasnulin::read_matrix(is_t &input, int *arr, size_t n, size_t m)
+is_t &khasnulin::read_matrix(is_t &input, int *arr, size_t n, size_t m, size_t &elems_count)
 {
-  size_t i = 0;
-  while (input >> arr[i] && i < n * m)
+  elems_count = 0;
+  while (input >> arr[elems_count] && elems_count < n * m)
   {
-    i++;
+    elems_count++;
   }
-  if ((!input.eof() && input.fail()) || i != n * m)
-  {
-    throw std::runtime_error(ErrMessages::input_file_not_valid);
-  }
+
   return input;
 }
 
