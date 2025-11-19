@@ -5,7 +5,6 @@
 
 namespace kuznetsov {
   const size_t MAX_SIZE = 10'000;
-  bool isNumber(const char* str);
 
   int getCntColNsm(const int* mtx, size_t rows, size_t cols);
   int getCntLocMax(const int* mtx, size_t rows, size_t cols);
@@ -24,7 +23,7 @@ int main(int argc, char** argv)
   } else if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
-  } else if (!kuz::isNumber(argv[1])) {
+  } else if (!std::isdigit(argv[1][0])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   } else if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0') {
@@ -113,19 +112,6 @@ std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, si
    ++c;
   }
   return input;
-}
-
-bool kuznetsov::isNumber(const char* str)
-{
-  size_t i = 0;
-  do {
-    if (!std::isdigit(str[i])) {
-      return false;
-    }
-    ++i;
-  } while (str[i] != '\0');
-
-  return true;
 }
 
 int kuznetsov::processMatrix(std::istream& input, int* mtx,size_t rows, size_t cols, const char* out)
