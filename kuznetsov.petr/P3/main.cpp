@@ -108,11 +108,9 @@ int kuznetsov::getCntLocMax(const int* mtx, size_t rows, size_t cols)
 std::istream& kuznetsov::initMatr(std::istream& input, int* mtx, size_t rows, size_t cols)
 {
   size_t c = 0;
-  while (c < rows*cols) {
-    if (!(input >> mtx[c])) {
-      break;
-    }
-    ++c;
+  while (c < rows * cols) {
+   input >> mtx[c];
+   ++c;
   }
   return input;
 }
