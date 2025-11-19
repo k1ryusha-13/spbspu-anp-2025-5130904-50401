@@ -7,11 +7,11 @@ namespace sedov
 {
   bool checkFirstArg(const char * a);
   void destroy(int * mtx);
-  int * create(size_t rows, size_t cols);
-  size_t input_mtx(std::istream & input, int * mtx, size_t rows, size_t cols);
+  int * createMatrix(size_t rows, size_t cols);
+  size_t inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
   void convertIncMatrix(int * mtx, size_t rows, size_t cols);
   size_t getNumCol(const int * mtx, size_t rows, size_t cols);
-  void output_mtx(std::ostream & out, const int * mtx, size_t rows, size_t cols);
+  void outputMatrix(std::ostream & out, const int * mtx, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -55,7 +55,7 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1')
   {
     int matrix[10000];
-    size_t st = sedov::input_mtx(input, matrix, r, c);
+    size_t st = sedov::inputMatrix(input, matrix, r, c);
     input.close();
     if (st == 1)
     {
@@ -72,7 +72,7 @@ int main(int argc, char ** argv)
     {
       sedov::convertIncMatrix(matrix, r, c);
       std::ofstream output(argv[3]);
-      sedov::output_mtx(output, matrix, r, c);
+      sedov::outputMatrix(output, matrix, r, c);
       output << res << "\n";
       return 0;
     }
@@ -85,8 +85,8 @@ int main(int argc, char ** argv)
 
   try
   {
-    int * matrix = sedov::create(r, c);
-    size_t st = sedov::input_mtx(input, matrix, r, c);
+    int * matrix = sedov::createMatrix(r, c);
+    size_t st = sedov::inputMatrix(input, matrix, r, c);
     input.close();
     if (st == 1)
     {
@@ -105,7 +105,7 @@ int main(int argc, char ** argv)
     {
       sedov::convertIncMatrix(matrix, r, c);
       std::ofstream output(argv[3]);
-      sedov::output_mtx(output, matrix, r, c);
+      sedov::outputMatrix(output, matrix, r, c);
       sedov::destroy(matrix);
       output << res << "\n";
       return 0;
@@ -141,7 +141,7 @@ void sedov::destroy(int * mtx)
   delete[] mtx;
 }
 
-int * sedov::create(size_t rows, size_t cols)
+int * sedov::createMatrix(size_t rows, size_t cols)
 {
   int * mtx = nullptr;
   try
@@ -155,7 +155,7 @@ int * sedov::create(size_t rows, size_t cols)
   return mtx;
 }
 
-size_t sedov::input_mtx(std::istream & input, int * mtx, size_t rows, size_t cols)
+size_t sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   size_t c = 0;
   while (input >> mtx[c])
@@ -223,7 +223,7 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
   return maxCol;
 }
 
-void sedov::output_mtx(std::ostream & out, const int * mtx, size_t rows, size_t cols)
+void sedov::outputMatrix(std::ostream & out, const int * mtx, size_t rows, size_t cols)
 {
   if (rows && cols)
   {
