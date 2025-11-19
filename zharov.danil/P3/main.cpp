@@ -5,11 +5,10 @@
 
 namespace zharov
 {
-  bool isArgNum(const char * arg);
-  std::istream& createMatrix(std::istream& input, int * mtx, size_t rows, size_t cols);
-  bool UppTriMtx(const int * mtx, size_t rows, size_t cols);
-  size_t CntColNsm(const int * mtx, size_t rows, size_t cols);
-  int processMatrix(std::ifstream& input, int * matrix, size_t rows, size_t cols, bool needFree, const char * output_file);
+  std::istream & createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  bool isUppTriMtx(const int * mtx, size_t rows, size_t cols);
+  size_t getCntColNsm(const int * mtx, size_t rows, size_t cols);
+  int processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file);
 }
 
 int main(int argc, char ** argv)
@@ -22,7 +21,7 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  if (!zharov::isArgNum(argv[1])) {
+  if (!std::isdigit(argv[1][0])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   }
@@ -38,49 +37,49 @@ int main(int argc, char ** argv)
     std::cerr << "Bad read (rows and cols)\n";
     return 2;
   }
-
+  int * matrix = nullptr;
   if (argv[1][0] == '1') {
     constexpr size_t MAX_MATRIX_SIZE = 10000;
     int matrix[MAX_MATRIX_SIZE] = {};
-    return zharov::processMatrix(input, matrix, rows, cols, false, argv[3]);
-  }
-
-  int * matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
-  if (matrix == nullptr) {
-    std::cerr << "Bad alloc\n";
-    return 2;
-  }
-  return zharov::processMatrix(input, matrix, rows, cols, true, argv[3]);
-}
-
-bool zharov::isArgNum(const char * arg)
-{
-  if (arg[0] == '\0') {
-    return false;
+    return zharov::processMatrix(input, matrix, rows, cols, argv[3]);
   } else {
-    for (int i = 0; arg[i] != '\0'; ++i) {
-      if (!std::isdigit(arg[i])) {
-        return false;
-      }
+    matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+    if (matrix == nullptr) {
+      std::cerr << "Bad alloc\n";
+      return 2;
     }
+    return zharov::processMatrix(input, matrix, rows, cols, argv[3]);
   }
-  return true;
+
+  if (!input) {
+  if (input.eof()) {
+    std::cerr << "Not enough numbers\n";
+  } else {
+    std::cerr << "Bad read (wrong value)\n";
+  }
+  if (argv[1][0] == '2') {
+    free(matrix);
+  }
+  return 2;
+  }
+
+  if (argv[1][0] == '2') {
+    free(matrix);
+  }
 }
 
-std::istream& zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+std::istream & zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; ++i) {
-    if (!(input >> mtx[i])) {
-      break;
-    }
+    input >> mtx[i];
   }
   return input;
 }
 
-bool zharov::UppTriMtx(const int * mtx, size_t rows, size_t cols)
+bool zharov::isUppTriMtx(const int * mtx, size_t rows, size_t cols)
 {
   if (rows != cols) {
-    rows = (rows > cols) ? cols : rows;
+    rows = std::min(rows, cols);
     cols = rows;
   }
 
@@ -98,7 +97,7 @@ bool zharov::UppTriMtx(const int * mtx, size_t rows, size_t cols)
   return true;
 }
 
-size_t zharov::CntColNsm(const int * mtx, size_t rows, size_t cols)
+size_t zharov::getCntColNsm(const int * mtx, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return 0;
@@ -116,29 +115,12 @@ size_t zharov::CntColNsm(const int * mtx, size_t rows, size_t cols)
   return res;
 }
 
-int zharov::processMatrix(std::ifstream& input, int * matrix, size_t rows, size_t cols, bool needFree, const char * output_file)
+int zharov::processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file)
 {
   zharov::createMatrix(input, matrix, rows, cols);
-  if (!input) {
-    if (input.eof()) {
-      std::cerr << "Not enough numbers\n";
-    } else {
-      std::cerr << "Bad read (wrong value)\n";
-    }
-    if (needFree) {
-      free(matrix);
-    }
-  return 2;
-  }
-
   input.close();
   std::ofstream output(output_file);
-  output << zharov::UppTriMtx(matrix, rows, cols) << "\n";
-  output << zharov::CntColNsm(matrix, rows, cols) << "\n";
-
-  if (needFree) {
-    free(matrix);
-  }
-
+  output << zharov::isUppTriMtx(matrix, rows, cols) << "\n";
+  output << zharov::getCntColNsm(matrix, rows, cols) << "\n";
   return 0;
 }
