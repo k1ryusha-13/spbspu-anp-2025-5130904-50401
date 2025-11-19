@@ -54,6 +54,10 @@ int main(int argc, char **argv)
 
     if ((!input.eof() && input.fail()) || (elems_count != n * m))
     {
+      if (mode == 2)
+      {
+        delete[] currArr;
+      }
       std::cerr << khasnulin::ErrMessages::input_file_not_valid;
       return 2;
     }
