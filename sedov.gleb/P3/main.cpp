@@ -6,12 +6,11 @@
 namespace sedov
 {
   bool checkFirstArg(const char * a);
-  void destroy(int * mtx);
   int * createMatrix(size_t rows, size_t cols);
-  size_t inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  std::istream & inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
   void convertIncMatrix(int * mtx, size_t rows, size_t cols);
   size_t getNumCol(const int * mtx, size_t rows, size_t cols);
-  void outputMatrix(std::ostream & out, const int * mtx, size_t rows, size_t cols);
+  size_t completeMatrix(std::istream & input, int * mtx, size_t rows, size_t cols, const char * out);
 }
 
 int main(int argc, char ** argv)
@@ -49,65 +48,16 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1')
   {
     int matrix[10000];
-    size_t st = sedov::inputMatrix(input, matrix, r, c);
-    if (st == 1)
-    {
-      std::cerr << "Not enough arguments for matrix\n";
-      return 2;
-    }
-    else if (st == 2)
-    {
-      std::cerr << "Bad reading file\n";
-      return 2;
-    }
-    size_t res = sedov::getNumCol(matrix, r, c);
-    try
-    {
-      sedov::convertIncMatrix(matrix, r, c);
-      std::ofstream output(argv[3]);
-      sedov::outputMatrix(output, matrix, r, c);
-      output << res << "\n";
-      return 0;
-    }
-    catch (const std::overflow_error &e)
-    {
-      std::cerr << e.what() << "\n";
-      return 4;
-    }
+    size_t st = sedov::completeMatrix(input, matrix, r, c, argv[3]);
+    return st;
   }
 
   try
   {
     int * matrix = sedov::createMatrix(r, c);
-    size_t st = sedov::inputMatrix(input, matrix, r, c);
-    if (st == 1)
-    {
-      std::cerr << "Not enough arguments for matrix\n";
-      delete[] matrix;
-      return 2;
-    }
-    else if (st == 2)
-    {
-      std::cerr << "Bad reading file\n";
-      delete[] matrix;
-      return 2;
-    }
-    size_t res = sedov::getNumCol(matrix, r, c);
-    try
-    {
-      sedov::convertIncMatrix(matrix, r, c);
-      std::ofstream output(argv[3]);
-      sedov::outputMatrix(output, matrix, r, c);
-      sedov::destroy(matrix);
-      output << res << "\n";
-      return 0;
-    }
-    catch (const std::overflow_error &e)
-    {
-      std::cerr << e.what() << "\n";
-      delete[] matrix;
-      return 4;
-    }
+    size_t st = sedov::completeMatrix(input, matrix, r, c, argv[3]);
+    delete[] matrix;
+    return st;
   }
   catch (const std::bad_alloc &e)
   {
@@ -128,11 +78,6 @@ bool sedov::checkFirstArg(const char * a)
   return true;
 }
 
-void sedov::destroy(int * mtx)
-{
-  delete[] mtx;
-}
-
 int * sedov::createMatrix(size_t rows, size_t cols)
 {
   int * mtx = nullptr;
@@ -147,25 +92,13 @@ int * sedov::createMatrix(size_t rows, size_t cols)
   return mtx;
 }
 
-size_t sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+sts::istream & sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
-  size_t c = 0;
-  while (input >> mtx[c])
+  for (size_t i = 0; i < rows * cols; ++i)
   {
-    ++c;
+    input >> mtx[i];
   }
-  if (input.eof())
-  {
-    if (c < rows * cols)
-    {
-      return 1;
-    }
-  }
-  else if (input.fail())
-  {
-    return 2;
-  }
-  return 0;
+  return input;
 }
 
 void sedov::convertIncMatrix(int * mtx, size_t rows, size_t cols)
@@ -215,30 +148,25 @@ size_t sedov::getNumCol(const int * mtx, size_t rows, size_t cols)
   return maxCol;
 }
 
-void sedov::outputMatrix(std::ostream & out, const int * mtx, size_t rows, size_t cols)
+size_t sedov::completeMatrix(std::istream & input, int * mtx, size_t rows, size_t cols, const char * out)
 {
-  if (rows && cols)
+  inputMatrix(input, mtx, rows, cols);
+  if (!input)
   {
-    out << rows << " " << cols << " ";
-    for (size_t i = 0; i < rows; ++i)
+    if (input.eof())
     {
-      out << mtx[i * cols];
-      for (size_t j = 1; j < cols; ++j)
-      {
-        out << " " << mtx[i * cols + j];
-      }
-      if (i == rows - 1)
-      {
-        out << "\n";
-      }
-      else
-      {
-        out << " ";
-      }
+      std::cerr << "Not enough arguments for matrix\n";
     }
+    else
+    {
+      std::cerr << "Bad reading\n";
+    }
+    return 2;
   }
-  else
-  {
-    out << rows << " " << cols << "\n";
-  }
+  size_t res1 = getNumCol(mtx, rows, cols);
+  convertIncMatrix(mtx, rows, cols);
+  std::ofstream output(out);
+  output << mtx << "\n";
+  output << res1 << "\n";
+  return 0;
 }
