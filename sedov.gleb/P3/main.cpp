@@ -85,7 +85,7 @@ int * sedov::createMatrix(size_t rows, size_t cols)
   return mtx;
 }
 
-sts::istream & sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+std::istream & sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
   for (size_t i = 0; i < rows * cols; ++i)
   {
