@@ -5,7 +5,7 @@
 namespace goltsov
 {
   long long * create(size_t rows, size_t cols);
-  void getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
+  std::istream & getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input);
   bool lwrTriMtx(const long long * mtx, size_t n, size_t shift, size_t cols, size_t flag1, size_t flag2);
   size_t cntLocMax(const long long * mtx, size_t rows, size_t cols);
 }
@@ -48,6 +48,9 @@ int main(int argc, char ** argv)
   size_t rows = 0;
   size_t cols = 0;
   input >> rows >> cols;
+
+
+
   if (!input)
   {
     std::cerr << "Bad input\n";
@@ -57,9 +60,8 @@ int main(int argc, char ** argv)
   if (num == 1)
   {
     long long autoMtx[10000];
-    goltsov::getMtx(autoMtx, rows, cols, input);
 
-    if (!input)
+    if (!goltsov::getMtx(autoMtx, rows, cols, input))
     {
       std::cerr << "Bad input\n";
       return 2;
@@ -98,8 +100,7 @@ int main(int argc, char ** argv)
       return 3;
     }
 
-    goltsov::getMtx(dynMtx, rows, cols, input);
-    if (!input)
+    if (!goltsov::getMtx(dynMtx, rows, cols, input))
     {
       std::cerr << "Bad input\n";
       free(dynMtx);
@@ -209,11 +210,12 @@ long long * goltsov::create(size_t rows, size_t cols)
   return mtx;
 }
 
-void goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input)
+std::istream & goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & input)
 {
   if (rows == 0 || cols == 0)
   {
-    return;
+    
+    return input;
   }
 
   for (size_t i = 0; i < rows; ++i)
@@ -223,8 +225,9 @@ void goltsov::getMtx(long long * mtx, size_t rows, size_t cols, std::istream & i
       input >> mtx[i * cols + j];
       if (!input)
       {
-        return;
+        return input;
       }
     }
   }
+  return input;
 }
