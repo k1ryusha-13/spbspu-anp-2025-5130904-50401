@@ -39,16 +39,10 @@ int main(int argc, char ** argv)
 
   size_t r = 0, c = 0;
   std::ifstream input(argv[2]);
-  if (!input.is_open())
-  {
-    std::cerr << "Can't open file\n";
-    return 2;
-  }
   input >> r >> c;
   if (!input)
   {
     std::cerr << "Bad reading\n";
-    input.close();
     return 2;
   }
 
@@ -56,7 +50,6 @@ int main(int argc, char ** argv)
   {
     int matrix[10000];
     size_t st = sedov::inputMatrix(input, matrix, r, c);
-    input.close();
     if (st == 1)
     {
       std::cerr << "Not enough arguments for matrix\n";
@@ -87,7 +80,6 @@ int main(int argc, char ** argv)
   {
     int * matrix = sedov::createMatrix(r, c);
     size_t st = sedov::inputMatrix(input, matrix, r, c);
-    input.close();
     if (st == 1)
     {
       std::cerr << "Not enough arguments for matrix\n";
