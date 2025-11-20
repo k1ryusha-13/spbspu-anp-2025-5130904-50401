@@ -34,11 +34,19 @@ int main(int argc, char ** argv)
   }
 
   int * array = nullptr;
+  int array_static[10000] = {};
   int number = rizatdinov::stringToInt(argv[1]);
   try {
     array = rizatdinov::creat(rows * cols, number);
+    if (array == nullptr) {
+      array = array_static;
+    }
+
     rizatdinov::initial(array, rows * cols, input);
   } catch(...) {
+    if (number ==2) {
+      free(array);
+    }
     rizatdinov::errorHandler(2);
     return 2;
   }
@@ -96,10 +104,7 @@ void rizatdinov::errorHandler(unsigned parse_args)
 int * rizatdinov::creat(size_t len, int number)
 {
   int * array = nullptr;
-  int static_array[10000] = {};
-  if (number == 1) {
-    array = static_array;
-  } else {
+  if (number == 2) {
     array = reinterpret_cast< int * >(malloc(sizeof(int) * len));
     if (array == nullptr) {
       throw std::bad_alloc();
@@ -112,9 +117,9 @@ void rizatdinov::initial(int * array, size_t len, std::ifstream & file)
 {
   for (size_t i = 0; i < len; ++i) {
     file >> array[i];
-  }
-  if (!file) {
-    throw std::invalid_argument("invalid argument");
+    if (!file) {
+      throw std::invalid_argument("invalid argument");
+    }
   }
 }
 
