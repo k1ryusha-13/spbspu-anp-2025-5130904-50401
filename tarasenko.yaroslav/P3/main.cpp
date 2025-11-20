@@ -3,31 +3,21 @@
 
 namespace tarasenko
 {
-  size_t input(std::istream & in, int * arr, size_t n, size_t m)
+  std::istream & input(std::istream & in, int * arr, size_t n, size_t m, size_t & k)
   {
     for (size_t i = 0; i < n * m; ++i)
     {
       in >> arr[i];
       if (!in)
       {
-        return i;
+        return in;
       }
+      k += 1;
     }
-    return n * m;
-  }
-
-  std::ostream & output(std::ostream & out, const int * a, size_t n, size_t m)
-  {
-    for (size_t i = 0; i < n * m; ++i)
-    {
-      out << a[i] << ' ';
-    }
-    out << '\n';
-    return out;
+    return in;
   }
 
   size_t cnt_loc_extremum(int const * arr, int type, size_t n, size_t m)
-  // type 1 for max and 0 for min
   {
     if (n * m == 0)
     {
@@ -70,48 +60,51 @@ namespace tarasenko
     return count;
   }
 
-  void input_processing(int argc, char ** argv)
+  size_t cnt_loc_max(int const * arr, size_t n, size_t m)
   {
-    if (argc < 4)
-    {
-      throw std::invalid_argument("Not enough arguments");
-    }
-    if (argc > 4)
-    {
-      throw std::invalid_argument("Too many arguments");
-    }
-    const char * first_arg = argv[1];
-    size_t i = 0;
-    while (first_arg[i] != '\0')
-    {
-      if (first_arg[i] > '9' || first_arg[i] < '0')
-      {
-        throw std::invalid_argument("First parameter is not a number");
-      }
-      i += 1;
-    }
-    if (first_arg[0] != '1' && first_arg[0] != '2')
-    {
-      throw std::invalid_argument("First parameter is out of range");
-    }
-    if (first_arg[1] != '\0')
-    {
-      throw std::invalid_argument("First parameter is out of range");
-    }
+    return cnt_loc_extremum(arr, 1, n, m);
+  }
+
+  size_t cnt_loc_min(int const * arr, size_t n, size_t m)
+  {
+    return cnt_loc_extremum(arr, 0, n, m);
   }
 }
 
 int main(int argc, char ** argv)
 {
-  try
+  if (argc < 4)
   {
-    tarasenko::input_processing(argc, argv);
-  }
-  catch (const std::invalid_argument &e)
-  {
-    std::cerr << e.what() << '\n';
+    std::cerr << "Not enough arguments\n";
     return 1;
   }
+  if (argc > 4)
+  {
+    std::cerr << "Too many arguments\n";
+    return 1;
+  }
+  const char * first_arg = argv[1];
+  size_t i = 0;
+  while (first_arg[i] != '\0')
+  {
+    if (!std::isdigit(static_cast< unsigned char >(first_arg[i])))
+    {
+      std::cerr << "First parameter is not a number\n";
+      return 1;
+    }
+    i += 1;
+  }
+  if (first_arg[0] != '1' && first_arg[0] != '2')
+  {
+    std::cerr << "First parameter is out of range\n";
+    return 1;
+  }
+  if (first_arg[1] != '\0')
+  {
+    std::cerr << "First parameter is out of range\n";
+    return 1;
+  }
+
   std::ifstream input(argv[2]);
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
@@ -125,48 +118,44 @@ int main(int argc, char ** argv)
     std::ofstream output(argv[3]);
     output << 0 << '\n';
     output << 0 << '\n';
-    output.close();
     return 0;
   }
-  if (*argv[1] == '1')
+
+  int static_arr[10000] = {};
+  int * arr = nullptr;
+  bool is_dynamic = (*argv[1] == '2') ? 1 : 0;
+  if (!is_dynamic)
   {
-    int arr[10000] = {};
-    size_t k = tarasenko::input(input, arr, rows, cols);
-    input.close();
-    if (k < rows * cols)
-    {
-      std::cerr << "Managed to read "<< k << " numbers from file" << '\n';
-      return 2;
-    }
-    size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
-    size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
-    std::ofstream output(argv[3]);
-    output << max << '\n';
-    output << min << '\n';
-    output.close();
+    arr = static_arr;
   }
   else
   {
-    int * arr = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+    arr = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
     if (!arr)
     {
       std::cerr << "failed to allocate memory" << '\n';
       return 1;
     }
-    size_t k = tarasenko::input(input, arr, rows, cols);
-    input.close();
-    if (k < rows * cols)
+  }
+  size_t k = 0;
+  tarasenko::input(input, arr, rows, cols, k);
+  if (!input)
+  {
+    std::cerr << "Managed to read " << k << " numbers from file" << '\n';
+    if (is_dynamic)
     {
-      std::cerr << "Managed to read "<< k << " numbers from file" << '\n';
       free(arr);
-      return 2;
     }
-    size_t max = tarasenko::cnt_loc_extremum(arr, 1, rows, cols);
-    size_t min = tarasenko::cnt_loc_extremum(arr, 0, rows, cols);
-    std::ofstream output(argv[3]);
-    output << max << '\n';
-    output << min << '\n';
-    output.close();
+    return 2;
+  }
+  input.close();
+  size_t max = tarasenko::cnt_loc_max(arr, rows, cols);
+  size_t min = tarasenko::cnt_loc_min(arr, rows, cols);
+  std::ofstream output(argv[3]);
+  output << max << '\n';
+  output << min << '\n';
+  if (is_dynamic)
+  {
     free(arr);
   }
 }
