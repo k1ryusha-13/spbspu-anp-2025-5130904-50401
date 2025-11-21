@@ -7,7 +7,7 @@ namespace zubarev
 {
   int getMaxInt();
   int getMinInt();
-  std::ostream& outputMatrix(std::ostream& out, const int* const matrix, size_t rows, size_t cols);
+  std::ostream& outputMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols);
   int* convertToSquare(int* matrix, size_t& rows, size_t& cols, bool dynamic);
   int* readMatrix(std::istream& in, size_t& rows, size_t& cols, int* matrix, bool dynamic);
   int solveTask9(const int* matrix, size_t rows, size_t cols);
@@ -55,7 +55,7 @@ int main(int argc, char const** argv)
     mtx = statMatrix;
     mtx = zub::readMatrix(input, rows, cols, mtx, dynamic);
   } else if (argv[1][0] == '2') {
-    mtx = reinterpret_cast<int*>(std::malloc(rows * cols * sizeof(int)));
+    mtx = reinterpret_cast< int* >(std::malloc(rows * cols * sizeof(int)));
     if (!mtx) {
       std::cerr << "Memory allocation failed\n";
       return 1;
