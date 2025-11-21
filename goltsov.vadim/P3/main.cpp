@@ -62,6 +62,12 @@ int main(int argc, char ** argv)
   {
     static long long autoMtx[10000];
     mtx = autoMtx;
+
+    if (!goltsov::getMtx(mtx, rows, cols, input))
+    {
+      std::cerr << "Bad input\n";
+      return 2;
+    }
   }
   else
   {
