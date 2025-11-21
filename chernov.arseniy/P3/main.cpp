@@ -100,9 +100,6 @@ int chernov::processMatrix(std::istream & input, std::ostream & output, int * ma
 {
   if (!chernov::matrixInput(input, matrix, rows, cols)) {
     std::cerr << "Incorrect input\n";
-    if (type == '2') {
-      delete [] matrix;
-    }
     return 2;
   }
 
