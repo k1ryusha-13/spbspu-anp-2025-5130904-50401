@@ -62,7 +62,7 @@ int main(int argc, char ** argv)
     std::cerr << "Bad read (wrong value)\n";
     return 2;
   }
-  
+
 }
 
 std::istream & zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
