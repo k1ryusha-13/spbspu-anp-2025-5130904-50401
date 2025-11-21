@@ -115,10 +115,6 @@ int chernov::processMatrix(std::istream & input, std::ostream & output, int * ma
   }
   output << "\n";
 
-  if (type == '2') {
-    delete [] matrix;
-  }
-
   return 0;
 }
 
@@ -155,5 +151,7 @@ int main(int argc, char ** argv)
   }
 
   int * matrix = new int[rows * cols];
-  return chernov::processMatrix(input, output, matrix, type, rows, cols);
+  int result = chernov::processMatrix(input, output, matrix, type, rows, cols);
+  delete [] matrix;
+  return result;
 }
