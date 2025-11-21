@@ -5,7 +5,6 @@
 
 namespace chernov {
   std::istream & matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols);
-  bool isNumber(const char * word);
   void fllIncWav(int * mtx, size_t rows, size_t cols);
   int minSumMdg(const int * mtx, size_t rows, size_t cols);
   int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
@@ -18,23 +17,6 @@ std::istream & chernov::matrixInput(std::istream & input, int * mtx, size_t rows
     input >> mtx[i];
   }
   return input;
-}
-
-bool chernov::isNumber(const char * word)
-{
-  if (!word || *word == '\0') {
-    return false;
-  }
-  size_t i = 0;
-  if (word[0] == '-') {
-    ++i;
-  }
-  for (; word[i] != '\0'; ++i) {
-    if (!std::isdigit(word[i])) {
-      return false;
-    }
-  }
-  return true;
 }
 
 void chernov::fllIncWav(int * mtx, size_t rows, size_t cols)
@@ -123,7 +105,7 @@ int main(int argc, char ** argv)
   } else if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
-  } else if (!chernov::isNumber(argv[1])) {
+  } else if (!std::isdigit(argv[1][0])) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   } else if (!((argv[1][0] == '1' || argv[1][0] == '2') && argv[1][1] == '\0')) {
