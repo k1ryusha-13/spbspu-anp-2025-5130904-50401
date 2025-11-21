@@ -8,7 +8,7 @@ namespace chernov {
   void fllIncWav(int * mtx, size_t rows, size_t cols);
   int minSumMdg(const int * mtx, size_t rows, size_t cols);
   int getSumAntiDiagonal(const int * mtx, size_t x, size_t y, size_t rows, size_t cols);
-  int processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols);
+  int processMatrix(std::istream & input, std::ostream & output, int * matrix, size_t rows, size_t cols);
 }
 
 std::istream & chernov::matrixInput(std::istream & input, int * mtx, size_t rows, size_t cols)
@@ -78,7 +78,7 @@ int chernov::minSumMdg(const int * mtx, size_t rows, size_t cols)
   return min_sum;
 }
 
-int chernov::processMatrix(std::istream & input, std::ostream & output, int * matrix, char type, size_t rows, size_t cols)
+int chernov::processMatrix(std::istream & input, std::ostream & output, int * matrix, size_t rows, size_t cols)
 {
   if (!chernov::matrixInput(input, matrix, rows, cols)) {
     std::cerr << "Incorrect input\n";
@@ -122,15 +122,14 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  char type = argv[1][0];
-  if (type == '1') {
+  if (argv[1][0] == '1') {
     constexpr size_t MAX_STATIC_MATRIX_SIZE = 10000;
     int matrix[MAX_STATIC_MATRIX_SIZE] = {};
-    return chernov::processMatrix(input, output, matrix, type, rows, cols);
+    return chernov::processMatrix(input, output, matrix, rows, cols);
   }
 
   int * matrix = new int[rows * cols];
-  int result = chernov::processMatrix(input, output, matrix, type, rows, cols);
+  int result = chernov::processMatrix(input, output, matrix, rows, cols);
   delete [] matrix;
   return result;
 }
