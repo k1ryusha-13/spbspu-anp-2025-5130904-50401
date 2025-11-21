@@ -51,21 +51,18 @@ int main(int argc, char ** argv)
     zharov::processMatrix(input, matrix, rows, cols, argv[3]);
   }
 
-  if (!input) {
-  if (input.eof()) {
-    std::cerr << "Not enough numbers\n";
-  } else {
-    std::cerr << "Bad read (wrong value)\n";
-  }
   if (argv[1][0] == '2') {
     free(matrix);
-  }
-  return 2;
   }
 
-  if (argv[1][0] == '2') {
-    free(matrix);
+  if (input.eof()) {
+    std::cerr << "Not enough numbers\n";
+    return 2;
+  } else if (input.bad()) {
+    std::cerr << "Bad read (wrong value)\n";
+    return 2;
   }
+  
 }
 
 std::istream & zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
