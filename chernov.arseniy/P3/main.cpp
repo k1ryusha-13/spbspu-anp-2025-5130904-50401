@@ -154,12 +154,6 @@ int main(int argc, char ** argv)
     return chernov::processMatrix(input, output, matrix, type, rows, cols);
   }
 
-  int * matrix = nullptr;
-  try {
-    matrix = new int[rows * cols];
-  } catch (const std::bad_alloc & e) {
-    std::cerr << "Bad alloc\n";
-    return 2;
-  }
+  int * matrix = new int[rows * cols];
   return chernov::processMatrix(input, output, matrix, type, rows, cols);
 }
