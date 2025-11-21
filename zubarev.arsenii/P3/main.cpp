@@ -7,7 +7,7 @@ namespace zubarev
 {
   int getMaxInt();
   int getMinInt();
-  std::ostream& outputMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols);
+  std::ostream& outputMatrix(std::ostream& out, const int* const matrix, size_t rows, size_t cols);
   int* convertToSquare(int* matrix, size_t& rows, size_t& cols, bool dynamic);
   int* readMatrix(std::istream& in, size_t& rows, size_t& cols, int* matrix, bool dynamic);
   int solveTask9(const int* matrix, size_t rows, size_t cols);
@@ -26,10 +26,10 @@ int main(int argc, char const** argv)
     } else if (argc < 4) {
       std::cerr << "Not enough arguments" << "\n";
       return 1;
-    } else if (argv[1][0] < '0' || argv[1][0] > '2') {
-      std::cerr << "First is out of range\n";
-      return 1;
-    }
+    } if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0') {
+    std::cerr << "First parameter is out of range\n";
+    return 1;
+}
   } catch (const std::invalid_argument& e) {
     std::cerr << "First parameter is not a number\n";
     return 1;
@@ -46,7 +46,7 @@ int main(int argc, char const** argv)
     return 1;
   }
   int* mtx = nullptr;
-  if (std::stoi(argv[1]) == 1) {
+  if (argv[1][0] == '1') {
     int statMatrix[10000];
     if (rows * cols > 10000) {
       std::cerr << "Matrix too big for static allocation\n";
@@ -54,7 +54,7 @@ int main(int argc, char const** argv)
     }
     mtx = statMatrix;
     mtx = zub::readMatrix(input, rows, cols, mtx, dynamic);
-  } else if (std::stoi(argv[1]) == 2) {
+  } else if (argv[1][0] == '2') {
     mtx = reinterpret_cast<int*>(std::malloc(rows * cols * sizeof(int)));
     if (!mtx) {
       std::cerr << "Memory allocation failed\n";
