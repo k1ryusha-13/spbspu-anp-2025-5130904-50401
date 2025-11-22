@@ -56,7 +56,7 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  long long* mtx = nullptr;
+  long long * mtx = nullptr;
 
   if (num == 1)
   {
@@ -161,11 +161,9 @@ size_t goltsov::cntLocMax(const long long * mtx, size_t rows, size_t cols)
   {
     for (size_t j = 1; j < cols - 1; ++j)
     {
-      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j]
-        && mtx[i * cols + j] > mtx[(i + 1) * cols + j])
+      if (mtx[i * cols + j] > mtx[(i - 1) * cols + j] && mtx[i * cols + j] > mtx[(i + 1) * cols + j])
       {
-        if (mtx[i * cols + j] > mtx[i * cols + j - 1]
-          && mtx[i * cols + j] > mtx[i * cols + j + 1])
+        if (mtx[i * cols + j] > mtx[i * cols + j - 1] && mtx[i * cols + j] > mtx[i * cols + j + 1])
         {
           ++answer;
         }
