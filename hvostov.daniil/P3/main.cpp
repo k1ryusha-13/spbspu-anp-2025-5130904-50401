@@ -36,10 +36,11 @@ int main(int argc, char ** argv)
     output << 0 << "\n" << 0 << " " << 0 << "\n";
     return 0;
   }
+  constexpr size_t MATRIX_SIZE = 10000;
   int * matrix = nullptr;
+  int primary_matrix[MATRIX_SIZE] = {};
+  int * dynamic_primary_matrix = nullptr;
   if (argv[1][0] == '1') {
-    constexpr size_t MATRIX_SIZE = 10000;
-    int primary_matrix[MATRIX_SIZE] = {};
     matrix = primary_matrix;
   } else {
     int * primary_matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
@@ -51,12 +52,11 @@ int main(int argc, char ** argv)
   }
   if (!hvostov::inputMatrix(input, matrix, rows, cols)) {
     std::cerr << "Bad input!\n";
+    free(dynamic_primary_matrix);
     return 2;
   }
   hvostov::taskExecution(output, matrix, rows, cols);
-  if (argv[1][0] == '2') {
-    free(matrix);
-  }
+  free(dynamic_primary_matrix);
   return 0;
 }
 
