@@ -70,7 +70,7 @@ bool sedov::checkFirstArg(const char * a)
 {
   for (size_t i = 0; a[i] != '\0'; ++i)
   {
-    if (a[i] < '0' || a[i] > '9')
+    if (!std::isdigit(a[i]))
     {
       return false;
     }
@@ -96,7 +96,7 @@ std::istream & sedov::inputMatrix(std::istream & input, int * mtx, size_t rows, 
 
 void sedov::convertIncMatrix(int * mtx, size_t rows, size_t cols)
 {
-  size_t minrc = (rows < cols) ? rows : cols;
+  size_t minrc = std::min(rows, cols);
   size_t layer = minrc / 2 + minrc % 2;
   const int MAX = std::numeric_limits< int >::max();
   for (size_t k = 0; k < layer; ++k)
