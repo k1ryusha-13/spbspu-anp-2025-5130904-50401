@@ -66,19 +66,13 @@ namespace stupir
     }
   }
 
-  const size_t maxStat = 10000;
-  int statMem[maxStat];
-  int * create(int * arr, const char * firstArg, size_t rows, size_t cols)
+  int * create(int * arr, const char * firstArg, size_t rows, size_t cols, const size_t maxStat)
   {
     if (firstArg[0] == '1')
     {
       if (rows * cols <= maxStat)
       {
-        arr = statMem;
-        for (size_t i = 0; i < rows * cols; ++i)
-        {
-          arr[i] = 0;
-        }
+        arr[maxStat] = {};
       }
       else
       {
@@ -208,13 +202,14 @@ int main(int argc, char ** argv)
     return 2;
   }
 
+  const size_t maxStat = 10000;
   int * matrixFile = nullptr;
   int * matrixChange = nullptr;
   size_t numDigNotNull = 0;
   namespace stu = stupir;
   try
   {
-    matrixFile = stu::create(matrixFile, firstArg, rows, cols);
+    matrixFile = stu::create(matrixFile, firstArg, rows, cols, maxStat);
     if (!stu::readArr(input, rows, cols, matrixFile))
     {
       std::cerr << "Non-correct values of matrix elements\n";
