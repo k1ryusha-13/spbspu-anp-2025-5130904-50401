@@ -18,28 +18,31 @@ namespace khasnulin
     const char *unknown = "Error during task execution, something went wrong\n";
   };
 
-  size_t get_first_parameter(const char *num);
-  void check_argc_validity(int argc);
+  size_t getFirstParameter(const char *num);
 
-  std::istream &read_matrix(std::istream &input, int *arr, size_t n, size_t m, size_t &elems_count);
+  std::istream &readMatrix(std::istream &input, int *arr, size_t n, size_t m, size_t &elems_count);
 
-  void lft_bot_clk(int *arr, size_t n, size_t m);
+  void lftBotClk(int *arr, size_t n, size_t m);
 
-  bool lwr_tri_mtx(const int *arr, size_t n, size_t m);
+  bool lwrTriMtx(const int *arr, size_t n, size_t m);
 
-  std::ostream &print_matrix(std::ostream &output, const int *a, size_t n, size_t m);
-  std::ostream &print_bool(std::ostream &output, bool val);
+  std::ostream &printMatrix(std::ostream &output, const int *a, size_t n, size_t m);
+  std::ostream &printBool(std::ostream &output, bool val);
 }
 
 int main(int argc, char **argv)
 {
   size_t mode = 0;
   int *currArr = nullptr;
+  if (argc != 4)
+  {
+    const char *message = argc > 4 ? khasnulin::ErrMessages::many_args : khasnulin::ErrMessages::not_enough_args;
+    std::cerr << message;
+    return 1;
+  }
   try
   {
-    khasnulin::check_argc_validity(argc);
-
-    mode = khasnulin::get_first_parameter(argv[1]);
+    mode = khasnulin::getFirstParameter(argv[1]);
 
     std::ifstream input(argv[2]);
     size_t n = 1, m = 1;
@@ -50,7 +53,7 @@ int main(int argc, char **argv)
     currArr = mode == 1 ? arr : new int[n * m];
 
     size_t elems_count = 0;
-    khasnulin::read_matrix(input, currArr, n, m, elems_count);
+    khasnulin::readMatrix(input, currArr, n, m, elems_count);
 
     if ((!input.eof() && input.fail()) || (elems_count != n * m))
     {
@@ -63,13 +66,13 @@ int main(int argc, char **argv)
     }
     input.close();
 
-    bool isLWR_TRI_MTX = khasnulin::lwr_tri_mtx(currArr, n, m);
-    khasnulin::lft_bot_clk(currArr, n, m);
+    bool isLWR_TRI_MTX = khasnulin::lwrTriMtx(currArr, n, m);
+    khasnulin::lftBotClk(currArr, n, m);
 
     std::ofstream output(argv[3]);
 
-    khasnulin::print_matrix(output, currArr, n, m);
-    khasnulin::print_bool(output, isLWR_TRI_MTX);
+    khasnulin::printMatrix(output, currArr, n, m);
+    khasnulin::printBool(output, isLWR_TRI_MTX);
 
     if (mode == 2)
     {
@@ -101,7 +104,7 @@ int main(int argc, char **argv)
   }
 }
 
-size_t khasnulin::get_first_parameter(const char *num)
+size_t khasnulin::getFirstParameter(const char *num)
 {
   size_t len = 0;
   const char *ch = num;
@@ -129,16 +132,7 @@ size_t khasnulin::get_first_parameter(const char *num)
   throw std::runtime_error(ErrMessages::fp_out_of_range);
 }
 
-void khasnulin::check_argc_validity(int argc)
-{
-  if (argc != 4)
-  {
-    const char *message = argc > 4 ? ErrMessages::many_args : ErrMessages::not_enough_args;
-    throw std::runtime_error(message);
-  }
-}
-
-void khasnulin::lft_bot_clk(int *arr, size_t n, size_t m)
+void khasnulin::lftBotClk(int *arr, size_t n, size_t m)
 {
   if (n > 0 && m > 0)
   {
@@ -186,7 +180,7 @@ void khasnulin::lft_bot_clk(int *arr, size_t n, size_t m)
   }
 }
 
-bool khasnulin::lwr_tri_mtx(const int *arr, size_t n, size_t m)
+bool khasnulin::lwrTriMtx(const int *arr, size_t n, size_t m)
 {
   size_t minSide = std::min(n, m);
   if (minSide == 0)
@@ -208,7 +202,7 @@ bool khasnulin::lwr_tri_mtx(const int *arr, size_t n, size_t m)
 }
 
 using is_t = std::istream;
-is_t &khasnulin::read_matrix(is_t &input, int *arr, size_t n, size_t m, size_t &elems_count)
+is_t &khasnulin::readMatrix(is_t &input, int *arr, size_t n, size_t m, size_t &elems_count)
 {
   elems_count = 0;
   while (input >> arr[elems_count] && elems_count < n * m)
@@ -220,7 +214,7 @@ is_t &khasnulin::read_matrix(is_t &input, int *arr, size_t n, size_t m, size_t &
 }
 
 using os_t = std::ostream;
-os_t &khasnulin::print_matrix(os_t &output, const int *a, size_t n, size_t m)
+os_t &khasnulin::printMatrix(os_t &output, const int *a, size_t n, size_t m)
 {
   output << n << " " << m << " ";
   if (n > 0 && n > 0)
@@ -235,7 +229,7 @@ os_t &khasnulin::print_matrix(os_t &output, const int *a, size_t n, size_t m)
   return output;
 }
 
-os_t &khasnulin::print_bool(os_t &output, bool val)
+os_t &khasnulin::printBool(os_t &output, bool val)
 {
   return output << (val ? "true\n" : "false\n");
 }
