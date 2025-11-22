@@ -11,7 +11,7 @@ namespace kuznetsov {
 
   std::istream& initMatr(std::istream& input, int* mtx, size_t rows, size_t cols);
 
-  int processMatrix(std::istream& input, int* mtx,size_t rows, size_t cols, const char* out);
+  int processMatrix(std::istream& input, int* mtx, size_t rows, size_t cols, const char* out);
 }
 
 int main(int argc, char** argv)
