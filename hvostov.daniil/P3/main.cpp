@@ -43,12 +43,12 @@ int main(int argc, char ** argv)
   if (argv[1][0] == '1') {
     matrix = primary_matrix;
   } else {
-    int * primary_matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
-    if (primary_matrix == nullptr) {
+    int * dynamic_primary_matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+    if (dynamic_primary_matrix == nullptr) {
       std::cerr << "Bad alloc!\n";
       return 3;
     }
-    matrix = primary_matrix;
+    matrix = dynamic_primary_matrix;
   }
   if (!hvostov::inputMatrix(input, matrix, rows, cols)) {
     std::cerr << "Bad input!\n";
