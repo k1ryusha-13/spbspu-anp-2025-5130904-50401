@@ -8,7 +8,7 @@ namespace vasyakin
   int countSaddlePoints(const int* a, size_t rows, size_t cols);
   int* createMatrix(size_t rows, size_t cols);
   void transformSpiral(int* a, size_t rows, size_t cols);
-  void readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
+  std::istream& readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
 }
 void vasyakin::outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output)
 {
@@ -100,27 +100,19 @@ void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
     }
   }
 }
-void vasyakin::readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
+std::istream& vasyakin::readMatrix(int* a, size_t rows, size_t cols, std::istream& input)
 {
   for (size_t i = 0; i < rows; ++i)
   {
     for (size_t j = 0; j < cols; ++j)
     {
-      int temp = 0;
-      if (!(input >> temp))
+      if (!(input >> a[i * cols + j]))
       {
-        if (input.eof())
-        {
-          throw std::runtime_error("Not enough elements for matrix");
-        }
-        if (input.fail())
-        {
-          throw std::runtime_error("Unexpected input");
-        }
+        return input;
       }
-      a[i * cols + j] = temp;
     }
   }
+  return input;
 }
 int main(int argc, char** argv)
 {
@@ -168,13 +160,16 @@ int main(int argc, char** argv)
         return 2;
       }
       int matrix[10000];
-      try
+      if (!vasyakin::readMatrix(matrix, rows, cols, input))
       {
-        vasyakin::readMatrix(matrix, rows, cols, input);
-      }
-      catch (const std::exception& e)
-      {
-        std::cerr << e.what() << '\n';
+        if (input.eof())
+        {
+          std::cerr << "Not enough arguments for matrix" << '\n';
+        }
+        else if (input.fail())
+        {
+          std::cerr << "Unexpected input" << '\n';
+        }
         return 2;
       }
       int result = vasyakin::countSaddlePoints(matrix, rows, cols);
@@ -190,14 +185,17 @@ int main(int argc, char** argv)
     else
     {
       int* matrix = vasyakin::createMatrix(rows, cols);
-      try
-      {
-        vasyakin::readMatrix(matrix, rows, cols, input);
-      }
-      catch (const std::exception& e)
+      if (!vasyakin::readMatrix(matrix, rows, cols, input))
       {
         delete[] matrix;
-        std::cerr << e.what() << '\n';
+        if (input.eof())
+        {
+          std::cerr << "Not enough arguments for matrix" << '\n';
+        }
+        else if (input.fail())
+        {
+          std::cerr << "Unexpected input" << '\n';
+        }
         return 2;
       }
       int result = vasyakin::countSaddlePoints(matrix, rows, cols);
