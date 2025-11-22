@@ -5,7 +5,7 @@
 
 namespace zharov
 {
-  std::istream & createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
+  std::istream & inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols);
   bool isUppTriMtx(const int * mtx, size_t rows, size_t cols);
   size_t getCntColNsm(const int * mtx, size_t rows, size_t cols);
   void processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file);
@@ -51,9 +51,7 @@ int main(int argc, char ** argv)
     zharov::processMatrix(input, matrix, rows, cols, argv[3]);
   }
 
-  if (argv[1][0] == '2') {
-    free(matrix);
-  }
+  free(matrix);
 
   if (input.eof()) {
     std::cerr << "Not enough numbers\n";
@@ -65,9 +63,9 @@ int main(int argc, char ** argv)
 
 }
 
-std::istream & zharov::createMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
+std::istream & zharov::inputMatrix(std::istream & input, int * mtx, size_t rows, size_t cols)
 {
-  for (size_t i = 0; i < rows * cols; ++i) {
+  for (size_t i = 0; input && i < rows * cols; ++i) {
     input >> mtx[i];
   }
   return input;
@@ -114,7 +112,7 @@ size_t zharov::getCntColNsm(const int * mtx, size_t rows, size_t cols)
 
 void zharov::processMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols, const char * output_file)
 {
-  zharov::createMatrix(input, matrix, rows, cols);
+  zharov::inputMatrix(input, matrix, rows, cols);
   if (input.fail()) {
     return;
   }
