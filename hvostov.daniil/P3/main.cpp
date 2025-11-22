@@ -6,8 +6,7 @@ namespace hvostov {
   size_t countLocalMax(int * matrix, size_t rows, size_t cols);
   void modifyMatrix(int * matrix, size_t rows, size_t cols);
   void outputMatrix(std::ofstream & output, int * matrix, size_t rows, size_t cols);
-  int taskExecution(std::ifstream & input, std::ofstream & output,
-      int * matrix, size_t rows, size_t cols, char task_number);
+  void taskExecution(std::ofstream & output, int * matrix, size_t rows, size_t cols);
 }
 
 int main(int argc, char ** argv)
@@ -37,39 +36,36 @@ int main(int argc, char ** argv)
     output << 0 << "\n" << 0 << " " << 0 << "\n";
     return 0;
   }
+  int * matrix = nullptr;
   if (argv[1][0] == '1') {
     constexpr size_t MATRIX_SIZE = 10000;
-    int matrix[MATRIX_SIZE] = {};
-    return hvostov::taskExecution(input, output, matrix, rows, cols, argv[1][0]);
-  }
-  int * matrix = reinterpret_cast<int *>(malloc(sizeof(int) * rows * cols));
-  return hvostov::taskExecution(input, output, matrix, rows, cols, argv[1][0]);
-}
-
-int hvostov::taskExecution(std::ifstream & input, std::ofstream & output,
-    int * matrix, size_t rows, size_t cols, char task_number)
-{
-  if (task_number == '2') {
-    if (matrix == nullptr) {
+    int primary_matrix[MATRIX_SIZE] = {};
+    matrix = primary_matrix;
+  } else {
+    int * primary_matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+    if (primary_matrix == nullptr) {
       std::cerr << "Bad alloc!\n";
       return 3;
     }
+    matrix = primary_matrix;
   }
   if (!hvostov::inputMatrix(input, matrix, rows, cols)) {
-    std::cerr << "Problems with input_matrix!\n";
-    if (task_number == '2') {
-      free(matrix);
-    }
+    std::cerr << "Bad input!\n";
     return 2;
   }
+  hvostov::taskExecution(output, matrix, rows, cols);
+  if (argv[1][0] == '2') {
+    free(matrix);
+  }
+  return 0;
+}
+
+void hvostov::taskExecution(std::ofstream & output, int * matrix, size_t rows, size_t cols)
+{
   size_t counter = hvostov::countLocalMax(matrix, rows, cols);
   output << counter << "\n";
   hvostov::modifyMatrix(matrix, rows, cols);
   hvostov::outputMatrix(output, matrix, rows, cols);
-  if (task_number == '2') {
-    free(matrix);
-  }
-  return 0;
 }
 
 std::ifstream & hvostov::inputMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols)
@@ -90,8 +86,8 @@ size_t hvostov::countLocalMax(int * matrix, size_t rows, size_t cols)
     for (size_t j = 1; j < cols - 1; j++) {
       bool is_local_max = matrix[i * cols + j] > matrix[i * cols + j - 1];
       is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * cols + j + 1];
-      is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * (cols - 1) + j];
-      is_local_max = is_local_max && matrix[i * cols + j] > matrix[i * (cols+1) + j];
+      is_local_max = is_local_max && matrix[i * cols + j] > matrix[(i - 1) * cols + j];
+      is_local_max = is_local_max && matrix[i * cols + j] > matrix[(i + 1) * cols + j];
       if (is_local_max) {
         counter++;
       }
