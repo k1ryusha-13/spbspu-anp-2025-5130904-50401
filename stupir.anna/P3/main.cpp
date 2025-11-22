@@ -73,6 +73,10 @@ namespace stupir
       if (rows * cols <= maxStat)
       {
         arr[maxStat] = {};
+        for (size_t i = 0; i < maxStat; ++i)
+        {
+          arr[i] = 0;
+        }
       }
       else
       {
