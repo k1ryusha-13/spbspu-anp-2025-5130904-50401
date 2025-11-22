@@ -37,21 +37,23 @@ int main(int argc, char ** argv)
     std::cerr << "Bad read (rows and cols)\n";
     return 2;
   }
+  constexpr size_t MAX_MATRIX_SIZE = 10000;
+  int matrix_static[MAX_MATRIX_SIZE] = {};
   int * matrix = nullptr;
+  int * matrix_dynamic = nullptr;
   if (argv[1][0] == '1') {
-    constexpr size_t MAX_MATRIX_SIZE = 10000;
-    int matrix[MAX_MATRIX_SIZE] = {};
-    zharov::processMatrix(input, matrix, rows, cols, argv[3]);
+    matrix = matrix_static;
   } else {
-    matrix = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
-    if (matrix == nullptr) {
+    matrix_dynamic = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+    if (matrix_dynamic == nullptr) {
       std::cerr << "Bad alloc\n";
       return 2;
     }
-    zharov::processMatrix(input, matrix, rows, cols, argv[3]);
+    matrix = matrix_dynamic;
   }
+  zharov::processMatrix(input, matrix, rows, cols, argv[3]);
 
-  free(matrix);
+  free(matrix_dynamic);
 
   if (input.eof()) {
     std::cerr << "Not enough numbers\n";
