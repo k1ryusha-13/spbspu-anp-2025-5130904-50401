@@ -80,7 +80,7 @@ namespace stupir
     if (!output.fail())
     {
       output << arr[0];
-      for (size_t i = 1; i < rows * cols; ++ i)
+      for (size_t i = 1; i < rows * cols; ++i)
       {
         output << " " << arr[i];
       }
@@ -193,7 +193,8 @@ int main(int argc, char ** argv)
     {
       if (rows * cols <= maxStat)
       {
-        matrixFile[maxStat] = {};
+        int buffer[maxStat] = {};
+        matrixFile = buffer;
       }
       else
       {
@@ -202,7 +203,7 @@ int main(int argc, char ** argv)
     }
     else
     {
-      matrixFile = new int[rows * cols];
+      matrixFile = new int[rows * cols]();
     }
 
     if (!stu::readArr(input, rows, cols, matrixFile))
@@ -215,7 +216,7 @@ int main(int argc, char ** argv)
       return 2;
     }
     input.close();
-    matrixChange = new int[rows * cols];
+    matrixChange = new int[rows * cols]();
     if (rows != 0 && cols != 0)
     {
       stu::addSnail(matrixFile, rows, cols, matrixChange);
