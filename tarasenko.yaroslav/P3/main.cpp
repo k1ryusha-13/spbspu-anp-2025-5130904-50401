@@ -84,22 +84,15 @@ int main(int argc, char ** argv)
     return 1;
   }
   const char * first_arg = argv[1];
-  size_t i = 0;
-  while (first_arg[i] != '\0')
+  for (size_t i = 0; first_arg[i] != '\0'; ++i)
   {
     if (!std::isdigit(static_cast< unsigned char >(first_arg[i])))
     {
       std::cerr << "First parameter is not a number\n";
       return 1;
     }
-    i += 1;
   }
-  if (first_arg[0] != '1' && first_arg[0] != '2')
-  {
-    std::cerr << "First parameter is out of range\n";
-    return 1;
-  }
-  if (first_arg[1] != '\0')
+  if ((first_arg[0] != '1' && first_arg[0] != '2') || first_arg[1] != '\0')
   {
     std::cerr << "First parameter is out of range\n";
     return 1;
