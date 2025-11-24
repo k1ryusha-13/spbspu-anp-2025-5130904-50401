@@ -13,24 +13,19 @@ namespace kudaev
 
 int main(int argc, char** argv)
 {
-  try
+  if (argc < 4)
   {
-    if (argc < 4)
-    {
-      throw std::invalid_argument("Not enough arguments");
-    }
-    if (argc > 4)
-    {
-      throw std::out_of_range("Too many arguments");
-    }
-    if (!std::isdigit(argv[1][0]) || argv[1][0] == '\0')
-    {
-      throw std::invalid_argument("First parameter is not a number");
-    }
+    std::cerr << "Not enough arguments\n";
+    return 1;
   }
-  catch (const std::exception& ex)
+  if (argc > 4)
   {
-    std::cerr << ex.what() << '\n';
+    std::cerr << "Too many arguments\n";
+    return 1;
+  }
+  if (!std::isdigit(argv[1][0]) || argv[1][0] == '\0')
+  {
+    std::cerr << "First parameter is not a number\n";
     return 1;
   }
   int choice = std::atoi(argv[1]);
@@ -123,11 +118,7 @@ std::ifstream& kudaev::inputMtx(std::ifstream& input, int* a, size_t m, size_t n
 {
   for (size_t i = 0; i < m * n; ++i)
   {
-    if (!(input >> a[i]))
-    {
-      input.setstate(std::ios::failbit);
-      break;
-    }
+    input >> a[i];
   }
   return input;
 }
