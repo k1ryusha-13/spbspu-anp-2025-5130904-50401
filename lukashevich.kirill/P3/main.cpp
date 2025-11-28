@@ -24,6 +24,13 @@ namespace lukashevich
     return out;
   }
 
+  int* createMtx(size_t rows, size_t cols)
+  {
+    int* nums = nullptr;
+    nums = reinterpret_cast<int*>(malloc(rows * cols * sizeof(int)));
+    return nums;
+  }
+
   
 int main(int argc, char ** argv){
 
