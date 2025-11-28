@@ -31,6 +31,18 @@ namespace lukashevich
     return nums;
   }
 
+  std::istream& readMtx(std::istream& in, int* nums, size_t rows, size_t cols)
+  {
+    for (size_t i = 0; i < rows * cols; ++i)
+    {
+      if (!(in >> nums[i]))
+      {
+        return in;
+      }
+    }
+    return in;
+  }
+
   
 int main(int argc, char ** argv){
 
