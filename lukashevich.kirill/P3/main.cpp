@@ -76,6 +76,53 @@ namespace lukashevich
       }
     }
   }
+
+  int max_sum_mdg(const int* mtx, size_t rows, size_t cols)
+  {
+    if (rows == 0 || cols == 0)
+    {
+      return 0;
+    }
+
+    int max_sum = 0;
+
+    for (size_t d = 0; d < rows; ++d)
+    {
+      int sum = 0;
+      size_t i = d;
+      size_t j = 0;
+      while (i < rows && j < cols)
+      {
+        sum += mtx[i * cols + j];
+        ++i;
+        ++j;
+      }
+      if (sum > max_sum)
+      {
+        max_sum = sum;
+      }
+    }
+
+    for (size_t d = 1; d < cols; ++d)
+    {
+      int sum = 0;
+      size_t i = 0;
+      size_t j = d;
+      while (i < rows && j < cols)
+      {
+        sum += mtx[i * cols + j];
+        ++i;
+        ++j;
+      }
+      if (sum > max_sum)
+      {
+        max_sum = sum;
+      }
+    }
+
+    return max_sum;
+  }
+}
   
 int main(int argc, char ** argv){
 
