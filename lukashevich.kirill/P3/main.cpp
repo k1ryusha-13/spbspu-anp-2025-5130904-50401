@@ -124,6 +124,97 @@ namespace lukashevich
   }
 }
   
-int main(int argc, char ** argv){
+int main(int argc, char ** argv) {
+  if (argc < 4)
+  {
+    std::cerr << "Not enough arguments\n";
+    return 1;
+  }
+  else if (argc > 4)
+  {
+    std::cerr << "Too many arguments\n";
+    return 1;
+  }
 
+  int mode = 0;
+  try
+  {
+    mode = std::stoi(argv[1]);
+  }
+  catch (const std::exception&)
+  {
+    std::cerr << "First parameter is not a number\n";
+    return 1;
+  }
+
+  if (mode != 2 && mode != 1)
+  {
+    std::cerr << "First parameter is out of range\n";
+    return 1;
+  }
+
+  namespace luk = lukashevich;
+
+  std::ifstream input(argv[2]);
+  if (!input)
+  {
+    std::cerr << "Can't open file\n";
+    return 2;
+  }
+
+  int* nums = nullptr;
+  int statNums[10000] = {};
+  size_t rows = 0;
+  size_t cols = 0;
+
+  if (!(input >> rows >> cols))
+  {
+    std::cerr << "Bad reading\n";
+    return 2;
+  }
+
+  if (mode == 1 && rows * cols > 10000)
+  {
+    std::cerr << "Matrix too large for static array\n";
+    return 2;
+  }
+
+  nums = (mode == 1) ? statNums : luk::createMtx(rows, cols);
+
+  if (!nums)
+  {
+    std::cerr << "Memory allocation failed\n";
+    return 3;
+  }
+
+  if (!luk::readMtx(input, nums, rows, cols))
+  {
+    std::cerr << "Bad reading file\n";
+    if (mode == 2)
+    {
+      free(nums);
+    }
+    return 2;
+  }
+
+  std::ofstream output(argv[3]);
+  if (!output)
+  {
+    std::cerr << "Can't open output file\n";
+    if (mode == 2)
+    {
+      free(nums);
+    }
+    return 2;
+  }
+
+  luk::fll_inc_wav(nums, rows, cols);
+  luk::outMtx(output, nums, rows, cols);
+
+  if (mode == 2)
+  {
+    free(nums);
+  }
+
+  return 0;
 }
