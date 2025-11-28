@@ -43,6 +43,39 @@ namespace lukashevich
     return in;
   }
 
+  void fll_inc_wav(int* mtx, size_t rows, size_t cols)
+  {
+    if (rows == 0 || cols == 0)
+    {
+      return;
+    }
+
+    size_t layers = (std::min(rows, cols) + 1) / 2;
+
+    for (size_t layer = 0; layer < layers; ++layer)
+    {
+      int increment = layer + 1;
+      size_t start_row = layer;
+      size_t end_row = rows - layer - 1;
+      size_t start_col = layer;
+      size_t end_col = cols - layer - 1;
+
+      for (size_t j = start_col; j <= end_col; ++j)
+      {
+        mtx[start_row * cols + j] += increment;
+        if (start_row != end_row)
+        {
+          mtx[end_row * cols + j] += increment;
+        }
+      }
+
+      for (size_t i = start_row + 1; i < end_row; ++i)
+      {
+        mtx[i * cols + start_col] += increment;
+        mtx[i * cols + end_col] += increment;
+      }
+    }
+  }
   
 int main(int argc, char ** argv){
 
