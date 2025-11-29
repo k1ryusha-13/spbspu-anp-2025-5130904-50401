@@ -121,7 +121,7 @@ int* zubarev::convertToSquare(int* matrix, size_t& rows, size_t& cols)
   }
   if (rows == cols) {
     for (size_t i = 0; i < rows*cols; ++i) {
-        square[i] = matrix[i];
+      square[i] = matrix[i];
     }
   } else {
     for (size_t i = 0; i < sizeOfMatrix; ++i) {
