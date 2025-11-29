@@ -8,7 +8,7 @@ namespace kudaev
   std::ifstream& inputMtx(std::ifstream&, int*, size_t, size_t);
   void lftBotClk(int*, size_t, size_t);
   void bldSmtMtr(std::ostream&, int*, size_t, size_t);
-  void outputMtx(std::ostream&, int*, size_t, size_t);
+  void outputMtx(std::ostream&, const int*, size_t, size_t);
 }
 
 int main(int argc, char** argv)
@@ -134,7 +134,9 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
     {
       a[pos] -= k++;
       if (i < rows - 1)
+      {
         pos -= n;
+      }
     }
     if (--cols == 0)
     {
@@ -145,7 +147,9 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
     {
       a[pos] -= k++;
       if (i < cols - 1)
+      {
         pos++;
+      }
     }
     if (--rows == 0)
     {
@@ -156,7 +160,9 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
     {
       a[pos] -= k++;
       if (i < rows - 1)
+      {
         pos += n;
+      }
     }
     if (--cols == 0)
     {
@@ -167,7 +173,9 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
     {
       a[pos] -= k++;
       if (i < cols - 1)
+      {
         pos--;
+      }
     }
     if (--rows == 0)
     {
@@ -177,11 +185,16 @@ void kudaev::lftBotClk(int* a, size_t m, size_t n)
   }
 }
 
-void kudaev::outputMtx(std::ostream& out, int* a, size_t m, size_t n)
+void kudaev::outputMtx(std::ostream& out, const int* a, size_t m, size_t n)
 {
   out << m << ' ' << n << ' ';
   for (size_t i = 0; i < m * n; ++i)
   {
+    if (i == m * n - 1)
+    {
+      out << a[i];
+      break;
+    }
     out << a[i] << ' ';
   }
   out << '\n';
@@ -251,14 +264,19 @@ void kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
       }
       else
       {
-        float res = static_cast <float> (sum) / k;
+        float res = sum * 1.0 / k;
         res_mas[i] = res;
       }
     }
     out << m << ' ' << n << ' ';
     for (size_t i = 0; i < m * n; ++i)
     {
-        out << std::floor(10 * res_mas[i] + 0.5f) / 10 << ' ';
+      if (i == m * n - 1)
+      {
+        out << std::floor(10 * res_mas[i] + 0.5f) / 10;
+        break;
+      }
+      out << std::floor(10 * res_mas[i] + 0.5f) / 10 << ' ';
     }
     delete[] tmp;
     delete[] res_mas;
