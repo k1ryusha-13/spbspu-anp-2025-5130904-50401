@@ -6,9 +6,9 @@ namespace vasyakin
 {
   void outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output);
   int countSaddlePoints(const int* a, size_t rows, size_t cols);
-  int* createMatrix(size_t rows, size_t cols);
   void transformSpiral(int* a, size_t rows, size_t cols);
   std::istream& readMatrix(int* a, size_t rows, size_t cols, std::istream& input);
+  size_t completeMatrix(std::istream& input, int* matrix, size_t rows, size_t cols, std::ofstream& output);
 }
 void vasyakin::outputMatrix(const int* a, size_t rows, size_t cols, std::ofstream& output)
 {
@@ -60,12 +60,6 @@ int vasyakin::countSaddlePoints(const int* a, size_t rows, size_t cols)
   }
   return count;
 }
-int* vasyakin::createMatrix(size_t rows, size_t cols)
-{
-  int* a = nullptr;
-  a = new int [rows * cols];
-  return a;
-}
 void vasyakin::transformSpiral(int* a, size_t rows, size_t cols)
 {
   size_t circle = std::min(rows, cols) / 2 + std::min(rows, cols) % 2;
@@ -114,6 +108,26 @@ std::istream& vasyakin::readMatrix(int* a, size_t rows, size_t cols, std::istrea
   }
   return input;
 }
+size_t vasyakin::completeMatrix(std::istream& input, int* matrix, size_t rows, size_t cols, std::ofstream& output)
+{
+  if (!vasyakin::readMatrix(matrix, rows, cols, input))
+  {
+    if (input.eof())
+    {
+      std::cerr << "Not enough arguments for matrix" << '\n';
+    }
+    else if (input.fail())
+    {
+      std::cerr << "Unexpected input" << '\n';
+    }
+    return 2;
+  }
+  size_t res = vasyakin::countSaddlePoints(matrix, rows, cols);
+  output << res << '\n';
+  vasyakin::transformSpiral(matrix, rows, cols);
+  vasyakin::outputMatrix(matrix, rows, cols, output);
+  return 0;
+}
 int main(int argc, char** argv)
 {
   if (argc != 4)
@@ -147,11 +161,6 @@ int main(int argc, char** argv)
       std::cerr << "cannot read matrix dimensions" << "\n";
       return 2;
     }
-    if (rows == 0 && cols == 0)
-    {
-      output << "0 0" << "\n";
-      return 0;
-    }
     if (num == 1)
     {
       if (rows * cols > 10000)
@@ -160,55 +169,15 @@ int main(int argc, char** argv)
         return 2;
       }
       int matrix[10000];
-      if (!vasyakin::readMatrix(matrix, rows, cols, input))
-      {
-        if (input.eof())
-        {
-          std::cerr << "Not enough arguments for matrix" << '\n';
-        }
-        else if (input.fail())
-        {
-          std::cerr << "Unexpected input" << '\n';
-        }
-        return 2;
-      }
-      int result = vasyakin::countSaddlePoints(matrix, rows, cols);
-      output << result << '\n';
-      int matrix_copy[10000];
-      for (size_t i = 0; i < rows * cols; ++i)
-      {
-        matrix_copy[i] = matrix[i];
-      }
-      vasyakin::transformSpiral(matrix_copy, rows, cols);
-      vasyakin::outputMatrix(matrix_copy, rows, cols, output);
+      size_t k = vasyakin::completeMatrix(input, matrix, rows, cols, output);
+      return k;
     }
     else
     {
-      int* matrix = vasyakin::createMatrix(rows, cols);
-      if (!vasyakin::readMatrix(matrix, rows, cols, input))
-      {
-        delete[] matrix;
-        if (input.eof())
-        {
-          std::cerr << "Not enough arguments for matrix" << '\n';
-        }
-        else if (input.fail())
-        {
-          std::cerr << "Unexpected input" << '\n';
-        }
-        return 2;
-      }
-      int result = vasyakin::countSaddlePoints(matrix, rows, cols);
-      output << result << '\n';
-      int* matrix_copy = vasyakin::createMatrix(rows, cols);
-      for (size_t i = 0; i < rows * cols; ++i)
-      {
-        matrix_copy[i] = matrix[i];
-      }
-      vasyakin::transformSpiral(matrix_copy, rows, cols);
-      vasyakin::outputMatrix(matrix_copy, rows, cols, output);
+      int* matrix = new int [rows * cols];
+      size_t k = vasyakin::completeMatrix(input, matrix, rows, cols, output);
       delete[] matrix;
-      delete[] matrix_copy;
+      return k;
     }
   }
   catch (const std::exception& e)
@@ -216,5 +185,4 @@ int main(int argc, char** argv)
     std::cerr << e.what() << "\n";
     return 2;
   }
-  return 0;
 }
