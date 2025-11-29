@@ -108,7 +108,7 @@ unsigned long rizatdinov::countLocalMax(const int * array, size_t rows, size_t c
 
 bool rizatdinov::isLowerTriangular(const int * array, size_t rows, size_t cols)
 {
-  if (!(rows * cols)) {
+  if (!(rows && cols)) {
     return false;
   }
 
