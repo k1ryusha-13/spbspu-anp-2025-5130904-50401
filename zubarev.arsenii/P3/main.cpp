@@ -5,8 +5,8 @@
 
 namespace zubarev
 {
-  int max_int();
-  int min_int();
+  int getMaxInt();
+  int getMinInt();
   std::ostream& outputMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols);
   int* convertToSquare(int* matrix, size_t& rows, size_t& cols);
   int* readMatrix(std::istream& in, size_t& rows, size_t& cols, int* matrix);
@@ -84,14 +84,14 @@ int main(int argc, char const** argv)
   free(square);
 }
 
-int zubarev::max_int()
+int zubarev::getMaxInt()
 {
   using namespace std;
   using int_limit = numeric_limits< int >;
   return int_limit::max();
 }
 
-int zubarev::min_int()
+int zubarev::getMinInt()
 {
   using namespace std;
   using int_limit = numeric_limits< int >;
@@ -169,7 +169,7 @@ int zubarev::solveTask9(const int* matrix, size_t rows, size_t cols)
 
 int zubarev::solveTask14(const int* matrix, size_t rows, size_t cols)
 {
-  int maxSum = min_int();
+  int maxSum = getMinInt();
   int tempSum = 0;
   for (size_t s = 1; s <= (cols / 2); ++s) {
     for (size_t i = 0; i < rows - s; i++) {
