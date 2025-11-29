@@ -61,7 +61,9 @@ int main(int argc, char** argv)
     case 1:
     {
       if (m * n <= 10000)
+      {
         target = a;
+      }
       else
       {
         std::cerr << "Too many elements for static array\n";
