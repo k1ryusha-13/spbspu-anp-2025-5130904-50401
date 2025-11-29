@@ -7,7 +7,7 @@ namespace kudaev
 {
   std::ifstream& inputMtx(std::ifstream&, int*, size_t, size_t);
   void lftBotClk(int*, size_t, size_t);
-  void bldSmtMtr(std::ostream&, int*, size_t, size_t);
+  int bldSmtMtr(std::ostream&, int*, size_t, size_t);
   void outputMtx(std::ostream&, const int*, size_t, size_t);
 }
 
@@ -97,7 +97,11 @@ int main(int argc, char** argv)
     }
     kudaev::lftBotClk(target, m, n);
     kudaev::outputMtx(output, target, m, n);
-    kudaev::bldSmtMtr(output, target, m, n);
+    int res = kudaev::bldSmtMtr(output, target, m, n);
+    if (res == 1)
+    {
+      throw std::runtime_error("Memory allocation failed in bldSmtMtr");
+    }
   }
   catch (const std::exception& ex)
   {
@@ -200,7 +204,7 @@ void kudaev::outputMtx(std::ostream& out, const int* a, size_t m, size_t n)
   out << '\n';
 }
 
-void kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
+int kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
 {
   int* tmp = nullptr;
   float* res_mas = nullptr;
@@ -285,6 +289,7 @@ void kudaev::bldSmtMtr(std::ostream& out, int* a, size_t m, size_t n)
   {
     delete[] tmp;
     delete[] res_mas;
-    throw;
+    return 1;
   }
+  return 0;
 }
