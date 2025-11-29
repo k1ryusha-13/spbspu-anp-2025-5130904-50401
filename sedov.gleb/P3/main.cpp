@@ -47,7 +47,7 @@ int main(int argc, char ** argv)
 
   try
   {
-    int * matrix = new int[rows * cols];
+    int * matrix = new int[r * c];
     size_t st = sedov::completeMatrix(input, matrix, r, c, argv[3]);
     delete[] matrix;
     return st;
