@@ -7,16 +7,6 @@
 
 namespace khasnulin
 {
-  namespace ErrMessages
-  {
-    const char *many_args = "Too many arguments\n";
-    const char *not_enough_args = "Not enough arguments\n";
-    const char *fp_out_of_range = "First parameter is out of range\n";
-    const char *fp_not_a_number = "First parameter is not a number\n";
-    const char *input_file_not_valid = "Error while reading input file data, can't read as matrix\n";
-    const char *memory_bad_alloc = "Error memory allocation\n";
-    const char *unknown = "Error during task execution, something went wrong\n";
-  };
 
   size_t getFirstParameter(const char *num);
 
@@ -27,7 +17,6 @@ namespace khasnulin
   bool lwrTriMtx(const int *arr, size_t n, size_t m);
 
   std::ostream &printMatrix(std::ostream &output, const int *a, size_t n, size_t m);
-  std::ostream &printBool(std::ostream &output, bool val);
 }
 
 int main(int argc, char **argv)
@@ -36,7 +25,7 @@ int main(int argc, char **argv)
   int *currArr = nullptr;
   if (argc != 4)
   {
-    const char *message = argc > 4 ? khasnulin::ErrMessages::many_args : khasnulin::ErrMessages::not_enough_args;
+    const char *message = argc > 4 ? "Too many arguments\n" : "Not enough arguments\n";
     std::cerr << message;
     return 1;
   }
@@ -61,7 +50,7 @@ int main(int argc, char **argv)
       {
         delete[] currArr;
       }
-      std::cerr << khasnulin::ErrMessages::input_file_not_valid;
+      std::cerr << "Error while reading input file data, can't read as matrix\n";
       return 2;
     }
     input.close();
@@ -72,19 +61,19 @@ int main(int argc, char **argv)
     std::ofstream output(argv[3]);
 
     khasnulin::printMatrix(output, currArr, n, m);
-    khasnulin::printBool(output, isLWR_TRI_MTX);
+    output << std::boolalpha << isLWR_TRI_MTX;
 
     if (mode == 2)
     {
       delete[] currArr;
     }
   }
-  catch (std::bad_alloc &e)
+  catch (const std::bad_alloc &e)
   {
-    std::cerr << khasnulin::ErrMessages::memory_bad_alloc;
+    std::cerr << "Error memory allocation\n";
     return 2;
   }
-  catch (std::runtime_error &e)
+  catch (const std::runtime_error &e)
   {
     if (mode == 2)
     {
@@ -95,7 +84,7 @@ int main(int argc, char **argv)
   }
   catch (...)
   {
-    std::cerr << khasnulin::ErrMessages::unknown;
+    std::cerr << "Error during task execution, something went wrong\n";
     if (mode == 2)
     {
       delete[] currArr;
@@ -110,14 +99,9 @@ size_t khasnulin::getFirstParameter(const char *num)
   const char *ch = num;
   while (*ch)
   {
-    if (*ch < '0' || *ch > '9')
-    {
-      throw std::runtime_error(ErrMessages::fp_not_a_number);
-    }
     len++;
     ch++;
   }
-
   if (len == 1)
   {
     if (num[0] == '1')
@@ -129,7 +113,7 @@ size_t khasnulin::getFirstParameter(const char *num)
       return 2;
     }
   }
-  throw std::runtime_error(ErrMessages::fp_out_of_range);
+  throw std::runtime_error("Incorrect first parameter input\n");
 }
 
 void khasnulin::lftBotClk(int *arr, size_t n, size_t m)
@@ -205,7 +189,7 @@ using is_t = std::istream;
 is_t &khasnulin::readMatrix(is_t &input, int *arr, size_t n, size_t m, size_t &elems_count)
 {
   elems_count = 0;
-  while (input >> arr[elems_count] && elems_count < n * m)
+  while ((elems_count < n * m) && (input >> arr[elems_count]))
   {
     elems_count++;
   }
@@ -227,9 +211,4 @@ os_t &khasnulin::printMatrix(os_t &output, const int *a, size_t n, size_t m)
   }
   output << "\n";
   return output;
-}
-
-os_t &khasnulin::printBool(os_t &output, bool val)
-{
-  return output << (val ? "true\n" : "false\n");
 }
