@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
 
   if (num == 1)
   {
-    static long long autoMtx[10000];
+    long long autoMtx[10000];
     mtx = autoMtx;
 
     if (!goltsov::getMtx(mtx, rows, cols, input))
@@ -71,13 +71,10 @@ int main(int argc, char ** argv)
   }
   else
   {
-    try
+    mtx = goltsov::create(rows, cols);
+    if (mtx == nullptr)
     {
-      mtx = goltsov::create(rows, cols);
-    }
-    catch (const std::bad_alloc & e)
-    {
-      std::cerr << e.what() << '\n';
+      std::cerr << "Bad alloc" << '\n';
       return 3;
     }
 
@@ -103,8 +100,8 @@ int main(int argc, char ** argv)
   size_t answer2 = goltsov::cntLocMax(mtx, rows, cols);
 
   std::ofstream output(argv[3]);
-  output << "Expects output (return code 0): " << answer1 << '\n';
-  output << "Expects output (return code 0): " << answer2 << '\n';
+  output << answer1 << '\n';
+  output << answer2 << '\n';
 
   if (num == 2)
   {
@@ -123,7 +120,7 @@ bool goltsov::lwrTriMtx(const long long * mtx, size_t n, size_t shift, size_t co
   {
     bool flag = false;
 
-    for (size_t i = 0; i < n - 1; ++i)
+    for (size_t i = 0; i < n - 1 && !flag; ++i)
     {
       for (size_t j = i + 1; j < n; ++j)
       {
@@ -132,11 +129,6 @@ bool goltsov::lwrTriMtx(const long long * mtx, size_t n, size_t shift, size_t co
           flag = true;
           break;
         }
-      }
-
-      if (flag)
-      {
-        break;
       }
     }
 
@@ -177,10 +169,6 @@ size_t goltsov::cntLocMax(const long long * mtx, size_t rows, size_t cols)
 long long * goltsov::create(size_t rows, size_t cols)
 {
   long long * mtx = reinterpret_cast< long long * >(malloc(sizeof(long long) * rows * cols));
-  if (mtx == nullptr)
-  {
-    throw std::bad_alloc();
-  }
 
   return mtx;
 }
