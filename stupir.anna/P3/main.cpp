@@ -154,11 +154,6 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  else if (!std::isdigit(firstArg[0]))
-  {
-    std::cerr << "First parametr isn't a number\n";
-    return 1;
-  }
   else if ((firstArg[0] != '1' && firstArg[0] != '2') || firstArg[1] != '\0')
   {
     std::cerr << "First parametr out of range\n";
