@@ -3,7 +3,7 @@
 
 namespace hvostov {
   std::ifstream & inputMatrix(std::ifstream & input, int * matrix, size_t rows, size_t cols);
-  size_t countLocalMax(int * matrix, size_t rows, size_t cols);
+  size_t countLocalMax(const int * matrix, size_t rows, size_t cols);
   void modifyMatrix(int * matrix, size_t rows, size_t cols);
   void outputMatrix(std::ofstream & output, const int * matrix, size_t rows, size_t cols);
   void taskExecution(std::ofstream & output, int * matrix, size_t rows, size_t cols);
@@ -76,7 +76,7 @@ std::ifstream & hvostov::inputMatrix(std::ifstream & input, int * matrix, size_t
   return input;
 }
 
-size_t hvostov::countLocalMax(int * matrix, size_t rows, size_t cols)
+size_t hvostov::countLocalMax(const int * matrix, size_t rows, size_t cols)
 {
   if (rows < 3 || cols < 3) {
     return 0;
