@@ -4,7 +4,6 @@
 
 namespace rizatdinov
 {
-  int * creat(size_t len, int number);
   bool initial(int * array, size_t len, std::ifstream & file);
   bool isLocalMax(const int * array, size_t cols, size_t position);
   unsigned long countLocalMax(const int * array, size_t rows, size_t cols);
@@ -39,20 +38,19 @@ int main(int argc, char ** argv)
 
   int * array = nullptr;
   int array_static[10000] = {};
-  try {
-    array = rizatdinov::creat(rows * cols, number);
-    if (array == nullptr) {
-      array = array_static;
-    }
+  if (number == 1) {
+    array = array_static;
+  } else {
+    array = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
+  }
 
-    if (rizatdinov::initial(array, rows * cols, input)) {
-      throw std::invalid_argument("invalid argument");
-    }
-  } catch(...) {
-    if (number ==2) {
-      free(array);
-    }
-    std::cerr << "fatal: failed to read data from the file\n";
+  if (array == nullptr) {
+    std::cerr << "fatal: memory allocation failed";
+    return 2;
+  }
+
+  if (rizatdinov::initial(array, rows * cols, input)) {
+    std::cerr << "fatal: could not read file";
     return 2;
   }
 
@@ -71,18 +69,6 @@ int main(int argc, char ** argv)
   }
 
   return 0;
-}
-
-int * rizatdinov::creat(size_t len, int number)
-{
-  int * array = nullptr;
-  if (number == 2) {
-    array = reinterpret_cast< int * >(malloc(sizeof(int) * len));
-    if (array == nullptr) {
-      throw std::bad_alloc();
-    }
-  }
-  return array;
 }
 
 bool rizatdinov::initial(int * array, size_t len, std::ifstream & file)
