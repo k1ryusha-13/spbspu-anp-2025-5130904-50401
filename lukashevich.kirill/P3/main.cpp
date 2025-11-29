@@ -24,14 +24,14 @@ namespace lukashevich
     return out;
   }
 
-  int* createMtx(size_t rows, size_t cols)
+  int * createMtx(size_t rows, size_t cols)
   {
-    int* nums = nullptr;
+    int * nums = nullptr;
     nums = reinterpret_cast<int*>(malloc(rows * cols * sizeof(int)));
     return nums;
   }
 
-  std::istream& readMtx(std::istream& in, int* nums, size_t rows, size_t cols)
+  std::istream & readMtx(std::istream & in, int * nums, size_t rows, size_t cols)
   {
     for (size_t i = 0; i < rows * cols; ++i)
     {
@@ -43,7 +43,7 @@ namespace lukashevich
     return in;
   }
 
-  void fll_inc_wav(int* mtx, size_t rows, size_t cols)
+  void fll_inc_wav(int * mtx, size_t rows, size_t cols)
   {
     if (rows == 0 || cols == 0)
     {
@@ -77,7 +77,7 @@ namespace lukashevich
     }
   }
 
-  int max_sum_mdg(const int* mtx, size_t rows, size_t cols)
+  int max_sum_mdg(const int * mtx, size_t rows, size_t cols)
   {
     if (rows == 0 || cols == 0)
     {
@@ -124,7 +124,8 @@ namespace lukashevich
   }
 }
 
-int main(int argc, char ** argv) {
+int main(int argc, char ** argv)
+{
   if (argc < 4)
   {
     std::cerr << "Not enough arguments\n";
@@ -137,13 +138,19 @@ int main(int argc, char ** argv) {
   }
 
   int mode = 0;
-  try
+  const char* arg = argv[1];
+
+  if (arg[0] == '1' && arg[1] == '\0')
   {
-    mode = std::stoi(argv[1]);
+    mode = 1;
   }
-  catch (const std::exception&)
+  else if (arg[0] == '2' && arg[1] == '\0')
   {
-    std::cerr << "First parameter is not a number\n";
+    mode = 2;
+  }
+  else
+  {
+    std::cerr << "First parameter must be 1 or 2\n";
     return 1;
   }
 
