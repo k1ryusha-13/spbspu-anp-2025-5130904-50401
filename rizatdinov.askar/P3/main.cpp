@@ -17,8 +17,8 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  int number = static_cast< int >(argv[1][0]) - 48;
-  if (number < 1 || number > 2 || argv[1][1] != '\0') {
+  char number = argv[1][0];
+  if (number < '1' || number > '2' || argv[1][1] != '\0') {
     std::cerr << "fatal: invalid parameters\n";
     return 1;
   }
@@ -32,28 +32,28 @@ int main(int argc, char ** argv)
   size_t rows = 0, cols = 0;
   input >> rows >> cols;
   if (!input) {
-    std::cerr << "fatal: failed to read data from the file\n";
+    std::cerr << "fatal: could not read file\n";
     return 2;
   }
 
   int * array = nullptr;
-  int array_static[10000] = {};
-  if (number == 1) {
-    array = array_static;
+  int fixlen_array[10000] = {};
+  if (number == '1') {
+    array = fixlen_array;
   } else {
     array = reinterpret_cast< int * >(malloc(sizeof(int) * rows * cols));
   }
 
   if (array == nullptr) {
-    std::cerr << "fatal: memory allocation failed";
-    return 2;
+    std::cerr << "fatal: memory allocation failed\n";
+    return 3;
   }
 
   if (rizatdinov::initial(array, rows * cols, input)) {
-    if (number == 2) {
+    if (number == '2') {
       free(array);
     }
-    std::cerr << "fatal: could not read file";
+    std::cerr << "fatal: could not read file\n";
     return 2;
   }
 
@@ -64,10 +64,9 @@ int main(int argc, char ** argv)
   size_t count_local_max = rizatdinov::countLocalMax(array, rows, cols);
   bool is_lower_triangular = rizatdinov::isLowerTriangular(array, rows, cols);
 
-  output << "Expects output (return code 0): " << count_local_max << '\n';
-  output << "Expects output (return code 0): " << is_lower_triangular << '\n';
+  output << count_local_max << ' ' << is_lower_triangular << '\n';
 
-  if (number == 2) {
+  if (number == '2') {
     free(array);
   }
 
@@ -87,17 +86,12 @@ bool rizatdinov::initial(int * array, size_t len, std::ifstream & file)
 
 bool rizatdinov::isLocalMax(const int * array, size_t cols, size_t position)
 {
-  if (array[position] < array[position + 1]) {
-    return false;
-  } else if (array[position] < array[position - 1]) {
-    return false;
-  } else if (array[position] < array[position + cols]) {
-    return false;
-  } else if (array[position] < array[position - cols]) {
-    return false;
-  }
+  bool result = array[position] > array[position + 1];
+  result = result && array[position] > array[position - 1];
+  result = result && array[position] > array[position + cols];
+  result = result && array[position] > array[position - cols];
 
-  return true;
+  return result;
 }
 
 unsigned long rizatdinov::countLocalMax(const int * array, size_t rows, size_t cols)
@@ -114,14 +108,17 @@ unsigned long rizatdinov::countLocalMax(const int * array, size_t rows, size_t c
 
 bool rizatdinov::isLowerTriangular(const int * array, size_t rows, size_t cols)
 {
-  bool result = false;
+  if (!(rows * cols)) {
+    return false;
+  }
+
+  bool result = true;
   for (size_t i = 0; i < rows; ++i) {
     for (size_t j = i + 1; j < cols; ++j) {
       if (array[i * cols + j] != 0) {
         return false;
       }
     }
-    result = true;
   }
   return result;
 }
