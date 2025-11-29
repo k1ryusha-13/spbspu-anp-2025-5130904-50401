@@ -10,8 +10,8 @@ namespace zubarev
   std::ostream& outputMatrix(std::ostream& out, const int* matrix, size_t rows, size_t cols);
   int* convertToSquare(int* matrix, size_t& rows, size_t& cols);
   int* readMatrix(std::istream& in, size_t& rows, size_t& cols, int* matrix);
-  int solveTask9(const int* matrix, size_t rows, size_t cols);
-  int solveTask14(const int* matrix, size_t rows, size_t cols);
+  int getCouOfColNoIden(const int* matrix, size_t rows, size_t cols);
+  int getMaxSumInDia(const int* matrix, size_t rows, size_t cols);
 }
 
 int main(int argc, char const** argv)
@@ -76,8 +76,8 @@ int main(int argc, char const** argv)
   int* square = zubarev::convertToSquare(mtx, rows, cols);
 
   std::ofstream output(argv[3]);
-  output << zub::solveTask9(square, rows, cols) << "\n";
-  output << zub::solveTask14(square, rows, cols) << "\n";
+  output << zub::getCouOfColNoIden(square, rows, cols) << "\n";
+  output << zub::getMaxSumInDia(square, rows, cols) << "\n";
   if (std::stoi(argv[1]) == 2) {
     free(mtx);
   }
@@ -145,7 +145,7 @@ int* zubarev::readMatrix(std::istream& in, size_t& rows, size_t& cols, int* matr
   return matrix;
 }
 
-int zubarev::solveTask9(const int* matrix, size_t rows, size_t cols)
+int zubarev::getCouOfColNoIden(const int* matrix, size_t rows, size_t cols)
 {
   size_t count = 0;
   bool equalFlag = false;
@@ -167,7 +167,7 @@ int zubarev::solveTask9(const int* matrix, size_t rows, size_t cols)
   return count;
 }
 
-int zubarev::solveTask14(const int* matrix, size_t rows, size_t cols)
+int zubarev::getMaxSumInDia(const int* matrix, size_t rows, size_t cols)
 {
   int maxSum = getMinInt();
   int tempSum = 0;
