@@ -50,6 +50,9 @@ int main(int argc, char ** argv)
   }
 
   if (rizatdinov::initial(array, rows * cols, input)) {
+    if (number == 2) {
+      free(array);
+    }
     std::cerr << "fatal: could not read file";
     return 2;
   }
