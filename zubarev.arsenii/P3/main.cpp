@@ -50,7 +50,7 @@ int main(int argc, char const** argv)
     }
     mtx = statMatrix;
     mtx = zub::readMatrix(input, rows, cols, mtx);
-    if (std::cin.fail()) {
+    if (input.fail()) {
       std::cerr << "Can't read the file\n";
       return 1;
     }
@@ -63,7 +63,7 @@ int main(int argc, char const** argv)
     }
 
     mtx = zub::readMatrix(input, rows, cols, mtx);
-     if (std::cin.fail()) {
+     if (input.fail()) {
       std::cerr << "Can't read the file\n";
       free(mtx);
       return 1;
@@ -114,22 +114,24 @@ std::ostream&zubarev::outputMatrix(std::ostream& out, const int* const matrix, s
 
 int* zubarev::convertToSquare(int* matrix, size_t& rows, size_t& cols)
 {
-  if (rows == cols) {
-    return matrix;
-  }
-
   size_t sizeOfMatrix = std::min(rows, cols);
-  int* square = reinterpret_cast<int*>(malloc(sizeOfMatrix * sizeOfMatrix * sizeof(int)));
+  int* square = reinterpret_cast< int* >(malloc(sizeOfMatrix * sizeOfMatrix * sizeof(int)));
   if (!square) {
     return nullptr;
   }
-
-  for (size_t i = 0; i < sizeOfMatrix; ++i) {
-    for (size_t j = 0; j < sizeOfMatrix; ++j) {
-      square[i * sizeOfMatrix + j] = matrix[i * cols + j];
+  if (rows == cols) {
+    for (size_t i = 0; i < rows*cols; ++i) {
+        square[i] = matrix[i];
     }
+  } else {
+    for (size_t i = 0; i < sizeOfMatrix; ++i) {
+      for (size_t j = 0; j < sizeOfMatrix; ++j) {
+        square[i * sizeOfMatrix + j] = matrix[i * cols + j];
+      }
+    }
+    rows = cols = sizeOfMatrix;
   }
-  rows = cols = sizeOfMatrix;
+
   return square;
 }
 
