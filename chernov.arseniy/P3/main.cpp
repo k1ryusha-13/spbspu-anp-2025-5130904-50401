@@ -27,20 +27,16 @@ void chernov::fllIncWav(int * mtx, size_t rows, size_t cols)
     mtx[cols * y + x] += add;
     if (y == border && x != cols - border - 1) {
       ++x;
-    }
-    else if (x == cols - border - 1 && y != rows - border - 1) {
+    } else if (x == cols - border - 1 && y != rows - border - 1) {
       ++y;
-    }
-    else if (y == rows - border - 1 && x != border) {
+    } else if (y == rows - border - 1 && x != border) {
       --x;
-    }
-    else if (x == border) {
+    } else if (x == border) {
       if (y == border - 1) {
         ++add;
         ++border;
         ++x;
-      }
-      else {
+      } else {
         --y;
       }
     }
