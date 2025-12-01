@@ -37,19 +37,9 @@ namespace tarasenko
             if (!(near_i == 0 && near_k == 0))
             {
               const int near_num = arr[(i + near_i) * m + (k + near_k)];
-              if (type)
+              if ((type && num <= near_num) || (!type && num >= near_num))
               {
-                if (num <= near_num)
-                {
-                  is_extremum = false;
-                }
-              }
-              else
-              {
-                if (num >= near_num)
-                {
-                  is_extremum = false;
-                }
+                is_extremum = false;
               }
             }
           }
@@ -84,14 +74,6 @@ int main(int argc, char ** argv)
     return 1;
   }
   const char * first_arg = argv[1];
-  for (size_t i = 0; first_arg[i] != '\0'; ++i)
-  {
-    if (!std::isdigit(static_cast< unsigned char >(first_arg[i])))
-    {
-      std::cerr << "First parameter is not a number\n";
-      return 1;
-    }
-  }
   if ((first_arg[0] != '1' && first_arg[0] != '2') || first_arg[1] != '\0')
   {
     std::cerr << "First parameter is out of range\n";
@@ -114,12 +96,12 @@ int main(int argc, char ** argv)
     return 0;
   }
 
-  int static_arr[10000] = {};
+  int fixed_arr[10000] = {};
   int * arr = nullptr;
   bool is_dynamic = (*argv[1] == '2') ? 1 : 0;
   if (!is_dynamic)
   {
-    arr = static_arr;
+    arr = fixed_arr;
   }
   else
   {
