@@ -193,7 +193,7 @@ int main()
 
   delete[] str;
   delete[] resLatTwo;
-  delete[] resLatRMV;
+  delete[] resLatRmv;
 
   return 0;
 }
