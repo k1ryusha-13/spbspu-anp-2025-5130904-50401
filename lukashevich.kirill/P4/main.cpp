@@ -73,6 +73,48 @@ namespace lukashevich {
     return str;
   }
 
+  int mergeLatinLetters(const char* str1, const char* str2, char* result, const int resultSize)
+  {
+    if (str1 == nullptr || str2 == nullptr || result == nullptr || resultSize <= 0) {
+      return -1;
+    }
+
+    int letters[26] = {0};
+
+    for (size_t i = 0; str1[i] != '\0'; ++i) {
+      const unsigned char c = str1[i];
+      if (std::isalpha(c)) {
+        const int index = std::tolower(c) - 'a';
+        if (index >= 0 && index < 26) {
+          letters[index] = 1;
+        }
+      }
+    }
+
+    for (size_t i = 0; str2[i] != '\0'; ++i) {
+      const unsigned char c = str2[i];
+      if (std::isalpha(c)) {
+        const int index = std::tolower(c) - 'a';
+        if (index >= 0 && index < 26) {
+          letters[index] = 1;
+        }
+      }
+    }
+
+    int pos = 0;
+    for (int i = 0; i < 26; ++i) {
+      if (letters[i] == 1) {
+        if (pos + 1 >= resultSize) {
+          return -1;
+        }
+        result[pos++] = static_cast<char>('a' + i);
+      }
+    }
+
+    result[pos] = '\0';
+    return pos;
+  }
+
   int removeLatinLetters(const char* str, char* result, const int resultSize)
   {
     if (str == nullptr || result == nullptr || resultSize <= 0) {
@@ -98,5 +140,10 @@ namespace lukashevich {
 int main()
 {
   namespace luk = lukashevich;
+  char* str = luk::getLine(std::cin);
+  if (!str) {
+    std::cerr << "problem with input\n";
+    return 1;
+  }
   return 0;
 }
