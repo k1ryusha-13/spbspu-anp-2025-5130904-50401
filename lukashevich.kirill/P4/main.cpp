@@ -183,5 +183,17 @@ int main()
     std::cerr << "problem with input\n";
     return 1;
   }
+
+  const char* secondWord = "def_ghk";
+  char* resLatTwo = luk::latinLettersInStock(str, secondWord);
+  char* resLatRmv = luk::latinRemove(str);
+
+  std::cout << resLatTwo << "\n";
+  std::cout << resLatRmv << "\n";
+
+  delete[] str;
+  delete[] resLatTwo;
+  delete[] resLatRMV;
+
   return 0;
 }
