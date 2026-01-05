@@ -135,6 +135,44 @@ namespace lukashevich {
     result[pos] = '\0';
     return pos;
   }
+
+  char* latinLettersInStock(const char* str1, const char* str2)
+  {
+    const int maxSize = 27;
+    char* result = createStr(maxSize);
+    if (!result) {
+      return nullptr;
+    }
+
+    const int len = mergeLatinLetters(str1, str2, result, maxSize);
+    if (len < 0) {
+      delete[] result;
+      return nullptr;
+    }
+
+    return result;
+  }
+
+  char* latinRemove(const char* str)
+  {
+    if (!str) {
+      return nullptr;
+    }
+
+    const size_t size = strLen(str);
+    char* result = createStr(size + 1);
+    if (!result) {
+      return nullptr;
+    }
+
+    const int len = removeLatinLetters(str, result, static_cast<int>(size + 1));
+    if (len < 0) {
+      delete[] result;
+      return nullptr;
+    }
+
+    return result;
+  }
 }
 
 int main()
